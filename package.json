@@ -1,0 +1,28 @@
+{
+  "name": "maze",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "setDebugStatus": "shx echo \"export default true;\" > ./src/dev-status.ts",
+    "setProdactionStatus": "shx echo \"export default false;\" > ./src/dev-status.ts",
+    "dev": "yarn run setDebugStatus && webpack-dev-server -d",
+    "watch": "yarn run setDebugStatus && webpack -w -d --mode development",
+    "build": "yarn run setProdactionStatus && yarn run clean && webpack -p --mode production && yarn run setDebugStatus",
+    "devbuild": "yarn run setDebugStatus && yarn run clean && webpack -d --mode development",
+    "clean": "shx rm -rf dist/*"
+  },
+  "devDependencies": {
+    "@types/victor": "^1.1.0",
+    "@types/wolfy87-eventemitter": "^5.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "shx": "^0.3.2",
+    "ts-loader": "^5.3.0",
+    "typescript": "^3.1.6",
+    "victor": "^1.1.0",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10",
+    "wolfy87-eventemitter": "^5.2.5"
+  }
+}
