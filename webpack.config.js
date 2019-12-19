@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const fs = require("fs");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env, options) => {
 
@@ -13,7 +13,7 @@ module.exports = (env, options) => {
         },
         plugins: [
             new HtmlWebpackPlugin({
-                title: 'Игра Лабиринт'
+                title: 'Simple Skill Based Roguelike',
             })
         ],
         resolve: {
@@ -21,9 +21,23 @@ module.exports = (env, options) => {
         },
         module: {
             rules: [
-                { test: /\.tsx?$/, loader: "ts-loader" }
+                {
+                    test: /\.ts(x?)$/,
+                    exclude: /node_modules/,
+                    use: [
+                        {
+                            loader: "ts-loader"
+                        }
+                    ]
+                },
+                // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+                {
+                    enforce: "pre",
+                    test: /\.js$/,
+                    loader: "source-map-loader"
+                }
             ]
-        }
+        },
     };
 
     if (options.mode === 'development') {
