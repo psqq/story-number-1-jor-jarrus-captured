@@ -1,8 +1,8 @@
 import Scene from './scene';
-import App from './app';
-import getDirectionByKeyboardEvent from './get-direction-by-keyboard-event';
-import PlayerComponent from './game/components/player-component';
-import MoveDirectionComponent from './game/components/move-direction-component';
+import App from '../app';
+import getDirectionByKeyboardEvent from '../get-direction-by-keyboard-event';
+import PlayerComponent from '../game/components/player-component';
+import MoveDirectionComponent from '../game/components/move-direction-component';
 
 /**
  * Represents the scene that displays the menu.

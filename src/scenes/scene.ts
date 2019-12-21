@@ -1,4 +1,4 @@
-import App from "./app";
+import App from "../app";
 
 /**
  * Represents the scene that displays the content of the game.

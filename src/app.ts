@@ -9,8 +9,8 @@ import BaseSystem from './game/systems/base-system';
 import { Display } from 'rot-js';
 import MovementSystem from './game/systems/movement-system';
 import FovSystem from './game/systems/fov-system';
-import MenuScene from './menu-scene';
-import GameScene from './game-scene';
+import MenuScene from './scenes/menu-scene';
+import GameScene from './scenes/game-scene';
 
 export default class App {
 
