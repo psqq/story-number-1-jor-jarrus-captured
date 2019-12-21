@@ -4,6 +4,7 @@ import Engine from './core/engine';
 import EntitiesBuilder from './games/entities-builder';
 import EngineBuilder from './core/engine-builder';
 import DungeonDisplaySystem from './games/systems/dungen-display-system';
+import '../assets/style.css';
 
 export default class App {
 
@@ -24,8 +25,6 @@ export default class App {
     initAppElement() {
         // Create the body with one div element
         let body = document.querySelector('body');
-        body.style.margin = "0";
-        body.innerHTML = '';
         this.appElement = document.createElement('div');
         body.appendChild(this.appElement);
     }

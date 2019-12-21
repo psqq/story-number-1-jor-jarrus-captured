@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const fs = require("fs");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env, options) => {
 
@@ -9,15 +10,19 @@ module.exports = (env, options) => {
         entry: './src/index.ts',
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: "[name].[chunkhash].js",
+            filename: "[name].js",
         },
         plugins: [
             new HtmlWebpackPlugin({
                 title: 'Simple Skill Based Roguelike',
-            })
+            }),
+            new MiniCssExtractPlugin({
+                filename: '[name].css',
+                chunkFilename: '[id].css',
+            }),
         ],
         resolve: {
-            extensions: [".ts", ".tsx", ".js"]
+            extensions: [".ts", ".tsx", ".js", ".css"]
         },
         module: {
             rules: [
@@ -30,12 +35,15 @@ module.exports = (env, options) => {
                         }
                     ]
                 },
-                // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
                 {
                     enforce: "pre",
                     test: /\.js$/,
                     loader: "source-map-loader"
-                }
+                },
+                {
+                  test: /\.css$/i,
+                  use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                },
             ]
         },
     };
