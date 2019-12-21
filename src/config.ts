@@ -49,6 +49,7 @@ const config = {
         height: mapSize.y,
         fontSize: 16,
         forceSquareRatio: true,
+        // fontFamily: 'Major Mono Display',
     },
 };
 
