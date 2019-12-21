@@ -7,11 +7,10 @@ import DisplaySystem from './game/systems/display-system';
 import '../assets/style.css';
 import BaseSystem from './game/systems/base-system';
 import { Display } from 'rot-js';
-import Victor = require('victor');
-import PlayerComponent from './game/components/player-component';
-import MoveDirectionComponent from './game/components/move-direction-component';
 import MovementSystem from './game/systems/movement-system';
 import FovSystem from './game/systems/fov-system';
+import MenuScene from './menu-scene';
+import GameScene from './game-scene';
 
 export default class App {
 
@@ -19,32 +18,16 @@ export default class App {
     appElement: HTMLDivElement = null;
     engine: Engine;
     baseSystem: BaseSystem;
-    directionByKey: { [key: string]: Victor };
+    menuScene: MenuScene;
+    gameScene: GameScene;
 
-    constructor() {
-        this.directionByKey = {
-            'KeyH': new Victor(-1, 0),
-            'KeyL': new Victor(1, 0),
-            'KeyK': new Victor(0, -1),
-            'KeyJ': new Victor(0, 1),
-            'KeyY': new Victor(-1, -1),
-            'KeyU': new Victor(1, -1),
-            'KeyB': new Victor(-1, 1),
-            'KeyN': new Victor(1, 1),
-            'Numpad4': new Victor(-1, 0),
-            'Numpad6': new Victor(1, 0),
-            'Numpad8': new Victor(0, -1),
-            'Numpad2': new Victor(0, 1),
-            'Numpad7': new Victor(-1, -1),
-            'Numpad9': new Victor(1, -1),
-            'Numpad1': new Victor(-1, 1),
-            'Numpad3': new Victor(1, 1),
-        };
-    }
+    constructor() { }
+
     /**
      *  Downloading assets.
      */
     async load() { }
+
     /**
      *  Creating the application element.
      */
@@ -54,8 +37,17 @@ export default class App {
         this.appElement = document.createElement('div');
         body.appendChild(this.appElement);
     }
+
     /**
-     * Configures the application
+     * Initialize game scenes.
+     */
+    initScenes() {
+        this.menuScene = new MenuScene(this);
+        this.gameScene = new GameScene(this);
+    }
+
+    /**
+     * Configures the application.
      */
     init() {
         this.initAppElement();
@@ -64,8 +56,8 @@ export default class App {
         this.appElement.appendChild(this.display.getContainer());
         // Initialize engine
         this.initEngine();
-        // Bind events
-        this.bindEvents();
+        // Initialize game scenes
+        this.initScenes();
     }
     /**
      * Initialize engine: systems and entities.
@@ -98,30 +90,6 @@ export default class App {
             ;
     }
     /**
-     * Handle events
-     * @param event event for handle
-     */
-    handleEvent(event: Event) {
-        if (event.type == 'keydown') {
-            const keyboardEvent = event as KeyboardEvent;
-            const direction = this.directionByKey[keyboardEvent.code];
-            if (!direction) {
-                return;
-            }
-            const entity = this.engine.getEntitiesOfTheseComponents(
-                PlayerComponent, MoveDirectionComponent
-            )[0];
-            entity.get(MoveDirectionComponent).setX(direction.x).setY(direction.y);
-            this.update();
-        }
-    }
-    /**
-     * Bind event listeners
-     */
-    bindEvents() {
-        document.addEventListener('keydown', this);
-    }
-    /**
      * Update game
      */
     update() {
@@ -132,6 +100,6 @@ export default class App {
      * Launches the application.
      */
     run() {
-        this.update();
+        this.menuScene.start();
     }
 }
