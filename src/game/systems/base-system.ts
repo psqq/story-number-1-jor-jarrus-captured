@@ -14,25 +14,30 @@ export default class BaseSystem extends System {
             DungeonComponent
         ]);
     }
+    getLightPassesCallback() {
+        return (x: number, y: number) => {
+            return this.isMovablePosition(new Victor(x, y));
+        };
+    }
     isMovablePosition(position: Victor): boolean {
-        for (let entity of this.mapEntities.getEnties()) {
-            const map = entity.get(DungeonComponent).map;
-            const { x, y } = position;
-            if (map[x][y] === config.map.wall.symbol) {
-                return false;
-            }
+        const map = this.mapEntities.getEnties()[0].get(DungeonComponent).map;
+        const { x, y } = position;
+        if (x < 0 || y < 0 || x >= config.map.size.x || y >= config.map.size.y) {
+            return false;
+        }
+        if (map[x][y] === config.map.wall.symbol) {
+            return false;
         }
         return true;
     }
     getMovablePositions(): Victor[] {
         let positions: Victor[] = [];
-        for (let entity of this.mapEntities.getEnties()) {
-            const map = entity.get(DungeonComponent).map;
-            for (let x of range(config.map.size.x)) {
-                for (let y of range(config.map.size.y)) {
-                    if (map[x][y] === config.map.floor.symbol) {
-                        positions.push(new Victor(x, y));
-                    }
+        const map = this.mapEntities.getEnties()[0].get(DungeonComponent).map;
+        for (let x of range(config.map.size.x)) {
+            for (let y of range(config.map.size.y)) {
+                const v = new Victor(x, y);
+                if (this.isMovablePosition(v)) {
+                    positions.push(v);
                 }
             }
         }

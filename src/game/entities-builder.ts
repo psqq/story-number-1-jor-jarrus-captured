@@ -8,6 +8,7 @@ import GlyphComponent from "./components/glyph-component";
 import Victor = require("victor");
 import PlayerComponent from "./components/player-component";
 import MoveDirectionComponent from "./components/move-direction-component";
+import FovComponent from "./components/fov-component";
 
 export default class EntitiesBuilder {
     entities: Component[][];
@@ -44,6 +45,7 @@ export default class EntitiesBuilder {
     }
     createPlayer(position: Victor) {
         this.entities.push([
+            new FovComponent(),
             new PlayerComponent(),
             new MoveDirectionComponent(),
             new PositionComponent().setX(position.x).setY(position.y),

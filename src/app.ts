@@ -11,6 +11,7 @@ import Victor = require('victor');
 import PlayerComponent from './game/components/player-component';
 import MoveDirectionComponent from './game/components/move-direction-component';
 import MovementSystem from './game/systems/movement-system';
+import FovSystem from './game/systems/fov-system';
 
 export default class App {
 
@@ -76,6 +77,8 @@ export default class App {
         this.engine = new EngineBuilder(this.engine)
             .addSystem(new MovementSystem(this.engine))
             .withGroup('actions')
+            .addSystem(new FovSystem(this.engine))
+            .withGroup('fov')
             .addSystem(new DungeonDisplaySystem(this.engine, this.display))
             .withGroup('display')
             .addSystem(new DisplaySystem(this.engine, this.display))
@@ -109,7 +112,7 @@ export default class App {
                 PlayerComponent, MoveDirectionComponent
             )[0];
             entity.get(MoveDirectionComponent).setX(direction.x).setY(direction.y);
-            this.engine.update();
+            this.update();
         }
     }
     /**
@@ -119,9 +122,16 @@ export default class App {
         document.addEventListener('keydown', this);
     }
     /**
+     * Update game
+     */
+    update() {
+        this.display.clear();
+        this.engine.update();
+    }
+    /**
      * Launches the application.
      */
     run() {
-        this.engine.update();
+        this.update();
     }
 }
