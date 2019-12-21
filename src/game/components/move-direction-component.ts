@@ -1,7 +1,7 @@
 import Component from "../../core/component";
 import Victor = require("victor");
 
-export default class PositionComponent extends Component {
+export default class MoveDirectionComponent extends Component {
     x: number = 0;
     y: number = 0;
     constructor() {
