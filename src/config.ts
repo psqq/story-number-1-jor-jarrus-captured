@@ -8,6 +8,16 @@ const config = {
         cellSize: 1,
         fgColor: 'grey',
         bgColor: 'black',
+        floor: {
+            symbol: '.',
+            fgColor: 'grey',
+            bgColor: 'black',
+        },
+        wall: {
+            symbol: '#',
+            fgColor: 'grey',
+            bgColor: 'black',
+        },
     },
     rotjsDisplayOptions: {
         width: mapSize.x,

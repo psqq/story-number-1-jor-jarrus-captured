@@ -4,25 +4,26 @@ import Engine from "../../core/engine";
 import SmartEntitiesContainer from "../../core/smart-entities-container";
 import DungeonComponent from "../components/dungeon-component";
 import config from "../../config";
+import range from "../../core/range";
 
 export default class DungeonDisplaySystem extends System {
     private display: Display;
-    private entities: SmartEntitiesContainer;
+    private smartEntities: SmartEntitiesContainer;
     constructor(engine: Engine, display: Display) {
         super(engine);
-        this.entities = new SmartEntitiesContainer(engine, [
+        this.smartEntities = new SmartEntitiesContainer(engine, [
             DungeonComponent,
         ]);
         this.display = display;
     }
     update(deltaTime: number = 0) {
-        for (let entity of this.entities.getEnties()) {
+        for (let entity of this.smartEntities.getEnties()) {
             let map = entity.get(DungeonComponent).map;
-            for (let x = 0; x < config.map.size.x; x++) {
-                for (let y = 0; y < config.map.size.y; y++) {
+            for (let x of range(config.map.size.x)) {
+                for (let y of range(config.map.size.y)) {
                     const fg = config.map.fgColor;
                     const bg = config.map.bgColor;
-                    const ch = map.get(`${x},${y}`);
+                    const ch = map[x][y];
                     this.display.draw(x, y, ch, fg, bg);
                 }
             }

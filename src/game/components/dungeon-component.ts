@@ -1,9 +1,12 @@
 import Component from "../../core/component";
 
 export default class DungeonComponent extends Component {
-    map: Map<string, string>;
-    constructor(map: Map<string, string>) {
+    map: string[][];
+    constructor() {
         super();
-        this.map = map || new Map();
+    }
+    setMap(map: string[][]) {
+        this.map = map;
+        return this;
     }
 }

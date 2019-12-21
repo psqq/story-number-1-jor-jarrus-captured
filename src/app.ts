@@ -1,20 +1,21 @@
-import * as rot from 'rot-js';
 import config from './config';
 import Engine from './core/engine';
-import EntitiesBuilder from './games/entities-builder';
+import EntitiesBuilder from './game/entities-builder';
 import EngineBuilder from './core/engine-builder';
-import DungeonDisplaySystem from './games/systems/dungen-display-system';
+import DungeonDisplaySystem from './game/systems/dungeon-display-system';
+import DisplaySystem from './game/systems/display-system';
 import '../assets/style.css';
+import BaseSystem from './game/systems/base-system';
+import { Display } from 'rot-js';
 
 export default class App {
 
-    display: rot.Display = null;
+    display: Display = null;
     appElement: HTMLDivElement = null;
     engine: Engine;
+    baseSystem: BaseSystem;
     
-    constructor() {
-        this.engine = new Engine();
-    }
+    constructor() { }
     /**
      *  Downloading assets.
      */
@@ -34,20 +35,30 @@ export default class App {
     init() {
         this.initAppElement();
         // Create the display
-        this.display = new rot.Display(config.rotjsDisplayOptions);
+        this.display = new Display(config.rotjsDisplayOptions);
         this.appElement.appendChild(this.display.getContainer());
         // Initialize engine
         this.initEngine();
     }
     initEngine() {
         this.engine = new Engine();
+        this.baseSystem = new BaseSystem(this.engine);
         this.engine = new EngineBuilder(this.engine)
             .addSystem(new DungeonDisplaySystem(this.engine, this.display))
-            .withGroup('display')
+                .withGroup('display')
+            .addSystem(new DisplaySystem(this.engine, this.display))
+                .withGroup('display')
             .getEngine()
         ;
         new EntitiesBuilder()
             .createDungeon()
+            .addCreatedEntitiesToEngine(this.engine)
+        ;
+        const freePositions = this.baseSystem.getFreePositions();
+        const position = freePositions[Math.floor(Math.random() * freePositions.length)];
+        console.log(freePositions);
+        new EntitiesBuilder()
+            .createPlayer(position)
             .addCreatedEntitiesToEngine(this.engine)
         ;
     }
