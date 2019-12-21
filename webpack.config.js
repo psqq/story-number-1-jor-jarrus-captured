@@ -41,7 +41,7 @@ module.exports = (env, options) => {
     };
 
     if (options.mode === 'development') {
-        config.devtool = 'source-map';
+        config.devtool = 'eval-source-map';
         config.watchOptions = {
             aggregateTimeout: 300,
             poll: 1000,

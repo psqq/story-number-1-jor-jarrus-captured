@@ -1,18 +1,21 @@
 import Engine from "./engine";
+import EventEmitter from "wolfy87-eventemitter";
+import coreConfig from "./core-config";
 
 interface DeltaTimeForNextState {
     amountOfTime: 0,
     isChanges: false 
 };
 
-export default class System {
+export default class System extends EventEmitter {
     private priority: number = 0;
     private engine: Engine;
     /**
      * Init system
      * @param engine 
      */
-    init(engine: Engine, priority: number = 0) {
+    constructor(engine?: Engine, priority: number = 0) {
+        super();
         this.engine = engine;
         this.priority = priority;
     }
@@ -21,7 +24,11 @@ export default class System {
      * @param priority priority
      */
     setPriority(priority: number): System {
+        const oldPriority = this.priority;
         this.priority = priority;
+        if (oldPriority !== priority) {
+            this.emit(coreConfig.systemEvents.priorityChanged);
+        }
         return this;
     }
     /**
