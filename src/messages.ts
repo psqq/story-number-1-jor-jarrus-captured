@@ -15,6 +15,7 @@ messages.setMessages(
     'ru', {
         [config.messages.enSotryMessage]: config.messages.ruSotryMessage,
         [config.messages.enPurposeMsg]: config.messages.ruPurposeMsg,
+        'Welcome to game': 'Добро пожаловать в игру',
     }
 );
 

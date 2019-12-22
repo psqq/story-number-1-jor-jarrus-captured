@@ -32,14 +32,17 @@ export default class MenuScene extends Scene {
     draw() {
         this.app.display.clear();
         let y = 0;
-        this.app.display.drawText(0, y, `Welcome to game, ${this.app.userName}!`);
+        this.app.display.drawText(
+            0, y,
+            messages.gettext('Welcome to game') + `, ${this.app.userName}!`
+        );
         y++;
         this.app.display.drawText(0, y, `Current deep: ${this.app.baseSystem.getCurrentDeep()}`);
         y += 2;
         this.app.display.drawText(0, y, 'Main menu:');
         let i = 1;
         y += 2;
-        for(let menuItem of this.menu) {
+        for (let menuItem of this.menu) {
             let s = `${i}. ${menuItem}`;
             if (menuItem == "Load") {
                 const userName = localStorage.getItem('userName');
