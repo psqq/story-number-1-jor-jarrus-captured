@@ -2,6 +2,8 @@ import Scene from './scene';
 import App from '../app';
 import getDirectionByKeyboardEvent from '../tools/get-direction-by-keyboard-event';
 import config from '../config';
+import messages from '../messages';
+import textToOneLineString from '../tools/text-to-one-line-string';
 
 /**
  * Represents the scene that displays the menu.
@@ -38,7 +40,10 @@ export default class MenuScene extends Scene {
             i++;
         }
         this.app.display.draw(1, 3 + this.selected, '*', 'white', 'black');
-        this.app.display.drawText(0, 7, config.menuScreenMsg);
+        let menuScreenMsg = '';
+        menuScreenMsg = textToOneLineString(messages.gettext(config.messages.enSotryMessage));
+        menuScreenMsg += '\n\n' + messages.gettext(config.messages.enPurposeMsg);
+        this.app.display.drawText(0, 7, menuScreenMsg);
     }
 
     /**
