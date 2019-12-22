@@ -6,6 +6,8 @@ import PositionCompoent from "../components/position-component";
 import FovComponent from "../components/fov-component";
 import coreConfig from "../../core/core-config";
 import BaseSystem from "./base-system";
+import Victor = require("victor");
+import config from "../../config";
 
 export default class DisplaySystem extends BaseSystem {
     private display: Display;
@@ -41,7 +43,14 @@ export default class DisplaySystem extends BaseSystem {
                 continue;
             }
             const glyph = entity.get(GlyphComponent);
-            this.display.draw(position.x, position.y, glyph.symbol, glyph.fgColor, glyph.bgColor);
+            const viewPosition =
+                position
+                    .toVictor().clone()
+                    .add(new Victor(config.map.offset.x, config.map.offset.y));
+            this.display.draw(
+                viewPosition.x, viewPosition.y,
+                glyph.symbol, glyph.fgColor, glyph.bgColor
+            );
         }
     }
 }

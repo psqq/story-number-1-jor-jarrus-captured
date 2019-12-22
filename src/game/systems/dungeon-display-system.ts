@@ -6,6 +6,7 @@ import config from "../../config";
 import range from "../../tools/range";
 import FovComponent from "../components/fov-component";
 import BaseSystem from "./base-system";
+import Victor = require("victor");
 
 export default class DungeonDisplaySystem extends BaseSystem {
     private display: Display;
@@ -32,7 +33,10 @@ export default class DungeonDisplaySystem extends BaseSystem {
                 const fg = config.map.fgColor;
                 const bg = config.map.bgColor;
                 const ch = map[x][y];
-                this.display.draw(x, y, ch, fg, bg);
+                const viewPosition =
+                    new Victor(x, y)
+                        .add(new Victor(config.map.offset.x, config.map.offset.y));
+                this.display.draw(viewPosition.x, viewPosition.y, ch, fg, bg);
             }
         }
     }

@@ -15,6 +15,7 @@ const purposeMsg = `Purpose: to save the crew of the ship.`;
 const menuScreenMsg = `${sotryMessage}\n\n${purposeMsg}`;
 
 const mapSize = { x: 40, y: 30 };
+const mapOffset = { x: 0, y: 1 };
 
 const directionByKey: { [key: string]: Victor } = {
     'KeyH': new Victor(-1, 0),
@@ -45,6 +46,7 @@ const config = {
     directionByKey,
     eps: 1e-5,
     map: {
+        offset: mapOffset,
         size: mapSize,
         cellSize: 1,
         fgColor: 'grey',
@@ -60,9 +62,19 @@ const config = {
             bgColor: 'black',
         },
     },
+    gameSceneBars: {
+        top: {
+            x: 0,
+            y: 0,
+        },
+        bottom: {
+            x: 0,
+            y: 1 + mapSize.y,
+        }
+    },
     rotjsDisplayOptions: {
         width: mapSize.x,
-        height: mapSize.y + 1,
+        height: mapSize.y + 2,
         fontSize: 16,
         forceSquareRatio: true,
         fontFamily: 'Typori',
