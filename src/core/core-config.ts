@@ -7,6 +7,9 @@ const coreConfig = {
         entityCreated: 'entity-created',
         entityRemoved: 'enitty-removed',
     },
+    smartEntitiesContainerEvents: {
+        changed: 'changed',
+    },
 };
 
 export default coreConfig;

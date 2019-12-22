@@ -19,7 +19,7 @@ export default class EntitiesBuilder {
         this.entities = [];
     }
     addCreatedEntitiesToEngine(engine: Engine) {
-        for(let components of this.entities) {
+        for (let components of this.entities) {
             engine.createEntity(...components);
         }
         this.entities = [];
@@ -58,7 +58,7 @@ export default class EntitiesBuilder {
             new PlayerComponent(),
             new MoveDirectionComponent(),
             new PositionComponent().setX(position.x).setY(position.y).setDeep(deep),
-            new GlyphComponent().setSymbol('@').setFgColor('white')
+            new GlyphComponent().setSymbol('@').setFgColor('white').setZLevel(500)
         ]);
         return this;
     }
@@ -66,7 +66,10 @@ export default class EntitiesBuilder {
         this.entities.push([
             new StairsComponent().setDepthChange(depthChange),
             new PositionComponent().setX(position.x).setY(position.y),
-            new GlyphComponent().setSymbol(depthChange > 0 ? '>' : '<').setFgColor('white')
+            new GlyphComponent()
+                .setSymbol(depthChange > 0 ? '>' : '<')
+                .setFgColor('white')
+                .setZLevel(400)
         ]);
         return this;
     }

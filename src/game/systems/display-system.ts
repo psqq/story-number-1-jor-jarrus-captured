@@ -5,6 +5,7 @@ import SmartEntitiesContainer from "../../core/smart-entities-container";
 import GlyphComponent from "../components/glyph-component";
 import PositionCompoent from "../components/position-component";
 import FovComponent from "../components/fov-component";
+import coreConfig from "../../core/core-config";
 
 export default class DisplaySystem extends System {
     private display: Display;
@@ -15,6 +16,14 @@ export default class DisplaySystem extends System {
         this.drawableEntities = new SmartEntitiesContainer(engine, [
             GlyphComponent, PositionCompoent
         ]);
+        this.drawableEntities.on(
+            coreConfig.smartEntitiesContainerEvents.changed,
+            () => {
+                this.drawableEntities.getEnties().sort((a, b) => {
+                    return a.get(GlyphComponent).zLevel - b.get(GlyphComponent).zLevel;
+                })
+            }
+        );
         this.fovEntities = new SmartEntitiesContainer(engine, [
             FovComponent,
         ]);
