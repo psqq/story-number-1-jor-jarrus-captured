@@ -37,7 +37,6 @@ export default class App {
             WebFontLoader.load({
                 custom: {
                     families: ['Typori'],
-                    urls: [config.mainCssFile],
                 },
                 active: () => {
                     res();
