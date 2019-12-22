@@ -8,6 +8,8 @@
     <link href="./assets/style.css" rel="stylesheet"></head>
 </head>
 <body>
-    <script src="./dist/main.js"></script>
+    <script>
+        document.write(`<script src="./dist/main.js?date=${+new Date()}"><\/script>`);
+    </script>
 </body>
 </html>
