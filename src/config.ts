@@ -79,7 +79,7 @@ const config = {
         enPurposeMsg,
         ruPurposeMsg,
     },
-    mainCssFile: '/assets/style.css',
+    mainCssFile: '../style.css',
     directionByKey,
     eps: 1e-5,
     map: {

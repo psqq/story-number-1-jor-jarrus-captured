@@ -34,17 +34,20 @@ export default class App {
      *  Downloading assets.
      */
     async load() {
-        await new Promise((res, rej) => {
-            WebFontLoader.load({
-                custom: {
-                    families: ['Typori'],
-                    urls: [config.mainCssFile],
-                },
-                active: () => {
-                    res();
-                }
+        try {
+            await new Promise((res, rej) => {
+                WebFontLoader.load({
+                    custom: {
+                        families: ['Typori'],
+                        urls: [config.mainCssFile],
+                    },
+                    active: () => {
+                        res();
+                    }
+                });
             });
-        });
+        } catch (e) {
+        }
     }
 
     /**
