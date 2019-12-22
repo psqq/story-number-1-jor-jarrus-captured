@@ -16,6 +16,8 @@ messages.setMessages(
         [config.messages.enSotryMessage]: config.messages.ruSotryMessage,
         [config.messages.enPurposeMsg]: config.messages.ruPurposeMsg,
         'Welcome to game': 'Добро пожаловать в игру',
+        'Main menu:': 'Главное меню:',
+        'Current deep:': 'Текущая глубина:',
     }
 );
 
