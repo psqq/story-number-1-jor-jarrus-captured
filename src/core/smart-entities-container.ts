@@ -34,8 +34,8 @@ export default class SmartEntitiesContainer extends EventEmitter {
                 }
             }
         );
-        this.engine.on(coreConfig.engineEvents.entityRemoved, (entity: Entity) => {
-            this.entities = this.entities.filter(x => x.getId() != entity.getId());
+        this.engine.on(coreConfig.engineEvents.entityRemoved, (entityId: number) => {
+            this.entities = this.entities.filter(x => x.getId() != entityId);
             this.emit(coreConfig.smartEntitiesContainerEvents.changed);
         });
     }

@@ -1,10 +1,10 @@
 import System from "./system";
 import EventEmmiter from "wolfy87-eventemitter";
-import config from "../config";
 import Component from "./component";
 import getuid from "./getuid";
 import Entity from "./entity";
 import coreConfig from "./core-config";
+import config from "../config";
 
 type EntityId = number;
 type SystemGroups = Map<string, System[]>;
@@ -25,6 +25,14 @@ export default class Engine extends EventEmmiter {
         super();
         this.systems = [];
         this.systemGroups = new Map();
+        this.entities = new Map();
+        this.components = new Map();
+        this.killedEntities = new Set();
+    }
+    clearEntities() {
+        for (let entityId of this.entities.keys()) {
+            this.emit(coreConfig.engineEvents.entityRemoved, entityId);
+        }
         this.entities = new Map();
         this.components = new Map();
         this.killedEntities = new Set();
@@ -50,6 +58,15 @@ export default class Engine extends EventEmmiter {
         this.emit(coreConfig.engineEvents.componentAddedToEntity, {
             entityId, component
         });
+    }
+    /**
+     * Create new entity
+     * @param components components of new entity
+     */
+    private createEmptyEntity(entityId: EntityId) {
+        if (!this.entities.has(entityId)) {
+            this.entities.set(entityId, new Map());
+        }
     }
     /**
      * Create new entity
@@ -104,7 +121,7 @@ export default class Engine extends EventEmmiter {
      * @param ComponentClasses Classes of components for find
      */
     *iterEntitiesOfTheseComponents<T>(...ComponentClasses: Class<T>[]): Generator<Entity> {
-        for(let [entityId, components] of this._getComponents(...ComponentClasses)) {
+        for (let [entityId, components] of this._getComponents(...ComponentClasses)) {
             let entity = new Entity(entityId, components);
             yield entity;
         }
@@ -194,5 +211,47 @@ export default class Engine extends EventEmmiter {
      */
     update(deltaTime: number = 0) {
         this._updateSystems(this.systems, deltaTime);
+    }
+    toString() {
+        let data: any = {
+            entities: [],
+        };
+        for (let [entityId, componentsMap] of this.entities) {
+            let componentsData: any = {};
+            for (let [ClassName, components] of componentsMap) {
+                for(let component of components) {
+                    if (!componentsData[ClassName]) {
+                        componentsData[ClassName] = [];
+                    }
+                    componentsData[ClassName].push(component);
+                }
+            }
+            data.entities.push({
+                entityId,
+                components: JSON.parse(JSON.stringify(componentsData))
+            });
+        }
+        return JSON.stringify(data);
+    }
+    fromString(dataString: string, context: any) {
+        this.clearEntities();
+        let data = JSON.parse(dataString);
+        for (let entityData of data.entities) {
+            this.createEmptyEntity(entityData.entityId);
+            let components = [];
+            for (let ClassName in entityData.components) {
+                for(let componentData of entityData.components[ClassName]) {
+                    let component = new context[ClassName]();
+                    Object.assign(component, componentData);
+                    components.push(component);
+                    this.addComponentToEntity(entityData.entityId, component);
+                }
+            }
+            const entity = new Entity(entityData.entityId, components);
+            this.emit(
+                coreConfig.engineEvents.entityCreated,
+                entity
+            );
+        }
     }
 }

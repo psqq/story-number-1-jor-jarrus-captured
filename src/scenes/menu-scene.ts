@@ -15,7 +15,7 @@ export default class MenuScene extends Scene {
     constructor(app: App) {
         super(app);
         this.selected = 1;
-        this.menu = ["Start", "Help"];
+        this.menu = ["Start", "Save", "Load", "Help"];
     }
 
     /**
@@ -43,7 +43,7 @@ export default class MenuScene extends Scene {
         let menuScreenMsg = '';
         menuScreenMsg = textToOneLineString(messages.gettext(config.messages.enSotryMessage));
         menuScreenMsg += '\n\n' + messages.gettext(config.messages.enPurposeMsg);
-        this.app.display.drawText(0, 7, menuScreenMsg);
+        this.app.display.drawText(0, 5 + this.menu.length, menuScreenMsg);
     }
 
     /**
@@ -54,10 +54,16 @@ export default class MenuScene extends Scene {
         if (event.type === 'keydown') {
             const keyboardEvent = event as KeyboardEvent;
             if (keyboardEvent.code === 'Enter') {
-                if (this.selected === 1) {
+                if (this.menu[this.selected - 1] === "Start") {
                     this.switchTo(this.app.gameScene);
                 }
-                if (this.selected === 2) {
+                if (this.menu[this.selected - 1] === "Save") {
+                    this.app.saveGame();
+                }
+                if (this.menu[this.selected - 1] === "Load") {
+                    this.app.loadGame();
+                }
+                if (this.menu[this.selected - 1] === "Help") {
                     this.switchTo(this.app.helpScene);
                 }
             }

@@ -55,7 +55,8 @@ export default class EntitiesBuilder {
     }
     createPlayer(position: Victor, deep: number) {
         this.entities.push([
-            new FovComponent(),
+            new FovComponent()
+                .setFov(matrix(config.map.size.x, config.map.size.y, false)),
             new PlayerComponent(),
             new MoveDirectionComponent(),
             new MemorizedFovAreaComponent()
@@ -76,8 +77,12 @@ export default class EntitiesBuilder {
     }
     createStairs(position: Victor, deep: number, depthChange: number) {
         this.entities.push([
-            new StairsComponent().setDepthChange(depthChange),
-            new PositionComponent().setX(position.x).setY(position.y).setDeep(deep),
+            new StairsComponent()
+                .setDepthChange(depthChange),
+            new PositionComponent()
+                .setX(position.x)
+                .setY(position.y)
+                .setDeep(deep),
             new GlyphComponent()
                 .setSymbol(depthChange > 0 ? '>' : '<')
                 .setFgColor('white')
