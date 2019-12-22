@@ -1,6 +1,20 @@
 import Victor = require("victor");
 
-const mapSize = { x: 30, y: 30 };
+const sotryMessage = `
+Orc pirates attacked a ship with people and captured them.
+Not everyone survived, but those who survived were captured.
+The hero of the game was one of the captured. His name is Jor Jarrus.
+The captured were imprisoned and sent one at a time to the local dungeons 
+to clear them from the goblins living there and guarding many valuable things. 
+The orcs themselves only reliably guarded the exit from the cave, so that the 
+victims had only one way out - to move deep into the caves.
+`.split(/\s+/).join(' ');
+
+const purposeMsg = `Purpose: to save the crew of the ship.`;
+
+const menuScreenMsg = `${sotryMessage}\n\n${purposeMsg}`;
+
+const mapSize = { x: 40, y: 30 };
 
 const directionByKey: { [key: string]: Victor } = {
     'KeyH': new Victor(-1, 0),
@@ -26,6 +40,7 @@ const directionByKey: { [key: string]: Victor } = {
 };
 
 const config = {
+    menuScreenMsg,
     mainCssFile: '/assets/style.css',
     directionByKey,
     eps: 1e-5,

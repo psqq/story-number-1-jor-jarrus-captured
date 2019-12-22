@@ -1,6 +1,7 @@
 import Scene from './scene';
 import App from '../app';
 import getDirectionByKeyboardEvent from '../get-direction-by-keyboard-event';
+import config from '../config';
 
 /**
  * Represents the scene that displays the menu.
@@ -37,6 +38,7 @@ export default class MenuScene extends Scene {
             i++;
         }
         this.app.display.draw(1, 3 + this.selected, '*', 'white', 'black');
+        this.app.display.drawText(0, 7, config.menuScreenMsg);
     }
 
     /**
@@ -49,6 +51,9 @@ export default class MenuScene extends Scene {
             if (keyboardEvent.code === 'Enter') {
                 if (this.selected === 1) {
                     this.switchTo(this.app.gameScene);
+                }
+                if (this.selected === 2) {
+                    this.switchTo(this.app.helpScene);
                 }
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);

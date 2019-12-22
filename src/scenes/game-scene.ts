@@ -37,6 +37,9 @@ export default class GameScene extends Scene {
             if (keyboardEvent.code === 'Escape') {
                 this.switchTo(this.app.menuScene);
             }
+            if (keyboardEvent.code === 'Slash' && keyboardEvent.shiftKey) {
+                this.switchTo(this.app.helpScene);
+            }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);
             if (!direction) {
                 return;

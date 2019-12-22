@@ -11,6 +11,7 @@ import MovementSystem from './game/systems/movement-system';
 import FovSystem from './game/systems/fov-system';
 import MenuScene from './scenes/menu-scene';
 import GameScene from './scenes/game-scene';
+import HelpScene from './scenes/help-scene';
 import WebFontLoader from 'webfontloader';
 
 export default class App {
@@ -21,6 +22,7 @@ export default class App {
     baseSystem: BaseSystem;
     menuScene: MenuScene;
     gameScene: GameScene;
+    helpScene: HelpScene;
 
     constructor() { }
 
@@ -57,6 +59,7 @@ export default class App {
     initScenes() {
         this.menuScene = new MenuScene(this);
         this.gameScene = new GameScene(this);
+        this.helpScene = new HelpScene(this);
     }
 
     /**

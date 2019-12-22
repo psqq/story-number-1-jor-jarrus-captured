@@ -5,6 +5,7 @@ import App from "../app";
  */
 export default class Scene {
     protected app: App;
+    protected previousScene: Scene;
 
     /**
      * Creates an instance of Scene.
@@ -12,6 +13,7 @@ export default class Scene {
      */
     constructor(app: App) {
         this.app = app;
+        this.previousScene = null;
     }
 
     /**
@@ -50,9 +52,17 @@ export default class Scene {
      */
     switchTo(scene: Scene) {
         this.finish();
+        scene.previousScene = this;
         window.removeEventListener('keydown', this);
         window.removeEventListener('mousedown', this);
         window.removeEventListener('mouseup', this);
         scene.start();
+    }
+
+    /**
+     * Back to privouse scene.
+     */
+    back() {
+        this.switchTo(this.previousScene);
     }
 }
