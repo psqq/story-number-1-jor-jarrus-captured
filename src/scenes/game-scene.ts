@@ -40,7 +40,7 @@ export default class GameScene extends Scene {
                 this.switchTo(this.app.menuScene);
                 return;
             }
-            if (keyboardEvent.key == '/' && keyboardEvent.shiftKey) {
+            if (keyboardEvent.key == '?') {
                 this.switchTo(this.app.helpScene);
                 return;
             }
