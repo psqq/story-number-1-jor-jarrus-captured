@@ -1,4 +1,3 @@
-import System from "../../core/system";
 import { Display } from "rot-js";
 import Engine from "../../core/engine";
 import SmartEntitiesContainer from "../../core/smart-entities-container";
@@ -6,8 +5,9 @@ import GlyphComponent from "../components/glyph-component";
 import PositionCompoent from "../components/position-component";
 import FovComponent from "../components/fov-component";
 import coreConfig from "../../core/core-config";
+import BaseSystem from "./base-system";
 
-export default class DisplaySystem extends System {
+export default class DisplaySystem extends BaseSystem {
     private display: Display;
     private drawableEntities: SmartEntitiesContainer;
     private fovEntities: SmartEntitiesContainer;
@@ -31,8 +31,12 @@ export default class DisplaySystem extends System {
     }
     update(deltaTime: number = 0) {
         const fov = this.fovEntities.getEnties()[0].get(FovComponent).fov;
+        const deep = this.getCurrentDeep();
         for (let entity of this.drawableEntities.getEnties()) {
             const position = entity.get(PositionCompoent);
+            if (position.deep != deep) {
+                continue;
+            }
             if (!fov[position.x][position.y]) {
                 continue;
             }

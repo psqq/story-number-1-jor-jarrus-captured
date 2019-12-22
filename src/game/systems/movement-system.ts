@@ -3,25 +3,45 @@ import SmartEntitiesContainer from "../../core/smart-entities-container";
 import MoveDirectionComponent from "../components/move-direction-component";
 import BaseSystem from "./base-system";
 import PositionComponent from "../components/position-component";
+import EntitiesBuilder from "../entities-builder";
+import getRandomElement from "../../tools/get-random-element";
 
 export default class MovementSystem extends BaseSystem {
-    private smartEntities: SmartEntitiesContainer;
+    private movableEntities: SmartEntitiesContainer;
     constructor(engine: Engine) {
         super(engine);
-        this.smartEntities = new SmartEntitiesContainer(engine, [
+        this.movableEntities = new SmartEntitiesContainer(engine, [
             MoveDirectionComponent, PositionComponent
         ]);
     }
     update(deltaTime: number = 0) {
-        for (let entity of this.smartEntities.getEnties()) {
+        for (let entity of this.movableEntities.getEnties()) {
             const position = entity.get(PositionComponent);
             const moveDirection = entity.get(MoveDirectionComponent);
-            const newPosition = position.toVictor().clone().add(moveDirection.toVictor());
-            if (this.isMovablePosition(newPosition)) {
-                position.x = newPosition.x;
-                position.y = newPosition.y;
+            if (moveDirection.depthChange != null) {
+                const stairs = this.getStairs(moveDirection.depthChange);
+                if (!stairs.get(PositionComponent).toVictor().isEqualTo(position.toVictor())) {
+                    continue;
+                }
+                const newDeep = position.deep + moveDirection.depthChange;
+                if (this.getDungeon(newDeep) == null) {
+                    new EntitiesBuilder()
+                        .createDungeon(newDeep)
+                        .addCreatedEntitiesToEngine(this.engine);
+                }
+                let newPosition = getRandomElement(this.getMovablePositions(newDeep));
+                position
+                    .setDeep(newDeep)
+                    .setX(newPosition.x)
+                    .setY(newPosition.y);
+            } else {
+                const newPosition = position.toVictor().clone().add(moveDirection.toVictor());
+                if (this.isMovablePosition(newPosition, position.deep)) {
+                    position.x = newPosition.x;
+                    position.y = newPosition.y;
+                }
+                moveDirection.clear();
             }
-            moveDirection.x = moveDirection.y = 0;
         }
     }
 }

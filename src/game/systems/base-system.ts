@@ -4,29 +4,49 @@ import SmartEntitiesContainer from "../../core/smart-entities-container";
 import DungeonComponent from "../components/dungeon-component";
 import Victor = require("victor");
 import range from "../../tools/range";
+import sign from "../../tools/sign";
 import config from "../../config";
 import Entity from "../../core/entity";
 import PlayerComponent from "../components/player-component";
 import PositionComponent from "../components/position-component";
-import EntitiesBuilder from "../entities-builder";
+import StairsComponent from "../components/stairs-component";
 
 export default class BaseSystem extends System {
-    private mapEntities: SmartEntitiesContainer;
-    private playerEntities: SmartEntitiesContainer;
+    private baseMapEntities: SmartEntitiesContainer;
+    private basePlayerEntities: SmartEntitiesContainer;
+    private stairsEntities: SmartEntitiesContainer;
     constructor(engine: Engine) {
         super(engine);
-        this.mapEntities = new SmartEntitiesContainer(engine, [
+        this.baseMapEntities = new SmartEntitiesContainer(engine, [
             DungeonComponent
         ]);
-        this.playerEntities = new SmartEntitiesContainer(engine, [
-            PlayerComponent
+        this.basePlayerEntities = new SmartEntitiesContainer(engine, [
+            PlayerComponent, PositionComponent
+        ]);
+        this.stairsEntities = new SmartEntitiesContainer(engine, [
+            StairsComponent, PositionComponent
         ]);
     }
+    getStairs(depthChange: number, deep?: number): Entity {
+        if (deep == null) {
+            deep = this.getCurrentDeep();
+        }
+        for (let stairs of this.stairsEntities.getEnties()) {
+            if (stairs.get(PositionComponent).deep != deep) {
+                continue;
+            }
+            const a = sign(stairs.get(StairsComponent).depthChange);
+            const b = sign(depthChange);
+            if (a === b) {
+                return stairs;
+            }
+        }
+    }
     getPlayer(): Entity {
-        return this.playerEntities.getEnties()[0];
+        return this.basePlayerEntities.getEnties()[0];
     }
     getDungeon(deep: number): Entity {
-        for (let dungeon of this.mapEntities.getEnties()) {
+        for (let dungeon of this.baseMapEntities.getEnties()) {
             if (dungeon.get(DungeonComponent).deep === deep) {
                 return dungeon;
             }
@@ -44,7 +64,7 @@ export default class BaseSystem extends System {
         };
     }
     isMovablePosition(position: Victor, deep?: number): boolean {
-        if (deep === undefined) {
+        if (deep == null) {
             deep = this.getCurrentDeep();
         }
         const map = this.getDungeon(deep).get(DungeonComponent).map;
@@ -58,6 +78,9 @@ export default class BaseSystem extends System {
         return true;
     }
     getMovablePositions(deep?: number): Victor[] {
+        if (deep == null) {
+            deep = this.getCurrentDeep();
+        }
         let positions: Victor[] = [];
         for (let x of range(config.map.size.x)) {
             for (let y of range(config.map.size.y)) {
@@ -70,6 +93,9 @@ export default class BaseSystem extends System {
         return positions;
     }
     getRandomMovablePosition(deep?: number): Victor {
+        if (deep == null) {
+            deep = this.getCurrentDeep();
+        }
         const movablePositions = this.getMovablePositions(deep);
         const position = movablePositions[Math.floor(Math.random() * movablePositions.length)];
         return position;

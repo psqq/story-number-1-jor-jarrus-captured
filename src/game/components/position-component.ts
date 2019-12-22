@@ -8,6 +8,12 @@ export default class PositionComponent extends Component {
     constructor() {
         super();
     }
+    clear() {
+        this.x = null;
+        this.y = null;
+        this.deep = null;
+        return this;
+    }
     setX(x: number) {
         this.x = x;
         return this;

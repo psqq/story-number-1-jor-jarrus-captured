@@ -1,4 +1,3 @@
-import System from "../../core/system";
 import { Display } from "rot-js";
 import Engine from "../../core/engine";
 import SmartEntitiesContainer from "../../core/smart-entities-container";
@@ -6,8 +5,9 @@ import DungeonComponent from "../components/dungeon-component";
 import config from "../../config";
 import range from "../../tools/range";
 import FovComponent from "../components/fov-component";
+import BaseSystem from "./base-system";
 
-export default class DungeonDisplaySystem extends System {
+export default class DungeonDisplaySystem extends BaseSystem {
     private display: Display;
     private mapEntities: SmartEntitiesContainer;
     private fovEntities: SmartEntitiesContainer;
@@ -23,7 +23,7 @@ export default class DungeonDisplaySystem extends System {
     }
     update(deltaTime: number = 0) {
         let fov = this.fovEntities.getEnties()[0].get(FovComponent).fov;
-        let map = this.mapEntities.getEnties()[0].get(DungeonComponent).map;
+        let map = this.getCurrentDungeon().get(DungeonComponent).map;
         for (let x of range(config.map.size.x)) {
             for (let y of range(config.map.size.y)) {
                 if (!fov[x][y]) {

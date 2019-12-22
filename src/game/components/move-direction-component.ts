@@ -4,9 +4,15 @@ import Victor = require("victor");
 export default class MoveDirectionComponent extends Component {
     x: number;
     y: number;
-    deep: number;
+    depthChange: number;
     constructor() {
         super();
+    }
+    clear() {
+        this.x = null;
+        this.y = null;
+        this.depthChange = null;
+        return this;
     }
     setX(x: number) {
         this.x = x;
@@ -16,8 +22,8 @@ export default class MoveDirectionComponent extends Component {
         this.y = y;
         return this;
     }
-    setDeep(deep: number) {
-        this.deep = deep;
+    setDepthChange(depthChange: number) {
+        this.depthChange = depthChange;
         return this;
     }
     toVictor(): Victor {

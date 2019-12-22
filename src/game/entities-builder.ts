@@ -47,9 +47,9 @@ export default class EntitiesBuilder {
             new DungeonComponent().setMap(map).setDeep(deep)
         ]);
         const stairsDownPosition = popRandomElement(floorPositions);
-        this.createStairs(stairsDownPosition, 1);
+        this.createStairs(stairsDownPosition, deep, 1);
         const stairsUpPosition = popRandomElement(floorPositions);
-        this.createStairs(stairsUpPosition, -1);
+        this.createStairs(stairsUpPosition, deep, -1);
         return this;
     }
     createPlayer(position: Victor, deep: number) {
@@ -62,10 +62,10 @@ export default class EntitiesBuilder {
         ]);
         return this;
     }
-    createStairs(position: Victor, depthChange: number) {
+    createStairs(position: Victor, deep: number, depthChange: number) {
         this.entities.push([
             new StairsComponent().setDepthChange(depthChange),
-            new PositionComponent().setX(position.x).setY(position.y),
+            new PositionComponent().setX(position.x).setY(position.y).setDeep(deep),
             new GlyphComponent()
                 .setSymbol(depthChange > 0 ? '>' : '<')
                 .setFgColor('white')
