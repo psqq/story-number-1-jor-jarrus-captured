@@ -27,6 +27,8 @@ const ruPurposeMsg = `Цель: спасти экипаж корабля.`;
 
 const mapSize = { x: 40, y: 30 };
 
+const leftRightPadding = 10;
+
 const directionByKey: { [key: string]: Victor } = {
     'KeyH': new Victor(-1, 0),
     'KeyL': new Victor(1, 0),
@@ -71,7 +73,10 @@ const gameSceneBars = {
     bottom: gameSceneBottomBar,
 };
 
-const mapOffset = { x: 0, y: gameSceneBars.top.height };
+const mapOffset = {
+    x: leftRightPadding, 
+    y: gameSceneBars.top.height 
+};
 
 const config = {
     messages: {
@@ -105,7 +110,7 @@ const config = {
     },
     gameSceneBars,
     rotjsDisplayOptions: {
-        width: mapSize.x,
+        width: mapSize.x + 2*leftRightPadding,
         height: mapSize.y + gameSceneBars.bottom.height + gameSceneBars.top.height,
         fontSize: 16,
         forceSquareRatio: true,

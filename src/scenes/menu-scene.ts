@@ -15,7 +15,7 @@ export default class MenuScene extends Scene {
     constructor(app: App) {
         super(app);
         this.selected = 1;
-        this.menu = ["Start", "Save", "Load", "Help"];
+        this.menu = ["Change name", "Start or Continue", "Save", "Load", "Help"];
     }
 
     /**
@@ -31,19 +31,36 @@ export default class MenuScene extends Scene {
      */
     draw() {
         this.app.display.clear();
-        this.app.display.drawText(0, 0, 'Welcome to game!');
-        this.app.display.drawText(0, 2, 'Main menu:');
+        let y = 0;
+        this.app.display.drawText(0, y, `Welcome to game, ${this.app.userName}!`);
+        y++;
+        this.app.display.drawText(0, y, `Current deep: ${this.app.baseSystem.getCurrentDeep()}`);
+        y += 2;
+        this.app.display.drawText(0, y, 'Main menu:');
         let i = 1;
+        y += 2;
         for(let menuItem of this.menu) {
             let s = `${i}. ${menuItem}`;
-            this.app.display.drawText(3, 3 + i, s);
+            if (menuItem == "Load") {
+                const userName = localStorage.getItem('userName');
+                const deep = localStorage.getItem('deep');
+                const date = localStorage.getItem('date');
+                if (!userName || !deep || !date) {
+                    s += ': no saved games';
+                } else {
+                    s += `: ${userName} (deep: ${deep}) ${date}`;
+                }
+            }
+            this.app.display.drawText(3, y, s);
+            y++;
             i++;
         }
-        this.app.display.draw(1, 3 + this.selected, '*', 'white', 'black');
+        this.app.display.draw(1, 4 + this.selected, '*', 'white', 'black');
         let menuScreenMsg = '';
         menuScreenMsg = textToOneLineString(messages.gettext(config.messages.enSotryMessage));
         menuScreenMsg += '\n\n' + messages.gettext(config.messages.enPurposeMsg);
-        this.app.display.drawText(0, 5 + this.menu.length, menuScreenMsg);
+        y += 2;
+        this.app.display.drawText(0, y, menuScreenMsg);
     }
 
     /**
@@ -54,17 +71,29 @@ export default class MenuScene extends Scene {
         if (event.type === 'keydown') {
             const keyboardEvent = event as KeyboardEvent;
             if (keyboardEvent.code === 'Enter') {
-                if (this.menu[this.selected - 1] === "Start") {
+                if (this.menu[this.selected - 1] === "Change name") {
+                    let newName = prompt("Enter your name");
+                    this.app.userName = newName;
+                    this.draw();
+                    return;
+                }
+                if (this.menu[this.selected - 1] === "Start or Continue") {
                     this.switchTo(this.app.gameScene);
+                    return;
                 }
                 if (this.menu[this.selected - 1] === "Save") {
                     this.app.saveGame();
+                    this.draw();
+                    return;
                 }
                 if (this.menu[this.selected - 1] === "Load") {
                     this.app.loadGame();
+                    this.draw();
+                    return;
                 }
                 if (this.menu[this.selected - 1] === "Help") {
                     this.switchTo(this.app.helpScene);
+                    return;
                 }
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);

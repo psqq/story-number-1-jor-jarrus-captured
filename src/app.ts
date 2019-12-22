@@ -23,6 +23,7 @@ import MemorizedFovAreaComponent from './game/components/memorized-fov-area-comp
 import MoveDirectionComponent from './game/components/move-direction-component';
 import PlayerComponent from './game/components/player-component';
 import StairsComponent from './game/components/stairs-component';
+import moment from 'moment';
 
 export default class App {
 
@@ -33,6 +34,7 @@ export default class App {
     menuScene: MenuScene;
     gameScene: GameScene;
     helpScene: HelpScene;
+    userName: string = "User Name";
 
     constructor() { }
 
@@ -135,6 +137,9 @@ export default class App {
     }
     saveGame() {
         localStorage.setItem('engine', this.engine.toString());
+        localStorage.setItem('userName', this.userName);
+        localStorage.setItem('date', moment().format("MMM Do YY, hh:mm:ss"));
+        localStorage.setItem('deep', '' + this.baseSystem.getCurrentDeep());
     }
     loadGame() {
         const context: any = {};
@@ -152,5 +157,6 @@ export default class App {
             context[ComponentClass.name] = ComponentClass;
         }
         this.engine.fromString(localStorage.getItem('engine'), context);
+        this.userName = localStorage.getItem('userName');
     }
 }
