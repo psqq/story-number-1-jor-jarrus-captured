@@ -1,3 +1,4 @@
+[Play now!](https://psqq.github.io/story-number-1-jor-jarrus-captured/)
 
 # In English
 
