@@ -7,6 +7,9 @@ export default class Entity {
         this.components = components;
         this.id = id;
     }
+    addComponent(component: Component) {
+        this.components.push(component);
+    }
     getId(): number {
         return this.id;
     }
@@ -16,5 +19,14 @@ export default class Entity {
                 return component;
             }
         }
+    }
+    gets<T>(ComponentClass: new (...arg: any) => T): T[] {
+        let components: T[] = [];
+        for(let component of this.components) {
+            if (component instanceof ComponentClass) {
+                components.push(component);
+            }
+        }
+        return components;
     }
 }

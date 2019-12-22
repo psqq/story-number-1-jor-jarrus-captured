@@ -8,7 +8,7 @@ import coreConfig from "./core-config";
 
 type EntityId = number;
 type SystemGroups = Map<string, System[]>;
-type Entities = Map<EntityId, Map<string, Component>>;
+type Entities = Map<EntityId, Map<string, Component[]>>;
 type Components = Map<string, Set<number>>;
 type Class<T> = new () => T;
 
@@ -31,19 +31,25 @@ export default class Engine extends EventEmmiter {
     }
     /**
      * Adding component to entity
-     * @param entity entity for adding component
+     * @param entityId entity for adding component
      * @param component component for adding
      */
-    addComponentToEntity(entity: EntityId, component: Component) {
+    addComponentToEntity(entityId: EntityId, component: Component) {
         let ComponentClass = component.constructor;
         if (!this.components.has(ComponentClass.name)) {
             this.components.set(ComponentClass.name, new Set());
         }
-        this.components.get(ComponentClass.name).add(entity);
-        if (!this.entities.has(entity)) {
-            this.entities.set(entity, new Map());
+        this.components.get(ComponentClass.name).add(entityId);
+        if (!this.entities.has(entityId)) {
+            this.entities.set(entityId, new Map());
         }
-        this.entities.get(entity).set(ComponentClass.name, component);
+        if (!this.entities.get(entityId).get(ComponentClass.name)) {
+            this.entities.get(entityId).set(ComponentClass.name, []);
+        }
+        this.entities.get(entityId).get(ComponentClass.name).push(component);
+        this.emit(coreConfig.engineEvents.componentAddedToEntity, {
+            entityId, component
+        });
     }
     /**
      * Create new entity
@@ -85,9 +91,9 @@ export default class Engine extends EventEmmiter {
     *_getComponents<T>(...ComponentClasses: Class<T>[]): Generator<[EntityId, T[]]> {
         for (let entity of this.entities.keys()) {
             if (this.hasComponents(entity, ComponentClasses)) {
-                let components = [];
+                let components: Component[] = [];
                 for (let ComponentClass of ComponentClasses) {
-                    components.push(this.entities.get(entity).get(ComponentClass.name));
+                    components = components.concat(this.entities.get(entity).get(ComponentClass.name));
                 }
                 yield [entity, components as T[]];
             }

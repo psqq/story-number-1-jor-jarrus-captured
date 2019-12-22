@@ -6,6 +6,7 @@ const coreConfig = {
     engineEvents: {
         entityCreated: 'entity-created',
         entityRemoved: 'enitty-removed',
+        componentAddedToEntity: 'componentAddedToEntity',
     },
     smartEntitiesContainerEvents: {
         changed: 'changed',
