@@ -8,4 +8,6 @@ async function main() {
     app.run();
 }
 
-main();
+document.body.onload = () => {
+    main();
+};

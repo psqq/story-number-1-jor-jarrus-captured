@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Nova+Square|VT323&display=swap');
+@font-face {
+    font-family: "Typori";
+    src: url('/assets/fonts/Typori.ttf');
+}
 
 body {
     margin: 0;

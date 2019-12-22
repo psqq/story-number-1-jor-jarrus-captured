@@ -11,6 +11,7 @@ import MovementSystem from './game/systems/movement-system';
 import FovSystem from './game/systems/fov-system';
 import MenuScene from './scenes/menu-scene';
 import GameScene from './scenes/game-scene';
+import WebFontLoader from 'webfontloader';
 
 export default class App {
 
@@ -26,7 +27,19 @@ export default class App {
     /**
      *  Downloading assets.
      */
-    async load() { }
+    async load() {
+        await new Promise((res, rej) => {
+            WebFontLoader.load({
+                custom: {
+                  families: ['Typori'],
+                  urls: [config.mainCssFile],
+                },
+                active: () => {
+                    res();
+                }
+            });
+        });
+    }
 
     /**
      *  Creating the application element.

@@ -26,6 +26,7 @@ const directionByKey: { [key: string]: Victor } = {
 };
 
 const config = {
+    mainCssFile: '/assets/style.css',
     directionByKey,
     eps: 1e-5,
     map: {
@@ -46,10 +47,10 @@ const config = {
     },
     rotjsDisplayOptions: {
         width: mapSize.x,
-        height: mapSize.y,
+        height: mapSize.y + 1,
         fontSize: 16,
         forceSquareRatio: true,
-        // fontFamily: 'Major Mono Display',
+        fontFamily: 'Typori',
     },
 };
 
