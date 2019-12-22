@@ -26,7 +26,6 @@ const enPurposeMsg = `Purpose: to save the crew of the ship.`;
 const ruPurposeMsg = `Цель: спасти экипаж корабля.`;
 
 const mapSize = { x: 40, y: 30 };
-const mapOffset = { x: 0, y: 1 };
 
 const directionByKey: { [key: string]: Victor } = {
     'KeyH': new Victor(-1, 0),
@@ -72,6 +71,8 @@ const gameSceneBars = {
     bottom: gameSceneBottomBar,
 };
 
+const mapOffset = { x: 0, y: gameSceneBars.top.height };
+
 const config = {
     messages: {
         enSotryMessage,
@@ -79,7 +80,7 @@ const config = {
         enPurposeMsg,
         ruPurposeMsg,
     },
-    mainCssFile: '../style.css',
+    mainCssFile: './assets/style.css',
     directionByKey,
     eps: 1e-5,
     map: {

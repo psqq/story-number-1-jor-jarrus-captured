@@ -4,7 +4,6 @@ import EntitiesBuilder from './game/entities-builder';
 import EngineBuilder from './core/engine-builder';
 import DungeonDisplaySystem from './game/systems/dungeon-display-system';
 import DisplaySystem from './game/systems/display-system';
-import '../assets/style.css';
 import BaseSystem from './game/systems/base-system';
 import { Display } from 'rot-js';
 import MovementSystem from './game/systems/movement-system';
@@ -34,20 +33,17 @@ export default class App {
      *  Downloading assets.
      */
     async load() {
-        try {
-            await new Promise((res, rej) => {
-                WebFontLoader.load({
-                    custom: {
-                        families: ['Typori'],
-                        urls: [config.mainCssFile],
-                    },
-                    active: () => {
-                        res();
-                    }
-                });
+        await new Promise((res, rej) => {
+            WebFontLoader.load({
+                custom: {
+                    families: ['Typori'],
+                    urls: [config.mainCssFile],
+                },
+                active: () => {
+                    res();
+                }
             });
-        } catch (e) {
-        }
+        });
     }
 
     /**

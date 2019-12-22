@@ -12,15 +12,6 @@ module.exports = (env, options) => {
             path: path.resolve(__dirname, 'dist'),
             filename: "[name].js",
         },
-        plugins: [
-            new HtmlWebpackPlugin({
-                title: 'Simple Skill Based Roguelike',
-            }),
-            new MiniCssExtractPlugin({
-                filename: '[name].css',
-                chunkFilename: '[id].css',
-            }),
-        ],
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".css"]
         },
@@ -39,10 +30,6 @@ module.exports = (env, options) => {
                     enforce: "pre",
                     test: /\.js$/,
                     loader: "source-map-loader"
-                },
-                {
-                  test: /\.css$/i,
-                  use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 },
             ]
         },

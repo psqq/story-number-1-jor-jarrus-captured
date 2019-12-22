@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Typori";
-    src: url('/assets/fonts/Typori.ttf');
+    src: url('../assets/fonts/Typori.ttf');
 }
 
 body {
