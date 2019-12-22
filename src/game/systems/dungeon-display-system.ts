@@ -4,7 +4,7 @@ import Engine from "../../core/engine";
 import SmartEntitiesContainer from "../../core/smart-entities-container";
 import DungeonComponent from "../components/dungeon-component";
 import config from "../../config";
-import range from "../../core/range";
+import range from "../../tools/range";
 import FovComponent from "../components/fov-component";
 
 export default class DungeonDisplaySystem extends System {

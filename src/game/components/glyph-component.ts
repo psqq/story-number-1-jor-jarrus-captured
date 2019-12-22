@@ -2,9 +2,10 @@ import Component from "../../core/component";
 import config from '../../config';
 
 export default class GlyphComponent extends Component {
-    symbol: string = '?';
-    fgColor: string = config.map.fgColor;
-    bgColor: string = config.map.bgColor;
+    symbol: string;
+    fgColor: string;
+    bgColor: string;
+    zLevel: number;
     constructor() {
         super();
     }
@@ -18,6 +19,10 @@ export default class GlyphComponent extends Component {
     }
     setBgColor(bgColor: string) {
         this.bgColor = bgColor;
+        return this;
+    }
+    setZLevel(zLevel: number) {
+        this.zLevel = zLevel;
         return this;
     }
 }

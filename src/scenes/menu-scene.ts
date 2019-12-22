@@ -1,6 +1,6 @@
 import Scene from './scene';
 import App from '../app';
-import getDirectionByKeyboardEvent from '../get-direction-by-keyboard-event';
+import getDirectionByKeyboardEvent from '../tools/get-direction-by-keyboard-event';
 import config from '../config';
 
 /**

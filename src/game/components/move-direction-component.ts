@@ -2,8 +2,9 @@ import Component from "../../core/component";
 import Victor = require("victor");
 
 export default class MoveDirectionComponent extends Component {
-    x: number = 0;
-    y: number = 0;
+    x: number;
+    y: number;
+    deep: number;
     constructor() {
         super();
     }
@@ -13,6 +14,10 @@ export default class MoveDirectionComponent extends Component {
     }
     setY(y: number) {
         this.y = y;
+        return this;
+    }
+    setDeep(deep: number) {
+        this.deep = deep;
         return this;
     }
     toVictor(): Victor {

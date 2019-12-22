@@ -1,6 +1,5 @@
 import Scene from './scene';
 import App from '../app';
-import getDirectionByKeyboardEvent from '../get-direction-by-keyboard-event';
 
 /**
  * Represents the scene that displays the menu.

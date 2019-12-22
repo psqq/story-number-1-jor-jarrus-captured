@@ -8,8 +8,8 @@ interface DeltaTimeForNextState {
 };
 
 export default class System extends EventEmitter {
-    private priority: number = 0;
-    private engine: Engine;
+    protected priority: number = 0;
+    protected engine: Engine;
     /**
      * Init system
      * @param engine 

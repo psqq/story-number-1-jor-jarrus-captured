@@ -13,6 +13,8 @@ import MenuScene from './scenes/menu-scene';
 import GameScene from './scenes/game-scene';
 import HelpScene from './scenes/help-scene';
 import WebFontLoader from 'webfontloader';
+import Victor from 'victor';
+import PositionComponent from './game/components/position-component';
 
 export default class App {
 
@@ -33,8 +35,8 @@ export default class App {
         await new Promise((res, rej) => {
             WebFontLoader.load({
                 custom: {
-                  families: ['Typori'],
-                  urls: [config.mainCssFile],
+                    families: ['Typori'],
+                    urls: [config.mainCssFile],
                 },
                 active: () => {
                     res();
@@ -94,15 +96,17 @@ export default class App {
             .getEngine()
             ;
         // Create entities
-        new EntitiesBuilder()
-            .createDungeon()
+        const entitiesBuider = new EntitiesBuilder();
+        entitiesBuider
+            .createPlayer(new Victor(0, 0), 1)
+            .createDungeon(1)
             .addCreatedEntitiesToEngine(this.engine)
             ;
-        const movablePositions = this.baseSystem.getMovablePositions();
-        const position = movablePositions[Math.floor(Math.random() * movablePositions.length)];
-        new EntitiesBuilder()
-            .createPlayer(position)
-            .addCreatedEntitiesToEngine(this.engine)
+        const position = this.baseSystem.getRandomMovablePosition();
+        this.baseSystem.getPlayer()
+            .get(PositionComponent)
+            .setX(position.x)
+            .setY(position.y)
             ;
     }
     /**
