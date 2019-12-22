@@ -10,8 +10,9 @@ import PlayerComponent from "./components/player-component";
 import MoveDirectionComponent from "./components/move-direction-component";
 import FovComponent from "./components/fov-component";
 import StairsComponent from "./components/stairs-component";
-import getRandomElement from "../tools/get-random-element";
 import popRandomElement from "../tools/pop-random-element copy";
+import MemorizedFovAreaComponent from "./components/memorized-fov-area-component";
+import matrix from "../tools/matrix";
 
 export default class EntitiesBuilder {
     entities: Component[][];
@@ -57,8 +58,19 @@ export default class EntitiesBuilder {
             new FovComponent(),
             new PlayerComponent(),
             new MoveDirectionComponent(),
-            new PositionComponent().setX(position.x).setY(position.y).setDeep(deep),
-            new GlyphComponent().setSymbol('@').setFgColor('white').setZLevel(500)
+            new MemorizedFovAreaComponent()
+                .setMemorizedFovArea(
+                    matrix(config.map.size.x, config.map.size.y, false)
+                )
+                .setDeep(deep),
+            new PositionComponent()
+                .setX(position.x)
+                .setY(position.y)
+                .setDeep(deep),
+            new GlyphComponent()
+                .setSymbol('@')
+                .setFgColor('white')
+                .setZLevel(500)
         ]);
         return this;
     }

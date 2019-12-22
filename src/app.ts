@@ -16,6 +16,7 @@ import WebFontLoader from 'webfontloader';
 import Victor from 'victor';
 import PositionComponent from './game/components/position-component';
 import GameSceneUiSystem from './game/systems/game-scene-ui-system';
+import MemorizedFovAreasSystem from './game/systems/memorized-fov-areas-system';
 
 export default class App {
 
@@ -89,6 +90,8 @@ export default class App {
             .addSystem(new MovementSystem(this.engine))
             .withGroup('actions')
             .addSystem(new FovSystem(this.engine))
+            .withGroup('fov')
+            .addSystem(new MemorizedFovAreasSystem(this.engine))
             .withGroup('fov')
             .addSystem(new DungeonDisplaySystem(this.engine, this.display))
             .withGroup('display')

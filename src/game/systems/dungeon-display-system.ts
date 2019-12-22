@@ -7,6 +7,7 @@ import range from "../../tools/range";
 import FovComponent from "../components/fov-component";
 import BaseSystem from "./base-system";
 import Victor = require("victor");
+import MemorizedFovAreaComponent from "../components/memorized-fov-area-component";
 
 export default class DungeonDisplaySystem extends BaseSystem {
     private display: Display;
@@ -18,20 +19,29 @@ export default class DungeonDisplaySystem extends BaseSystem {
             DungeonComponent,
         ]);
         this.fovEntities = new SmartEntitiesContainer(engine, [
-            FovComponent,
+            FovComponent, MemorizedFovAreaComponent
         ]);
         this.display = display;
     }
     update(deltaTime: number = 0) {
-        let fov = this.fovEntities.getEnties()[0].get(FovComponent).fov;
+        let fov = this.getPlayerFov().fov;
+        let memorizedFovArea = this.getPlayerMemorizedFovArea().memorizedFovArea;
         let map = this.getCurrentDungeon().get(DungeonComponent).map;
         for (let x of range(config.map.size.x)) {
             for (let y of range(config.map.size.y)) {
-                if (!fov[x][y]) {
+                let memorized = false;
+                if (!(fov[x][y] || memorizedFovArea[x][y])) {
                     continue;
                 }
-                const fg = config.map.fgColor;
-                const bg = config.map.bgColor;
+                if (!fov[x][y]) {
+                    memorized = true;
+                }
+                let fg = config.map.fgColor;
+                let bg = config.map.bgColor;
+                if (memorized) {
+                    fg = config.map.memorizedColor.fgColor;
+                    bg = config.map.memorizedColor.bgColor;
+                }
                 const ch = map[x][y];
                 const viewPosition =
                     new Victor(x, y)

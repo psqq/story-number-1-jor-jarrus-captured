@@ -10,6 +10,8 @@ import Entity from "../../core/entity";
 import PlayerComponent from "../components/player-component";
 import PositionComponent from "../components/position-component";
 import StairsComponent from "../components/stairs-component";
+import MemorizedFovAreaComponent from "../components/memorized-fov-area-component";
+import FovComponent from "../components/fov-component";
 
 export default class BaseSystem extends System {
     private baseMapEntities: SmartEntitiesContainer;
@@ -21,11 +23,25 @@ export default class BaseSystem extends System {
             DungeonComponent
         ]);
         this.basePlayerEntities = new SmartEntitiesContainer(engine, [
-            PlayerComponent, PositionComponent
+            PlayerComponent, PositionComponent, MemorizedFovAreaComponent,
+            FovComponent,
         ]);
         this.stairsEntities = new SmartEntitiesContainer(engine, [
             StairsComponent, PositionComponent
         ]);
+    }
+    getPlayerMemorizedFovArea(deep?: number): MemorizedFovAreaComponent {
+        if (deep == null) {
+            deep = this.getCurrentDeep();
+        }
+        for(let memorizedFovArea of this.getPlayer().gets(MemorizedFovAreaComponent)) {
+            if (memorizedFovArea.deep == deep) {
+                return memorizedFovArea;
+            }
+        }
+    }
+    getPlayerFov(): FovComponent {
+        return this.getPlayer().get(FovComponent);
     }
     getStairs(depthChange: number, deep?: number): Entity {
         if (deep == null) {

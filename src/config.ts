@@ -51,6 +51,27 @@ const directionByKey: { [key: string]: Victor } = {
     'ArrowDown': new Victor(0, 1),
 };
 
+const gameSceneTopBar = {
+    x: 0,
+    y: 0,
+    viewX: 0,
+    viewY: 0,
+    height: 2,
+};
+
+const gameSceneBottomBar = {
+    x: 0,
+    y: gameSceneTopBar.height + mapSize.y,
+    viewX: 0,
+    viewY: gameSceneTopBar.height + mapSize.y + 1,
+    height: 2,
+};
+
+const gameSceneBars = {
+    top: gameSceneTopBar,
+    bottom: gameSceneBottomBar,
+};
+
 const config = {
     messages: {
         enSotryMessage,
@@ -65,8 +86,12 @@ const config = {
         offset: mapOffset,
         size: mapSize,
         cellSize: 1,
-        fgColor: 'grey',
+        fgColor: 'white',
         bgColor: 'black',
+        memorizedColor: {
+            fgColor: '#111',
+            bgColor: 'black',
+        },
         floor: {
             symbol: '.',
             fgColor: 'grey',
@@ -78,19 +103,10 @@ const config = {
             bgColor: 'black',
         },
     },
-    gameSceneBars: {
-        top: {
-            x: 0,
-            y: 0,
-        },
-        bottom: {
-            x: 0,
-            y: 1 + mapSize.y,
-        }
-    },
+    gameSceneBars,
     rotjsDisplayOptions: {
         width: mapSize.x,
-        height: mapSize.y + 2,
+        height: mapSize.y + gameSceneBars.bottom.height + gameSceneBars.top.height,
         fontSize: 16,
         forceSquareRatio: true,
         fontFamily: 'Typori',

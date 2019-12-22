@@ -5,6 +5,9 @@ import BaseSystem from "./base-system";
 import PositionComponent from "../components/position-component";
 import EntitiesBuilder from "../entities-builder";
 import getRandomElement from "../../tools/get-random-element";
+import MemorizedFovAreaComponent from "../components/memorized-fov-area-component";
+import matrix from "../../tools/matrix";
+import config from "../../config";
 
 export default class MovementSystem extends BaseSystem {
     private movableEntities: SmartEntitiesContainer;
@@ -34,6 +37,14 @@ export default class MovementSystem extends BaseSystem {
                     .setDeep(newDeep)
                     .setX(newPosition.x)
                     .setY(newPosition.y);
+                this.engine.addComponentToEntity(
+                    this.getPlayer().getId(),
+                    new MemorizedFovAreaComponent()
+                    .setMemorizedFovArea(
+                        matrix(config.map.size.x, config.map.size.y, false)
+                    )
+                    .setDeep(newDeep),
+                );
             } else {
                 const newPosition = position.toVictor().clone().add(moveDirection.toVictor());
                 if (this.isMovablePosition(newPosition, position.deep)) {

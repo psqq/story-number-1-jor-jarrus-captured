@@ -32,24 +32,37 @@ export default class DisplaySystem extends BaseSystem {
         this.display = display;
     }
     update(deltaTime: number = 0) {
-        const fov = this.fovEntities.getEnties()[0].get(FovComponent).fov;
+        let fov = this.getPlayerFov().fov;
+        let memorizedFovArea = this.getPlayerMemorizedFovArea().memorizedFovArea;
         const deep = this.getCurrentDeep();
         for (let entity of this.drawableEntities.getEnties()) {
             const position = entity.get(PositionCompoent);
             if (position.deep != deep) {
                 continue;
             }
-            if (!fov[position.x][position.y]) {
+            const x = position.x;
+            const y = position.y;
+            let memorized = false;
+            if (!(fov[x][y] || memorizedFovArea[x][y])) {
                 continue;
             }
+            if (!fov[x][y]) {
+                memorized = true;
+            }
             const glyph = entity.get(GlyphComponent);
+            let fgColor = glyph.fgColor;
+            let bgColor = glyph.bgColor;
+            if (memorized) {
+                fgColor = config.map.memorizedColor.fgColor;
+                bgColor = config.map.memorizedColor.bgColor;
+            }
             const viewPosition =
                 position
                     .toVictor().clone()
                     .add(new Victor(config.map.offset.x, config.map.offset.y));
             this.display.draw(
                 viewPosition.x, viewPosition.y,
-                glyph.symbol, glyph.fgColor, glyph.bgColor
+                glyph.symbol, fgColor, bgColor
             );
         }
     }
