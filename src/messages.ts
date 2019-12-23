@@ -21,4 +21,4 @@ messages.setMessages(
     }
 );
 
-export default messages;
+export default messages as i18n.Gettext;

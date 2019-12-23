@@ -10,19 +10,40 @@ import textToOneLineString from '../tools/text-to-one-line-string';
  */
 export default class MenuScene extends Scene {
     private selected: number;
-    private menu: string[];
+    private menuList: string[];
+    private menuItems: { [key: string]: string };
+    private locales: string[];
+    private choosedLocale: number;
 
     constructor(app: App) {
         super(app);
         this.selected = 1;
-        this.menu = [
-            "Change name",
-            "Start new game",
-            "Continue",
-            "Save",
-            "Load",
-            "Help"
-        ];
+        this.locales = ["en", "ru"];
+        this.choosedLocale = this.locales.indexOf(messages.getLocale());
+        this.menuItems = {
+            changName: "Change name",
+            startNewGame: "Start new game",
+            continue: "Continue",
+            save: "Save",
+            load: "Load",
+            changeLanguage: "Change language",
+            help: "Help",
+        };
+        this.menuList = [];
+        for(let key in this.menuItems) {
+            this.menuList.push(this.menuItems[key]);
+        }
+    }
+
+    changeLanguage(dx: number) {
+        this.choosedLocale += dx;
+        if (this.choosedLocale < 0) {
+            this.choosedLocale = this.locales.length - 1;
+        }
+        if (this.choosedLocale >= this.locales.length) {
+            this.choosedLocale = 0;
+        }
+        messages.setLocale(this.locales[this.choosedLocale]);
     }
 
     /**
@@ -54,9 +75,9 @@ export default class MenuScene extends Scene {
         );
         let i = 1;
         y += 2;
-        for (let menuItem of this.menu) {
+        for (let menuItem of this.menuList) {
             let s = `${i}. ${menuItem}`;
-            if (menuItem == "Load") {
+            if (menuItem == this.menuItems.load) {
                 const userName = localStorage.getItem('userName');
                 const deep = localStorage.getItem('deep');
                 const date = localStorage.getItem('date');
@@ -65,6 +86,9 @@ export default class MenuScene extends Scene {
                 } else {
                     s += `: ${userName} (deep: ${deep}) ${date}`;
                 }
+            }
+            if (menuItem == this.menuItems.changeLanguage) {
+                s += `. Current: ${messages.getLocale()}`;
             }
             this.app.display.drawText(3, y, s);
             y++;
@@ -86,42 +110,49 @@ export default class MenuScene extends Scene {
         if (event.type === 'keydown') {
             const keyboardEvent = event as KeyboardEvent;
             if (keyboardEvent.code === 'Enter') {
-                if (this.menu[this.selected - 1] === "Change name") {
+                if (this.menuList[this.selected - 1] === this.menuItems.changName) {
                     let newName = prompt("Enter your name");
                     this.app.userName = newName;
                     this.draw();
                     return;
                 }
-                if (this.menu[this.selected - 1] === "Start new game") {
+                if (this.menuList[this.selected - 1] === this.menuItems.startNewGame) {
                     this.app.startNewGame();
                     this.switchTo(this.app.gameScene);
                     return;
                 }
-                if (this.menu[this.selected - 1] === "Continue") {
+                if (this.menuList[this.selected - 1] === "Continue") {
                     this.switchTo(this.app.gameScene);
                     return;
                 }
-                if (this.menu[this.selected - 1] === "Save") {
+                if (this.menuList[this.selected - 1] === "Save") {
                     this.app.saveGame();
                     this.draw();
                     return;
                 }
-                if (this.menu[this.selected - 1] === "Load") {
+                if (this.menuList[this.selected - 1] === "Load") {
                     this.app.loadGame();
                     this.draw();
                     return;
                 }
-                if (this.menu[this.selected - 1] === "Help") {
+                if (this.menuList[this.selected - 1] === "Help") {
                     this.switchTo(this.app.helpScene);
                     return;
                 }
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);
+            if (this.menuList[this.selected - 1] === this.menuItems.changeLanguage) {
+                if (direction.x != 0) {
+                    this.changeLanguage(direction.x);
+                    this.draw();
+                    return;
+                }
+            }
             if (!direction) {
                 return;
             }
             this.selected += direction.y;
-            this.selected = Math.max(1, Math.min(this.menu.length, this.selected));
+            this.selected = Math.max(1, Math.min(this.menuList.length, this.selected));
             this.draw();
         }
     }
