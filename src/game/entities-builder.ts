@@ -13,6 +13,7 @@ import StairsComponent from "./components/stairs-component";
 import popRandomElement from "../tools/pop-random-element copy";
 import MemorizedFovAreaComponent from "./components/memorized-fov-area-component";
 import matrix from "../tools/matrix";
+import ExperienceLevelComponent from "./components/experience-level-component";
 
 export default class EntitiesBuilder {
     entities: Component[][];
@@ -71,7 +72,13 @@ export default class EntitiesBuilder {
             new GlyphComponent()
                 .setSymbol('@')
                 .setFgColor('white')
-                .setZLevel(500)
+                .setZLevel(500),
+            new ExperienceLevelComponent()
+                .setup({
+                    level: 1,
+                    currentExperience: 0,
+                    nextLevelExperience: 100,
+                })
         ]);
         return this;
     }

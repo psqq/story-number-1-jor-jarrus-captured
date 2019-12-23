@@ -24,6 +24,7 @@ import MoveDirectionComponent from './game/components/move-direction-component';
 import PlayerComponent from './game/components/player-component';
 import StairsComponent from './game/components/stairs-component';
 import moment from 'moment';
+import ExperienceLevelComponent from './game/components/experience-level-component';
 
 /**
  * Main appliction
@@ -171,6 +172,7 @@ export default class App {
             PlayerComponent,
             PositionComponent,
             StairsComponent,
+            ExperienceLevelComponent,
         ];
         for (let ComponentClass of componentClasses) {
             context[ComponentClass.name] = ComponentClass;
