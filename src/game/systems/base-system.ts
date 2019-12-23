@@ -111,7 +111,11 @@ export default class BaseSystem extends System {
             return false;
         }
         for(let obstacleEntity of this.baseObstacleEntities.getEnties()) {
-            if (position.isEqualTo(obstacleEntity.get(PositionComponent).toVictor())) {
+            let pos = obstacleEntity.get(PositionComponent);
+            if (pos.deep != deep) {
+                continue;
+            }
+            if (position.isEqualTo(pos.toVictor())) {
                 return false;
             }
         }
