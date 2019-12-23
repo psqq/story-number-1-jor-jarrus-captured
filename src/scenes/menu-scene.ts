@@ -141,15 +141,15 @@ export default class MenuScene extends Scene {
                 }
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);
+            if (!direction) {
+                return;
+            }
             if (this.menuList[this.selected - 1] === this.menuItems.changeLanguage) {
                 if (direction.x != 0) {
                     this.changeLanguage(direction.x);
                     this.draw();
                     return;
                 }
-            }
-            if (!direction) {
-                return;
             }
             this.selected += direction.y;
             this.selected = Math.max(1, Math.min(this.menuList.length, this.selected));
