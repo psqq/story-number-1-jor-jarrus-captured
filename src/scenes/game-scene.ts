@@ -5,6 +5,9 @@ import PlayerComponent from '../game/components/player-component';
 import MoveDirectionComponent from '../game/components/move-direction-component';
 import EntitiesBuilder from '../game/entities-builder';
 import PositionComponent from '../game/components/position-component';
+import Entity from '../core/entity';
+import TeamComponent from '../game/components/team-component';
+import IdComponent from '../game/components/id-component';
 
 /**
  * Represents the scene that displays the menu.
@@ -44,9 +47,7 @@ export default class GameScene extends Scene {
                 this.switchTo(this.app.helpScene);
                 return;
             }
-            const player = this.app.engine.getEntitiesOfTheseComponents(
-                PlayerComponent, MoveDirectionComponent
-            )[0];
+            const player = this.app.baseSystem.getPlayer();
             if (keyboardEvent.key == '>' && keyboardEvent.shiftKey) {
                 player.get(MoveDirectionComponent).clear().setDepthChange(1);
                 this.app.update();
@@ -58,14 +59,31 @@ export default class GameScene extends Scene {
                 return;
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);
-            if (direction) {
-                player.get(MoveDirectionComponent)
-                    .clear()
-                    .setX(direction.x)
-                    .setY(direction.y);
+            if (!direction) {
+                return;
+            }
+            const newPosition =
+                this.app.baseSystem.getPlayer()
+                    .get(PositionComponent)
+                    .toVictor().clone()
+                    .add(direction);
+            const enemy: Entity = this.app.baseSystem.getTeamBeing(newPosition);
+            if (enemy != null && enemy.get(TeamComponent).teamName === 'goblins') {
+                new EntitiesBuilder()
+                    .createAutoAttackEntity(
+                        player.get(IdComponent).id,
+                        enemy.get(IdComponent).id,
+                    )
+                    .addCreatedEntitiesToEngine(this.app.engine);
                 this.app.update();
                 return;
             }
+            player.get(MoveDirectionComponent)
+                .clear()
+                .setX(direction.x)
+                .setY(direction.y);
+            this.app.update();
+            return;
         }
     }
 }

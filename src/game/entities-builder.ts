@@ -17,6 +17,10 @@ import ExperienceLevelComponent from "./components/experience-level-component";
 import PhysicalDamageComponent from "./components/physical-damage-component";
 import HealthPointsComponent from "./components/health-points-component";
 import ObstacleComponent from "./components/obstacle-component";
+import TeamComponent from "./components/team-component";
+import AutoAttackComponent from "./components/auto-attack-component";
+import IdComponent from "./components/id-component";
+import getuid from "../core/getuid";
 
 export default class EntitiesBuilder {
     entities: Component[][];
@@ -56,13 +60,21 @@ export default class EntitiesBuilder {
         const stairsUpPosition = popRandomElement(floorPositions);
         this.createStairs(stairsUpPosition, deep, -1);
         const n = 3 + Math.random() * 10;
-        for (let i = 0; i < n; i++) { 
-            this.createEnemy(popRandomElement(floorPositions), deep);
+        for (let i = 0; i < n; i++) {
+            this.createGoblinMinion(popRandomElement(floorPositions), deep);
         }
         return this;
     }
     createPlayer(position: Victor, deep: number) {
         this.entities.push([
+            new IdComponent()
+                .setup({
+                    id: getuid(),
+                }),
+            new TeamComponent()
+                .setup({
+                    teamName: 'humans',
+                }),
             new ObstacleComponent(),
             new FovComponent()
                 .setFov(matrix(config.map.size.x, config.map.size.y, false)),
@@ -106,8 +118,16 @@ export default class EntitiesBuilder {
         ]);
         return this;
     }
-    createEnemy(position: Victor, deep: number) {
+    createGoblinMinion(position: Victor, deep: number) {
         this.entities.push([
+            new IdComponent()
+                .setup({
+                    id: getuid(),
+                }),
+            new TeamComponent()
+                .setup({
+                    teamName: 'goblins',
+                }),
             new ObstacleComponent(),
             new PositionComponent()
                 .setX(position.x)
@@ -133,6 +153,16 @@ export default class EntitiesBuilder {
                     enhancerHealthPointsPerLevel: config.goblinMinionStats.healthPointsPerLevel,
                     maxHealthPoints: config.goblinMinionStats.healthPoints,
                 }),
+        ]);
+        return this;
+    }
+    createAutoAttackEntity(attackingId: number, protectingId: number) {
+        this.entities.push([
+            new AutoAttackComponent()
+                .setup({
+                    attackingId: attackingId,
+                    protectingId: protectingId,
+                })
         ]);
         return this;
     }

@@ -13,10 +13,16 @@ import StairsComponent from "../components/stairs-component";
 import MemorizedFovAreaComponent from "../components/memorized-fov-area-component";
 import FovComponent from "../components/fov-component";
 import ObstacleComponent from "../components/obstacle-component";
+import TeamComponent from "../components/team-component";
+import IdComponent from "../components/id-component";
+import HealthPointsComponent from "../components/health-points-component";
+import PhysicalDamageComponent from "../components/physical-damage-component";
+import MoveDirectionComponent from "../components/move-direction-component";
 
 export default class BaseSystem extends System {
     private baseMapEntities: SmartEntitiesContainer;
     private basePlayerEntities: SmartEntitiesContainer;
+    private teamBeingsEntities: SmartEntitiesContainer;
     private baseStairsEntities: SmartEntitiesContainer;
     private baseObstacleEntities: SmartEntitiesContainer;
     constructor(engine: Engine) {
@@ -25,8 +31,14 @@ export default class BaseSystem extends System {
             DungeonComponent
         ]);
         this.basePlayerEntities = new SmartEntitiesContainer(engine, [
-            PlayerComponent, PositionComponent, MemorizedFovAreaComponent,
-            FovComponent,
+            PlayerComponent,
+            TeamComponent,
+            PositionComponent, MoveDirectionComponent,
+            FovComponent, MemorizedFovAreaComponent,
+            IdComponent,
+            HealthPointsComponent,
+            PhysicalDamageComponent,
+            ObstacleComponent,
         ]);
         this.baseStairsEntities = new SmartEntitiesContainer(engine, [
             StairsComponent, PositionComponent
@@ -34,12 +46,22 @@ export default class BaseSystem extends System {
         this.baseObstacleEntities = new SmartEntitiesContainer(engine, [
             PositionComponent, ObstacleComponent
         ]);
+        this.teamBeingsEntities = new SmartEntitiesContainer(engine, [
+            TeamComponent, IdComponent, PositionComponent,
+        ]);
+    }
+    getTeamBeing(position: Victor, deep?: number) {
+        for (let teamBeing of this.teamBeingsEntities.getEnties()) {
+            if (teamBeing.get(PositionComponent).toVictor().isEqualTo(position)) {
+                return teamBeing;
+            }
+        }
     }
     getPlayerMemorizedFovArea(deep?: number): MemorizedFovAreaComponent {
         if (deep == null) {
             deep = this.getCurrentDeep();
         }
-        for(let memorizedFovArea of this.getPlayer().gets(MemorizedFovAreaComponent)) {
+        for (let memorizedFovArea of this.getPlayer().gets(MemorizedFovAreaComponent)) {
             if (memorizedFovArea.deep == deep) {
                 return memorizedFovArea;
             }
@@ -110,7 +132,7 @@ export default class BaseSystem extends System {
         if (map[x][y] === config.map.wall.symbol) {
             return false;
         }
-        for(let obstacleEntity of this.baseObstacleEntities.getEnties()) {
+        for (let obstacleEntity of this.baseObstacleEntities.getEnties()) {
             let pos = obstacleEntity.get(PositionComponent);
             if (pos.deep != deep) {
                 continue;

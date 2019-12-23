@@ -28,6 +28,11 @@ import ExperienceLevelComponent from './game/components/experience-level-compone
 import HealthPointsComponent from './game/components/health-points-component';
 import PhysicalDamageComponent from './game/components/physical-damage-component';
 import ObstacleComponent from './game/components/obstacle-component';
+import TeamComponent from './game/components/team-component';
+import AutoAttackComponent from './game/components/auto-attack-component';
+import IdComponent from './game/components/id-component';
+import AutoAttackSystem from './game/systems/auto-attack-system';
+import GrimReaperSystem from './game/systems/grim-reaper-system';
 
 /**
  * Main appliction
@@ -109,6 +114,10 @@ export default class App {
         this.baseSystem = new BaseSystem(this.engine);
         // Create systems
         this.engine = new EngineBuilder(this.engine)
+            .addSystem(new AutoAttackSystem(this.engine))
+            .withGroup('actions')
+            .addSystem(new GrimReaperSystem(this.engine))
+            .withGroup('actions')
             .addSystem(new MovementSystem(this.engine))
             .withGroup('actions')
             .addSystem(new FovSystem(this.engine))
@@ -179,6 +188,9 @@ export default class App {
             ObstacleComponent,
             HealthPointsComponent,
             PhysicalDamageComponent,
+            TeamComponent,
+            AutoAttackComponent,
+            IdComponent,
         ];
         for (let ComponentClass of componentClasses) {
             context[ComponentClass.name] = ComponentClass;

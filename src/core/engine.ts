@@ -81,6 +81,17 @@ export default class Engine extends EventEmmiter {
         return entityId;
     }
     /**
+     * Removing entity by id
+     * @param entityId
+     */
+    removeEntity(entityId: EntityId) {
+        this.emit(coreConfig.engineEvents.entityRemoved, entityId);
+        this.entities.delete(entityId);
+        for(let components of this.components.values()) {
+            components.delete(entityId);
+        }
+    }
+    /**
      * Check has entity component class
      * @param entity entity for checking
      * @param ComponentClass Component class for checking
