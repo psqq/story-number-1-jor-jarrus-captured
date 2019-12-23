@@ -14,6 +14,8 @@ import popRandomElement from "../tools/pop-random-element copy";
 import MemorizedFovAreaComponent from "./components/memorized-fov-area-component";
 import matrix from "../tools/matrix";
 import ExperienceLevelComponent from "./components/experience-level-component";
+import PhysicalDamageComponent from "./components/physical-damage-component";
+import HealthPointsComponent from "./components/health-points-component";
 
 export default class EntitiesBuilder {
     entities: Component[][];
@@ -78,7 +80,23 @@ export default class EntitiesBuilder {
                     level: 1,
                     currentExperience: 0,
                     nextLevelExperience: 100,
-                })
+                }),
+            new PhysicalDamageComponent()
+                .setup({
+                    basePhysicalDamage: config.heroStats.physicalDamage,
+                    bonusPhysicalDamage: 0,
+                    currentPhysicalDamage: config.heroStats.physicalDamage,
+                    enhancerPhysicalDamagePerLevel: config.heroStats.physicalDamagePerLevel,
+                    maxPhysicalDamage: config.heroStats.physicalDamage,
+                }),
+            new HealthPointsComponent()
+                .setup({
+                    baseHealthPoints: config.heroStats.healthPoints,
+                    bonusHealthPoints: 0,
+                    currentHealthPoints: config.heroStats.healthPoints,
+                    enhancerHealthPointsPerLevel: config.heroStats.healthPointsPerLevel,
+                    maxHealthPoints: config.heroStats.healthPoints,
+                }),
         ]);
         return this;
     }

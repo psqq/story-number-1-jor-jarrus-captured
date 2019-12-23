@@ -74,11 +74,22 @@ const gameSceneBars = {
 };
 
 const mapOffset = {
-    x: leftRightPadding, 
-    y: gameSceneBars.top.height 
+    x: leftRightPadding,
+    y: gameSceneBars.top.height
 };
 
 const config = {
+    heroStats: {
+        healthPoints: 70,
+        healthPointsPerLevel: 4,
+        physicalDamage: 12,
+        physicalDamagePerLevel: 3,
+    },
+    experience: {
+        maxLevel: 20,
+        experienceEnhancer: 100,
+        experienceForKilling: 150,
+    },
     messages: {
         enSotryMessage,
         ruSotryMessage,
@@ -110,7 +121,7 @@ const config = {
     },
     gameSceneBars,
     rotjsDisplayOptions: {
-        width: mapSize.x + 2*leftRightPadding,
+        width: mapSize.x + 2 * leftRightPadding,
         height: mapSize.y + gameSceneBars.bottom.height + gameSceneBars.top.height,
         fontSize: 16,
         forceSquareRatio: true,
