@@ -15,7 +15,14 @@ export default class MenuScene extends Scene {
     constructor(app: App) {
         super(app);
         this.selected = 1;
-        this.menu = ["Change name", "Start or Continue", "Save", "Load", "Help"];
+        this.menu = [
+            "Change name",
+            "Start new game",
+            "Continue",
+            "Save",
+            "Load",
+            "Help"
+        ];
     }
 
     /**
@@ -85,7 +92,12 @@ export default class MenuScene extends Scene {
                     this.draw();
                     return;
                 }
-                if (this.menu[this.selected - 1] === "Start or Continue") {
+                if (this.menu[this.selected - 1] === "Start new game") {
+                    this.app.startNewGame();
+                    this.switchTo(this.app.gameScene);
+                    return;
+                }
+                if (this.menu[this.selected - 1] === "Continue") {
                     this.switchTo(this.app.gameScene);
                     return;
                 }

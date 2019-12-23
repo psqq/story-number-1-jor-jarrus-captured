@@ -25,15 +25,25 @@ import PlayerComponent from './game/components/player-component';
 import StairsComponent from './game/components/stairs-component';
 import moment from 'moment';
 
+/**
+ * Main appliction
+ */
 export default class App {
 
+    // Display elements
     display: Display = null;
     appElement: HTMLDivElement = null;
+
+    // Engine elements
     engine: Engine;
     baseSystem: BaseSystem;
+
+    // Scenes
     menuScene: MenuScene;
     gameScene: GameScene;
     helpScene: HelpScene;
+
+    // User info
     userName: string = "User Name";
 
     constructor() { }
@@ -90,6 +100,7 @@ export default class App {
      * Initialize engine: systems and entities.
      */
     initEngine() {
+        // Create engine
         this.engine = new Engine();
         this.baseSystem = new BaseSystem(this.engine);
         // Create systems
@@ -123,6 +134,13 @@ export default class App {
             ;
     }
     /**
+     * Start new game.
+     */
+    startNewGame() {
+        this.initEngine();
+        this.update();
+    }
+    /**
      * Update game
      */
     update() {
@@ -133,6 +151,7 @@ export default class App {
      * Launches the application.
      */
     run() {
+        this.update();
         this.menuScene.start();
     }
     saveGame() {
@@ -153,7 +172,7 @@ export default class App {
             PositionComponent,
             StairsComponent,
         ];
-        for(let ComponentClass of componentClasses) {
+        for (let ComponentClass of componentClasses) {
             context[ComponentClass.name] = ComponentClass;
         }
         this.engine.fromString(localStorage.getItem('engine'), context);
