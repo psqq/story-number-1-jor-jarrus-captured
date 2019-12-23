@@ -16,6 +16,7 @@ import matrix from "../tools/matrix";
 import ExperienceLevelComponent from "./components/experience-level-component";
 import PhysicalDamageComponent from "./components/physical-damage-component";
 import HealthPointsComponent from "./components/health-points-component";
+import ObstacleComponent from "./components/obstacle-component";
 
 export default class EntitiesBuilder {
     entities: Component[][];
@@ -54,10 +55,15 @@ export default class EntitiesBuilder {
         this.createStairs(stairsDownPosition, deep, 1);
         const stairsUpPosition = popRandomElement(floorPositions);
         this.createStairs(stairsUpPosition, deep, -1);
+        const n = 3 + Math.random() * 10;
+        for (let i = 0; i < n; i++) { 
+            this.createEnemy(popRandomElement(floorPositions), deep);
+        }
         return this;
     }
     createPlayer(position: Victor, deep: number) {
         this.entities.push([
+            new ObstacleComponent(),
             new FovComponent()
                 .setFov(matrix(config.map.size.x, config.map.size.y, false)),
             new PlayerComponent(),
@@ -96,6 +102,36 @@ export default class EntitiesBuilder {
                     currentHealthPoints: config.heroStats.healthPoints,
                     enhancerHealthPointsPerLevel: config.heroStats.healthPointsPerLevel,
                     maxHealthPoints: config.heroStats.healthPoints,
+                }),
+        ]);
+        return this;
+    }
+    createEnemy(position: Victor, deep: number) {
+        this.entities.push([
+            new ObstacleComponent(),
+            new PositionComponent()
+                .setX(position.x)
+                .setY(position.y)
+                .setDeep(deep),
+            new GlyphComponent()
+                .setSymbol('g')
+                .setFgColor('green')
+                .setZLevel(500),
+            new PhysicalDamageComponent()
+                .setup({
+                    basePhysicalDamage: config.goblinMinionStats.physicalDamage,
+                    bonusPhysicalDamage: 0,
+                    currentPhysicalDamage: config.goblinMinionStats.physicalDamage,
+                    enhancerPhysicalDamagePerLevel: config.goblinMinionStats.physicalDamagePerLevel,
+                    maxPhysicalDamage: config.goblinMinionStats.physicalDamage,
+                }),
+            new HealthPointsComponent()
+                .setup({
+                    baseHealthPoints: config.goblinMinionStats.healthPoints,
+                    bonusHealthPoints: 0,
+                    currentHealthPoints: config.goblinMinionStats.healthPoints,
+                    enhancerHealthPointsPerLevel: config.goblinMinionStats.healthPointsPerLevel,
+                    maxHealthPoints: config.goblinMinionStats.healthPoints,
                 }),
         ]);
         return this;

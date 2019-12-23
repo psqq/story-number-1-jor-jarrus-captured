@@ -25,6 +25,9 @@ import PlayerComponent from './game/components/player-component';
 import StairsComponent from './game/components/stairs-component';
 import moment from 'moment';
 import ExperienceLevelComponent from './game/components/experience-level-component';
+import HealthPointsComponent from './game/components/health-points-component';
+import PhysicalDamageComponent from './game/components/physical-damage-component';
+import ObstacleComponent from './game/components/obstacle-component';
 
 /**
  * Main appliction
@@ -173,6 +176,9 @@ export default class App {
             PositionComponent,
             StairsComponent,
             ExperienceLevelComponent,
+            ObstacleComponent,
+            HealthPointsComponent,
+            PhysicalDamageComponent,
         ];
         for (let ComponentClass of componentClasses) {
             context[ComponentClass.name] = ComponentClass;

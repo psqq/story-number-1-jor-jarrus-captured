@@ -12,11 +12,13 @@ import PositionComponent from "../components/position-component";
 import StairsComponent from "../components/stairs-component";
 import MemorizedFovAreaComponent from "../components/memorized-fov-area-component";
 import FovComponent from "../components/fov-component";
+import ObstacleComponent from "../components/obstacle-component";
 
 export default class BaseSystem extends System {
     private baseMapEntities: SmartEntitiesContainer;
     private basePlayerEntities: SmartEntitiesContainer;
-    private stairsEntities: SmartEntitiesContainer;
+    private baseStairsEntities: SmartEntitiesContainer;
+    private baseObstacleEntities: SmartEntitiesContainer;
     constructor(engine: Engine) {
         super(engine);
         this.baseMapEntities = new SmartEntitiesContainer(engine, [
@@ -26,8 +28,11 @@ export default class BaseSystem extends System {
             PlayerComponent, PositionComponent, MemorizedFovAreaComponent,
             FovComponent,
         ]);
-        this.stairsEntities = new SmartEntitiesContainer(engine, [
+        this.baseStairsEntities = new SmartEntitiesContainer(engine, [
             StairsComponent, PositionComponent
+        ]);
+        this.baseObstacleEntities = new SmartEntitiesContainer(engine, [
+            PositionComponent, ObstacleComponent
         ]);
     }
     getPlayerMemorizedFovArea(deep?: number): MemorizedFovAreaComponent {
@@ -47,7 +52,7 @@ export default class BaseSystem extends System {
         if (deep == null) {
             deep = this.getCurrentDeep();
         }
-        for (let stairs of this.stairsEntities.getEnties()) {
+        for (let stairs of this.baseStairsEntities.getEnties()) {
             if (stairs.get(PositionComponent).deep != deep) {
                 continue;
             }
@@ -76,8 +81,22 @@ export default class BaseSystem extends System {
     }
     getLightPassesCallback(deep?: number) {
         return (x: number, y: number) => {
-            return this.isMovablePosition(new Victor(x, y), deep);
+            return this.isLightPasses(new Victor(x, y), deep);
         };
+    }
+    isLightPasses(position: Victor, deep?: number): boolean {
+        if (deep == null) {
+            deep = this.getCurrentDeep();
+        }
+        const map = this.getDungeon(deep).get(DungeonComponent).map;
+        const { x, y } = position;
+        if (x < 0 || y < 0 || x >= config.map.size.x || y >= config.map.size.y) {
+            return false;
+        }
+        if (map[x][y] === config.map.wall.symbol) {
+            return false;
+        }
+        return true;
     }
     isMovablePosition(position: Victor, deep?: number): boolean {
         if (deep == null) {
@@ -90,6 +109,11 @@ export default class BaseSystem extends System {
         }
         if (map[x][y] === config.map.wall.symbol) {
             return false;
+        }
+        for(let obstacleEntity of this.baseObstacleEntities.getEnties()) {
+            if (position.isEqualTo(obstacleEntity.get(PositionComponent).toVictor())) {
+                return false;
+            }
         }
         return true;
     }

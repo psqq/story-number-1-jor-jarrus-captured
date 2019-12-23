@@ -81,9 +81,15 @@ const mapOffset = {
 const config = {
     heroStats: {
         healthPoints: 70,
-        healthPointsPerLevel: 4,
+        healthPointsPerLevel: 8,
         physicalDamage: 12,
-        physicalDamagePerLevel: 3,
+        physicalDamagePerLevel: 4,
+    },
+    goblinMinionStats: {
+        healthPoints: 22,
+        healthPointsPerLevel: 2,
+        physicalDamage: 8,
+        physicalDamagePerLevel: 2,
     },
     experience: {
         maxLevel: 20,
