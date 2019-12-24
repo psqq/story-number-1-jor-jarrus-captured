@@ -102,6 +102,8 @@ export default class App {
         this.appElement.appendChild(this.display.getContainer());
         // Initialize engine
         this.initEngine();
+        this.initEngineSystems();
+        this.createEntities();
         // Initialize game scenes
         this.initScenes();
     }
@@ -111,6 +113,8 @@ export default class App {
     initEngine() {
         // Create engine
         this.engine = new Engine();
+    }
+    initEngineSystems() {
         this.baseSystem = new BaseSystem(this.engine);
         // Create systems
         this.engine = new EngineBuilder(this.engine)
@@ -132,6 +136,8 @@ export default class App {
             .withGroup('display')
             .getEngine()
             ;
+    }
+    createEntities() {
         // Create entities
         const entitiesBuider = new EntitiesBuilder();
         entitiesBuider
@@ -151,6 +157,8 @@ export default class App {
      */
     startNewGame() {
         this.initEngine();
+        this.initEngineSystems();
+        this.createEntities();
         this.update();
     }
     /**
@@ -179,15 +187,19 @@ export default class App {
             DungeonComponent,
             FovComponent,
             GlyphComponent,
+
             MemorizedFovAreaComponent,
             MoveDirectionComponent,
             PlayerComponent,
+
             PositionComponent,
             StairsComponent,
             ExperienceLevelComponent,
+
             ObstacleComponent,
             HealthPointsComponent,
             PhysicalDamageComponent,
+            
             TeamComponent,
             AutoAttackComponent,
             IdComponent,
@@ -195,7 +207,10 @@ export default class App {
         for (let ComponentClass of componentClasses) {
             context[ComponentClass.name] = ComponentClass;
         }
+        this.initEngine();
+        this.initEngineSystems();
         this.engine.fromString(localStorage.getItem('engine'), context);
+        this.engine.update();
         this.userName = localStorage.getItem('userName');
     }
 }

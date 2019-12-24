@@ -12,7 +12,6 @@ import config from "../../config";
 export default class DisplaySystem extends BaseSystem {
     private display: Display;
     private drawableEntities: SmartEntitiesContainer;
-    private fovEntities: SmartEntitiesContainer;
     constructor(engine: Engine, display: Display) {
         super(engine);
         this.drawableEntities = new SmartEntitiesContainer(engine, [
@@ -26,9 +25,6 @@ export default class DisplaySystem extends BaseSystem {
                 })
             }
         );
-        this.fovEntities = new SmartEntitiesContainer(engine, [
-            FovComponent,
-        ]);
         this.display = display;
     }
     update(deltaTime: number = 0) {

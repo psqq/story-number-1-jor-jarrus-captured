@@ -92,7 +92,7 @@ export default class EntitiesBuilder {
             new GlyphComponent()
                 .setSymbol('@')
                 .setFgColor('white')
-                .setZLevel(500),
+                .setZLevel(1000),
             new ExperienceLevelComponent()
                 .setup({
                     level: 1,

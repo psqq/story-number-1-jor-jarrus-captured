@@ -31,20 +31,20 @@ export default class MovementSystem extends BaseSystem {
                     new EntitiesBuilder()
                         .createDungeon(newDeep)
                         .addCreatedEntitiesToEngine(this.engine);
+                    this.engine.addComponentToEntity(
+                        this.getPlayer().getId(),
+                        new MemorizedFovAreaComponent()
+                            .setMemorizedFovArea(
+                                matrix(config.map.size.x, config.map.size.y, false)
+                            )
+                            .setDeep(newDeep),
+                    );
                 }
                 let newPosition = getRandomElement(this.getMovablePositions(newDeep));
                 position
                     .setDeep(newDeep)
                     .setX(newPosition.x)
                     .setY(newPosition.y);
-                this.engine.addComponentToEntity(
-                    this.getPlayer().getId(),
-                    new MemorizedFovAreaComponent()
-                    .setMemorizedFovArea(
-                        matrix(config.map.size.x, config.map.size.y, false)
-                    )
-                    .setDeep(newDeep),
-                );
             } else {
                 const newPosition = position.toVictor().clone().add(moveDirection.toVictor());
                 if (this.isMovablePosition(newPosition, position.deep)) {

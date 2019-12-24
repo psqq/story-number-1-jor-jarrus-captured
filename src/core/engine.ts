@@ -4,7 +4,6 @@ import Component from "./component";
 import getuid from "./getuid";
 import Entity from "./entity";
 import coreConfig from "./core-config";
-import config from "../config";
 
 type EntityId = number;
 type SystemGroups = Map<string, System[]>;
@@ -37,6 +36,18 @@ export default class Engine extends EventEmmiter {
         this.components = new Map();
         this.killedEntities = new Set();
     }
+    getEntity(entityId: number): Entity {
+        let components: Component[] = [];
+        if (!this.entities.has(entityId)) {
+            return;
+        }
+        for (let componentsOfClass of this.entities.get(entityId).values()) {
+            for (let component of componentsOfClass) {
+                components.push(component);
+            }
+        }
+        return new Entity(entityId, this, components);
+    }
     /**
      * Adding component to entity
      * @param entityId entity for adding component
@@ -55,18 +66,26 @@ export default class Engine extends EventEmmiter {
             this.entities.get(entityId).set(ComponentClass.name, []);
         }
         this.entities.get(entityId).get(ComponentClass.name).push(component);
-        this.emit(coreConfig.engineEvents.componentAddedToEntity, {
-            entityId, component
-        });
+        this.emit(
+            coreConfig.engineEvents.componentAddedToEntity,
+            {
+                entityId, component
+            }
+        );
     }
     /**
      * Create new entity
      * @param components components of new entity
      */
     private createEmptyEntity(entityId: EntityId) {
-        if (!this.entities.has(entityId)) {
-            this.entities.set(entityId, new Map());
+        if (this.entities.has(entityId)) {
+            this.emit(coreConfig.engineEvents.entityRemoved, entityId);
         }
+        this.entities.set(entityId, new Map());
+        this.emit(
+            coreConfig.engineEvents.entityCreated,
+            new Entity(entityId, this, [])
+        );
     }
     /**
      * Create new entity
@@ -77,7 +96,10 @@ export default class Engine extends EventEmmiter {
         for (let component of components) {
             this.addComponentToEntity(entityId, component);
         }
-        this.emit(coreConfig.engineEvents.entityCreated, new Entity(entityId, components));
+        this.emit(
+            coreConfig.engineEvents.entityCreated,
+            new Entity(entityId, this, components)
+        );
         return entityId;
     }
     /**
@@ -87,7 +109,7 @@ export default class Engine extends EventEmmiter {
     removeEntity(entityId: EntityId) {
         this.emit(coreConfig.engineEvents.entityRemoved, entityId);
         this.entities.delete(entityId);
-        for(let components of this.components.values()) {
+        for (let components of this.components.values()) {
             components.delete(entityId);
         }
     }
@@ -133,7 +155,7 @@ export default class Engine extends EventEmmiter {
      */
     *iterEntitiesOfTheseComponents<T>(...ComponentClasses: Class<T>[]): Generator<Entity> {
         for (let [entityId, components] of this._getComponents(...ComponentClasses)) {
-            let entity = new Entity(entityId, components);
+            let entity = new Entity(entityId, this, components);
             yield entity;
         }
     }
@@ -230,7 +252,7 @@ export default class Engine extends EventEmmiter {
         for (let [entityId, componentsMap] of this.entities) {
             let componentsData: any = {};
             for (let [ClassName, components] of componentsMap) {
-                for(let component of components) {
+                for (let component of components) {
                     if (!componentsData[ClassName]) {
                         componentsData[ClassName] = [];
                     }
@@ -251,18 +273,13 @@ export default class Engine extends EventEmmiter {
             this.createEmptyEntity(entityData.entityId);
             let components = [];
             for (let ClassName in entityData.components) {
-                for(let componentData of entityData.components[ClassName]) {
+                for (let componentData of entityData.components[ClassName]) {
                     let component = new context[ClassName]();
                     Object.assign(component, componentData);
                     components.push(component);
                     this.addComponentToEntity(entityData.entityId, component);
                 }
             }
-            const entity = new Entity(entityData.entityId, components);
-            this.emit(
-                coreConfig.engineEvents.entityCreated,
-                entity
-            );
         }
     }
 }
