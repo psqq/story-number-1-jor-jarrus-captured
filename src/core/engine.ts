@@ -11,6 +11,17 @@ type Entities = Map<EntityId, Map<string, Component[]>>;
 type Components = Map<string, Set<number>>;
 type Class<T> = new () => T;
 
+interface ComponentsSaveData {
+    [key: string]: any[],
+};
+
+interface SaveData {
+    entities: {
+        entityId: number,
+        components: ComponentsSaveData,
+    }[]
+};
+
 export default class Engine extends EventEmmiter {
     private systems: System[];
     private systemGroups: SystemGroups;
@@ -27,6 +38,12 @@ export default class Engine extends EventEmmiter {
         this.entities = new Map();
         this.components = new Map();
         this.killedEntities = new Set();
+    }
+    clear() {
+        this.clearEntities();
+        for (let system of this.systems) {
+            system.clear();
+        }
     }
     clearEntities() {
         for (let entityId of this.entities.keys()) {
@@ -192,9 +209,13 @@ export default class Engine extends EventEmmiter {
             this._addSystemToGroup(system, groupName);
         }
         // Sort all system on priotiy changed in a system
-        system.on(coreConfig.systemEvents.priorityChanged, () => {
-            this._sortAll();
-        });
+        let self = this;
+        system.on(
+            coreConfig.systemEvents.priorityChanged,
+            () => {
+                self._sortAll();
+            }
+        );
     }
     /**
      * Sorting all systems and all systems of all groups.
@@ -246,11 +267,11 @@ export default class Engine extends EventEmmiter {
         this._updateSystems(this.systems, deltaTime);
     }
     toString() {
-        let data: any = {
+        let data: SaveData = {
             entities: [],
         };
         for (let [entityId, componentsMap] of this.entities) {
-            let componentsData: any = {};
+            let componentsData: ComponentsSaveData = {};
             for (let [ClassName, components] of componentsMap) {
                 for (let component of components) {
                     if (!componentsData[ClassName]) {
@@ -267,16 +288,13 @@ export default class Engine extends EventEmmiter {
         return JSON.stringify(data);
     }
     fromString(dataString: string, context: any) {
-        this.clearEntities();
-        let data = JSON.parse(dataString);
+        let data = JSON.parse(dataString) as SaveData;
         for (let entityData of data.entities) {
             this.createEmptyEntity(entityData.entityId);
-            let components = [];
             for (let ClassName in entityData.components) {
                 for (let componentData of entityData.components[ClassName]) {
                     let component = new context[ClassName]();
                     Object.assign(component, componentData);
-                    components.push(component);
                     this.addComponentToEntity(entityData.entityId, component);
                 }
             }

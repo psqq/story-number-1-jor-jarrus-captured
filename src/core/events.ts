@@ -1,4 +1,4 @@
-import Component from "../../core/component";
+import Component from "./component";
 
 export interface ComponentAddedToEntityEvent {
     entityId: number,

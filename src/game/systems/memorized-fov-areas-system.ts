@@ -17,6 +17,10 @@ export default class MemorizedFovAreasSystem extends BaseSystem {
             FovComponent, PositionComponent, MemorizedFovAreaComponent,
         ]);
     }
+    clear() {
+        super.clear();
+        this.fovEntities.clear();
+    }
     update(deltaTime: number = 0) {
         for (let entity of this.fovEntities.getEnties()) {
             const position = entity.get(PositionComponent);

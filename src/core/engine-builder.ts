@@ -22,7 +22,7 @@ export default class EngineBuilder {
         if (!this.system) {
             return;
         }
-        if (!this.prority) {
+        if (this.prority == null) {
             this.prority = this.priorityForNextSystem;
         }
         this.priorityForNextSystem -= 1;
@@ -31,6 +31,7 @@ export default class EngineBuilder {
         for(let groupName of this.groups) {
             this.engine._addSystemToGroup(this.system, groupName);
         }
+        this._clearCurrentSystemSettings();
     }
     addSystem(system: System) {
         this._addCurrentSystemIfNeed();

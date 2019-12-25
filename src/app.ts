@@ -118,6 +118,8 @@ export default class App {
         this.baseSystem = new BaseSystem(this.engine);
         // Create systems
         this.engine = new EngineBuilder(this.engine)
+            .addSystem(this.baseSystem)
+            .withGroup('base')
             .addSystem(new AutoAttackSystem(this.engine))
             .withGroup('actions')
             .addSystem(new GrimReaperSystem(this.engine))
@@ -199,7 +201,7 @@ export default class App {
             ObstacleComponent,
             HealthPointsComponent,
             PhysicalDamageComponent,
-            
+
             TeamComponent,
             AutoAttackComponent,
             IdComponent,
@@ -207,10 +209,10 @@ export default class App {
         for (let ComponentClass of componentClasses) {
             context[ComponentClass.name] = ComponentClass;
         }
+        this.engine.clear();
         this.initEngine();
         this.initEngineSystems();
         this.engine.fromString(localStorage.getItem('engine'), context);
-        this.engine.update();
         this.userName = localStorage.getItem('userName');
     }
 }

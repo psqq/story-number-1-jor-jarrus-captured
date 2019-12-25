@@ -12,6 +12,10 @@ export default class GrimReaperSystem extends BaseSystem {
             HealthPointsComponent, TeamComponent,
         ]);
     }
+    clear() {
+        super.clear();
+        this.healthEntities.clear();
+    }
     update(deltaTime: number = 0) {
         for (let entity of this.healthEntities.getEnties()) {
             if (entity.get(HealthPointsComponent).currentHealthPoints <= 0) {

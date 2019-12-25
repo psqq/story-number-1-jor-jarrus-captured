@@ -17,15 +17,20 @@ export default class DisplaySystem extends BaseSystem {
         this.drawableEntities = new SmartEntitiesContainer(engine, [
             GlyphComponent, PositionCompoent
         ]);
+        let self = this;
         this.drawableEntities.on(
             coreConfig.smartEntitiesContainerEvents.changed,
             () => {
-                this.drawableEntities.getEnties().sort((a, b) => {
+                self.drawableEntities.getEnties().sort((a, b) => {
                     return a.get(GlyphComponent).zLevel - b.get(GlyphComponent).zLevel;
-                })
+                });
             }
         );
         this.display = display;
+    }
+    clear() {
+        super.clear();
+        this.drawableEntities.clear();
     }
     update(deltaTime: number = 0) {
         let fov = this.getPlayerFov().fov;

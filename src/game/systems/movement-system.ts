@@ -17,6 +17,10 @@ export default class MovementSystem extends BaseSystem {
             MoveDirectionComponent, PositionComponent
         ]);
     }
+    clear() {
+        super.clear();
+        this.movableEntities.clear();
+    }
     update(deltaTime: number = 0) {
         for (let entity of this.movableEntities.getEnties()) {
             const position = entity.get(PositionComponent);

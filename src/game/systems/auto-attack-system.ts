@@ -23,6 +23,12 @@ export default class AutoAttackSystem extends BaseSystem {
             AutoAttackComponent
         ]);
     }
+    clear() {
+        super.clear();
+        this.attackableEntities.clear();
+        this.protectableEntities.clear();
+        this.autoAttacksEntities.clear();
+    }
     getById(id: number, entities: Entity[]): Entity {
         for (let entity of entities) {
             if (entity.get(IdComponent).id == id) {

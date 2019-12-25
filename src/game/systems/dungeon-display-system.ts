@@ -23,6 +23,11 @@ export default class DungeonDisplaySystem extends BaseSystem {
         ]);
         this.display = display;
     }
+    clear() {
+        super.clear();
+        this.mapEntities.clear();
+        this.fovEntities.clear();
+    }
     update(deltaTime: number = 0) {
         let fov = this.getPlayerFov().fov;
         let memorizedFovArea = this.getPlayerMemorizedFovArea().memorizedFovArea;

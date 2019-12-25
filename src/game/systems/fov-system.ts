@@ -16,6 +16,10 @@ export default class FovSystem extends BaseSystem {
             FovComponent, PositionComponent,
         ]);
     }
+    clear() {
+        super.clear();
+        this.fovEntities.clear();
+    }
     update(deltaTime: number = 0) {
         for (let entity of this.fovEntities.getEnties()) {
             const position = entity.get(PositionComponent);

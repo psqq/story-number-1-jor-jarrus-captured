@@ -50,6 +50,14 @@ export default class BaseSystem extends System {
             TeamComponent, IdComponent, PositionComponent,
         ]);
     }
+    clear() {
+        super.clear();
+        this.baseMapEntities.clear();
+        this.basePlayerEntities.clear();
+        this.teamBeingsEntities.clear();
+        this.baseStairsEntities.clear();
+        this.baseObstacleEntities.clear();
+    }
     getTeamBeing(position: Victor, deep?: number) {
         for (let teamBeing of this.teamBeingsEntities.getEnties()) {
             if (teamBeing.get(PositionComponent).toVictor().isEqualTo(position)) {

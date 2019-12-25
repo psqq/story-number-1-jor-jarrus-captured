@@ -20,6 +20,10 @@ export default class GameSceneUiSystem extends BaseSystem {
             HealthPointsComponent, PhysicalDamageComponent
         ]);
     }
+    clear() {
+        super.clear();
+        this.playerEntities.clear();
+    }
     update(deltaTime: number = 0) {
         let topBarInfo = '';
         let bottomBarInfo = '';
