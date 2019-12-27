@@ -33,6 +33,9 @@ export default class DungeonDisplaySystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime = 0) {
+        if (!this.getPlayer()) {
+            return;
+        }
         let fov = this.getPlayerFov().fov;
         let memorizedFovArea = this.getPlayerMemorizedFovArea().memorizedFovArea;
         let map = this.getCurrentDungeon().get(DungeonComponent).map;

@@ -45,6 +45,9 @@ export default class GameScene extends Scene {
                 return;
             }
             const player = this.app.baseSystem.getPlayer();
+            if (!player) {
+                return;
+            }
             const deep = player.get(DeepComponent).deep;
             if (keyboardEvent.key == '>' && keyboardEvent.shiftKey) {
                 player.get(DepthMovingComponent)

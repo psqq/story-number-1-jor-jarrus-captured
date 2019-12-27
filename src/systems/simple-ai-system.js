@@ -8,6 +8,7 @@ import DeepComponent from "../components/deep-compnent";
 import SimpleAiComponent from '../components/simple-ai-component';
 import FovComponent from '../components/fov-component';
 import Dijkstra from 'rot-js/lib/path/dijkstra';
+import EntitiesBuilder from '../entities-builder';
 
 export default class SimpleAiSystem extends BaseSystem {
     /**
@@ -65,14 +66,23 @@ export default class SimpleAiSystem extends BaseSystem {
             if (!target || target.x == null || target.y == null) {
                 continue;
             }
-            const direction =
-                new Victor().copy(target)
-                    .subtract(aiPos);
-            aiEntity.get(MoveDirection2DComponent)
-                .setup({
-                    x: direction.x,
-                    y: direction.y,
-                });
+            if (new Victor().copy(target).isEqualTo(playerPos)) {
+                new EntitiesBuilder()
+                    .createAutoAttackEntity(
+                        aiEntity.getId(),
+                        player.getId(),
+                    )
+                    .addCreatedEntitiesToEngine(this.engine);
+            } else {
+                const direction =
+                    new Victor().copy(target)
+                        .subtract(aiPos);
+                aiEntity.get(MoveDirection2DComponent)
+                    .setup({
+                        x: direction.x,
+                        y: direction.y,
+                    });
+            }
         }
     }
 }

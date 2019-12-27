@@ -9,6 +9,7 @@ export default class Scene {
         this.previousScene = null;
     }
     start() {
+        this.app.currentScene = this;
         window.addEventListener('keydown', this);
         window.addEventListener('mousedown', this);
         window.addEventListener('mouseup', this);

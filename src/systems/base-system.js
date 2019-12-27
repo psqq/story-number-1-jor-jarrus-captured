@@ -75,6 +75,9 @@ export default class BaseSystem extends System {
      * @param {number} deep 
      */
     getPlayerMemorizedFovArea(deep = null) {
+        if (!this.getPlayer()) {
+            return;
+        }
         if (deep == null) {
             deep = this.getPlayerDeep();
         }
@@ -85,6 +88,9 @@ export default class BaseSystem extends System {
         }
     }
     getPlayerFov() {
+        if (!this.getPlayer()) {
+            return;
+        }
         return this.getPlayer().get(FovComponent);
     }
     /**
@@ -121,9 +127,15 @@ export default class BaseSystem extends System {
         }
     }
     getPlayerDeep() {
+        if (!this.getPlayer()) {
+            return;
+        }
         return this.getPlayer().get(DeepComponent).deep;
     }
     getCurrentDungeon() {
+        if (!this.getPlayer()) {
+            return;
+        }
         return this.getDungeon(this.getPlayerDeep());
     }
     /**

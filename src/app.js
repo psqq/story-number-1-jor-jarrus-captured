@@ -37,6 +37,8 @@ import AutoAttackSystem from "./systems/auto-attack-system";
 import GrimReaperSystem from "./systems/grim-reaper-system";
 import SimpleAiSystem from "./systems/simple-ai-system";
 import SimpleAiComponent from "./components/simple-ai-component";
+import Scene from "./scenes/scene";
+import LoseScene from "./scenes/lose-scene";
 
 export default class App {
     constructor() {
@@ -50,6 +52,9 @@ export default class App {
         this.menuScene = new MenuScene(this);
         this.helpScene = new HelpScene(this);
         this.gameScene = new GameScene(this);
+        this.loseScene = new LoseScene(this);
+        /** @type {Scene} */
+        this.currentScene = null;
         // others
         this.userName = config.defaultUserName;
     }
@@ -139,6 +144,11 @@ export default class App {
     update(deltaTime = 0) {
         this.display.clear();
         this.engine.update(deltaTime);
+        if (!this.baseSystem.getPlayer()) {
+            this.startNewGame();
+            this.currentScene.switchTo(this.loseScene);
+            return;
+        }
     }
     startNewGame() {
         this.engine.erase();

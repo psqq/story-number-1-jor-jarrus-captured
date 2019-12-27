@@ -33,6 +33,9 @@ export default class GameSceneUiSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime = 0) {
+        if (!this.getPlayer()) {
+            return;
+        }
         let topBarInfo = '';
         let bottomBarInfo = '';
         // ------------------------------------------------------------

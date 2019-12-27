@@ -47,6 +47,24 @@ const ruHelpScreenText = `
 * Назад
 `.trim();
 
+const enLoseScreenText = `
+You died ... :(
+
+... like the rest of the crew of the ship ...
+... one at a time in terrible dungeons with goblins ...
+    
+* Main menu
+`.trim();
+
+const ruLoseScreenText = `
+Вы умерли ... :(
+
+... как и весь остальной экипаж коробля ...
+... по одному в жутких подземельях с гоблинами ...
+
+* Главное меню
+`.trim();
+
 /** @type {{[key: string]: Victor}} */
 const directionByKeyCode = {
     'KeyH': new Victor(-1, 0),
@@ -114,6 +132,8 @@ const config = {
         ruPurposeMsg,
         enHelpScreenText,
         ruHelpScreenText,
+        enLoseScreenText,
+        ruLoseScreenText,
     },
     heroStats: {
         healthPoints: 70,

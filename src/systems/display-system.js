@@ -37,6 +37,9 @@ export default class DisplaySystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
+        if (!this.getPlayer()) {
+            return;
+        }
         let fov = this.getPlayerFov().fov;
         let memorizedFovArea = this.getPlayerMemorizedFovArea().memorizedFovArea;
         const deepOfPlayer = this.getPlayerDeep();
