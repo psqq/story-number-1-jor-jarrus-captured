@@ -15,8 +15,9 @@ import TeamComponent from "../components/team-component";
 import IdComponent from "../components/id-component";
 import HealthPointsComponent from "../components/health-points-component";
 import PhysicalDamageComponent from "../components/physical-damage-component";
-import MoveDirectionComponent from "../components/move-direction-component";
+import MoveDirection2DComponent from "../components/move-direction-2d-component";
 import DeepComponent from "../components/deep-compnent";
+import Entity from '../core/ecs-engine/entity';
 
 export default class BaseSystem extends System {
     /**
@@ -31,9 +32,8 @@ export default class BaseSystem extends System {
             PlayerComponent,
             TeamComponent,
             Position2DComponent, DeepComponent,
-            MoveDirectionComponent,
+            MoveDirection2DComponent,
             FovComponent, MemorizedFovAreaComponent,
-            IdComponent,
             HealthPointsComponent,
             PhysicalDamageComponent,
             ObstacleComponent,
@@ -45,7 +45,7 @@ export default class BaseSystem extends System {
             Position2DComponent, DeepComponent, ObstacleComponent
         ]);
         this.baseTeamBeingsEntities = new SmartEntitiesContainer(engine, [
-            TeamComponent, IdComponent, Position2DComponent, DeepComponent,
+            TeamComponent, Position2DComponent, DeepComponent,
         ]);
     }
     erase() {
@@ -130,8 +130,26 @@ export default class BaseSystem extends System {
      * @param {number} deep
      */
     getLightPassesCallback(deep = null) {
+        if (deep == null) {
+            deep = this.getPlayerDeep();
+        }
         return (x, y) => {
             return this.isLightPasses(new Victor(x, y), deep);
+        };
+    }
+    /**
+     * @param {Entity} entity
+     * @param {number} deep
+     */
+    getPassableCallbackForEntity(entity, deep = null) {
+        if (deep == null) {
+            deep = this.getPlayerDeep();
+        }
+        return (x, y) => {
+            if (new Victor(x, y).isEqualTo(entity.get(Position2DComponent))) {
+                return true;
+            }
+            return this.isMovablePosition(new Victor(x, y), deep);
         };
     }
     /**
@@ -169,11 +187,11 @@ export default class BaseSystem extends System {
             return false;
         }
         for (let obstacleEntity of this.baseObstacleEntities.getEnties()) {
-            let pos = obstacleEntity.get(Position2DComponent);
-            if (pos.deep != deep) {
+            let posComp = obstacleEntity.get(Position2DComponent);
+            if (obstacleEntity.get(DeepComponent).deep != deep) {
                 continue;
             }
-            if (position.isEqualTo(pos.toVictor())) {
+            if (position.isEqualTo(posComp)) {
                 return false;
             }
         }

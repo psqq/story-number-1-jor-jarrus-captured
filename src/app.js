@@ -14,7 +14,7 @@ import FovComponent from "./components/fov-component";
 import GlyphComponent from "./components/glyph-component";
 import HealthPointsComponent from "./components/health-points-component";
 import MemorizedFovAreaComponent from "./components/memorized-fov-area-component";
-import MoveDirection2DComponent from "./components/move-direction-component";
+import MoveDirection2DComponent from "./components/move-direction-2d-component";
 import ObstacleComponent from "./components/obstacle-component";
 import PhysicalDamageComponent from "./components/physical-damage-component";
 import PlayerComponent from "./components/player-component";
@@ -35,6 +35,8 @@ import DepthMovingSystem from "./systems/depth-moving-system";
 import MemorizedFovAreasSystem from "./systems/memorized-fov-areas-system";
 import AutoAttackSystem from "./systems/auto-attack-system";
 import GrimReaperSystem from "./systems/grim-reaper-system";
+import SimpleAiSystem from "./systems/simple-ai-system";
+import SimpleAiComponent from "./components/simple-ai-component";
 
 export default class App {
     constructor() {
@@ -89,6 +91,7 @@ export default class App {
     initSystems() {
         this.baseSystem = new BaseSystem(this.engine);
         this.engine.addSystem(this.baseSystem);
+        this.engine.addSystem(new SimpleAiSystem(this.engine));
         this.engine.addSystem(new DepthMovingSystem(this.engine));
         this.engine.addSystem(new MovementSystem(this.engine));
         this.engine.addSystem(new AutoAttackSystem(this.engine));
@@ -117,6 +120,7 @@ export default class App {
         this.engine.registerComponentClass(StairsComponent);
         this.engine.registerComponentClass(TeamComponent);
         this.engine.registerComponentClass(DepthMovingComponent);
+        this.engine.registerComponentClass(SimpleAiComponent);
         this.initSystems();
     }
     initDisplay() {

@@ -6,7 +6,7 @@ import Position2DComponent from '../components/position-2d-component';
 import TeamComponent from '../components/team-component';
 import DepthMovingComponent from '../components/depth-moving-component';
 import DeepComponent from '../components/deep-compnent';
-import MoveDirection2DComponent from '../components/move-direction-component';
+import MoveDirection2DComponent from '../components/move-direction-2d-component';
 
 /**
  * Represents the scene that displays the menu.

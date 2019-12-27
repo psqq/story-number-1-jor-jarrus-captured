@@ -10,7 +10,7 @@ import DungeonComponent from "./components/dungeon-component";
 import Position2DComponent from "./components/position-2d-component";
 import GlyphComponent from "./components/glyph-component";
 import PlayerComponent from "./components/player-component";
-import MoveDirectionComponent from "./components/move-direction-component";
+import MoveDirection2DComponent from "./components/move-direction-2d-component";
 import FovComponent from "./components/fov-component";
 import StairsComponent from "./components/stairs-component";
 import MemorizedFovAreaComponent from "./components/memorized-fov-area-component";
@@ -23,6 +23,7 @@ import AutoAttackComponent from "./components/auto-attack-component";
 import IdComponent from "./components/id-component";
 import DeepComponent from "./components/deep-compnent";
 import DepthMovingComponent from "./components/depth-moving-component";
+import SimpleAiComponent from "./components/simple-ai-component";
 
 export default class EntitiesBuilder {
     constructor() {
@@ -88,10 +89,6 @@ export default class EntitiesBuilder {
      */
     createPlayer(position, deep) {
         this.entities.push([
-            new IdComponent()
-                .setup({
-                    id: getuid(),
-                }),
             new TeamComponent()
                 .setup({
                     teamName: 'humans',
@@ -102,7 +99,7 @@ export default class EntitiesBuilder {
                     fov: matrix(config.map.size.x, config.map.size.y, false)
                 }),
             new PlayerComponent(),
-            new MoveDirectionComponent(),
+            new MoveDirection2DComponent(),
             new DepthMovingComponent(),
             new MemorizedFovAreaComponent()
                 .setup({
@@ -155,15 +152,13 @@ export default class EntitiesBuilder {
      */
     createGoblinMinion(position, deep) {
         this.entities.push([
-            new IdComponent()
-                .setup({
-                    id: getuid(),
-                }),
             new TeamComponent()
                 .setup({
                     teamName: 'goblins',
                 }),
             new ObstacleComponent(),
+            new SimpleAiComponent(),
+            new MoveDirection2DComponent(),
             new Position2DComponent()
                 .setup({
                     x: position.x,
