@@ -17,12 +17,12 @@ export default class Engine extends EventEmitter {
         this.registeredComponentClasses = new Map();
     }
     erase() {
-        for(let system of this.systems) {
+        for (let system of this.systems) {
             system.erase();
         }
         this.systems = [];
         this.priorityForNextSystem = 0;
-        for(let entityId of this.entities.keys()) {
+        for (let entityId of this.entities.keys()) {
             this.removeEntity(entityId);
         }
         this.entities = new Map();
@@ -134,6 +134,12 @@ export default class Engine extends EventEmitter {
      */
     createEntity(components) {
         let entityId = getuid();
+        this.createEntityWithId(entityId, components);
+    }
+    /**
+     * @param {Component[]} components 
+     */
+    createEntityWithId(entityId, components) {
         this.entities.set(entityId, new Map());
         for (let component of components) {
             this.addComponentToEntity(entityId, component);
@@ -169,6 +175,41 @@ export default class Engine extends EventEmitter {
     update(dt = 0) {
         for (let system of this.systems) {
             system.update(dt);
+        }
+    }
+    toString() {
+        const data = { entities: {} };
+        for (let [entityId, componentsOfEntity] of this.entities) {
+            data.entities[entityId] = {};
+            for (let [nameOfComponentClass, components] of componentsOfEntity) {
+                data.entities[entityId][nameOfComponentClass] = [];
+                for (let component of components) {
+                    data.entities[entityId][nameOfComponentClass].push(
+                        component
+                    );
+                }
+            }
+        }
+        return JSON.stringify(data);
+    }
+    /**
+     * @param {string} dataString 
+     */
+    fromString(dataString) {
+        /** @type {{entities: {[key:number]: {[key:string]: any[]}}}} */
+        const data = JSON.parse(dataString);
+        for (let entityId in data.entities) {
+            const components = [];
+            for (let nameOfComponentClass in data.entities[entityId]) {
+                const componentsData = data.entities[entityId][nameOfComponentClass];
+                for (let componentData of componentsData) {
+                    const ComponentClass = this.registeredComponentClasses.get(nameOfComponentClass);
+                    let component = new ComponentClass();
+                    component.setup(componentData);
+                    components.push(component);
+                }
+            }
+            this.createEntityWithId(entityId, components);
         }
     }
 }

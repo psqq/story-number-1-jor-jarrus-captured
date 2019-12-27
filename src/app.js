@@ -1,5 +1,6 @@
 import { Display } from "rot-js";
 import Victor from "victor";
+import moment from "moment";
 import config from "./config";
 import Engine from './core/ecs-engine/engine';
 import MenuScene from "./scenes/menu-scene";
@@ -117,7 +118,6 @@ export default class App {
         this.engine.registerComponentClass(TeamComponent);
         this.engine.registerComponentClass(DepthMovingComponent);
         this.initSystems();
-        this.createEntities();
     }
     initDisplay() {
         this.appElement = document.querySelector(config.appElementSelector);
@@ -127,6 +127,7 @@ export default class App {
         this.restoreLocale();
         this.initDisplay();
         this.initEngine();
+        this.createEntities();
     }
     /**
      * @param {number} deltaTime 
@@ -138,8 +139,21 @@ export default class App {
     startNewGame() {
         this.engine.erase();
         this.initEngine();
+        this.createEntities();
     }
     run() {
         this.menuScene.start();
+    }
+    saveGame() {
+        localStorage.setItem('engine', this.engine.toString());
+        localStorage.setItem('userName', this.userName);
+        localStorage.setItem('date', moment().format("MMM Do YY, hh:mm:ss"));
+        localStorage.setItem('deep', '' + this.baseSystem.getPlayerDeep());
+    }
+    loadGame() {
+        this.engine.erase();
+        this.initEngine();
+        this.engine.fromString(localStorage.getItem('engine'));
+        this.userName = localStorage.getItem('userName');
     }
 }
