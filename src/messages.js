@@ -19,6 +19,14 @@ messages.setMessages(
         'Welcome to game': 'Добро пожаловать в игру',
         'Main menu:': 'Главное меню:',
         'Current deep:': 'Текущая глубина:',
+        "Change name": 'Изменить имя',
+        'Start new game': 'Начать новую игру',
+        'Continue': 'Продолжить текущую игру',
+        'Save': 'Сохранить игру',
+        'Load': 'Загрузить',
+        'Help': 'Справка',
+        "Change language": "Изменить язык",
+        'Current:': 'Текущий:',
     }
 );
 

@@ -71,7 +71,7 @@ export default class MenuScene extends Scene {
         let i = 1;
         y += 2;
         for (let menuItem of this.menuList) {
-            let s = `${i}. ${menuItem}`;
+            let s = `${i}. ${messages.gettext(menuItem)}`;
             if (menuItem == this.menuItems.load) {
                 const userName = localStorage.getItem('userName');
                 const deep = localStorage.getItem('deep');
@@ -83,7 +83,7 @@ export default class MenuScene extends Scene {
                 }
             }
             if (menuItem == this.menuItems.changeLanguage) {
-                s += `. Current: ${messages.getLocale()}`;
+                s += `. ${messages.gettext('Current:')} ${messages.getLocale()}`;
             }
             this.app.display.drawText(3, y, s);
             y++;
