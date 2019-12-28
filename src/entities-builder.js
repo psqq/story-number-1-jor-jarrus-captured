@@ -4,7 +4,6 @@ import Component from "./core/ecs-engine/component";
 import Engine from "./core/ecs-engine/engine";
 import popRandomElement from "./tools/pop-random-element";
 import matrix from "./tools/matrix";
-import getuid from "./tools/getuid";
 import config from "./config";
 import DungeonComponent from "./components/dungeon-component";
 import Position2DComponent from "./components/position-2d-component";
@@ -20,7 +19,6 @@ import HealthPointsComponent from "./components/health-points-component";
 import ObstacleComponent from "./components/obstacle-component";
 import TeamComponent from "./components/team-component";
 import AutoAttackComponent from "./components/auto-attack-component";
-import IdComponent from "./components/id-component";
 import DeepComponent from "./components/deep-compnent";
 import DepthMovingComponent from "./components/depth-moving-component";
 import SimpleAiComponent from "./components/simple-ai-component";
@@ -41,10 +39,16 @@ export default class EntitiesBuilder {
         this.entities = [];
         return this;
     }
+    createSurface() {
+        return this;
+    }
     /**
      * @param {number} deep 
      */
     createDungeon(deep) {
+        // if (deep == 0) {
+        //     return this.createSurface();
+        // }
         /** @type {string[][]} */
         const map = [];
         /** @type {Victor[]} */

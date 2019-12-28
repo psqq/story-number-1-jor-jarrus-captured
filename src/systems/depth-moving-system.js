@@ -27,6 +27,7 @@ export default class DepthMovingSystem extends BaseSystem {
         const entity = this.getPlayer();
         const positionComp = entity.get(Position2DComponent);
         const deepComp = entity.get(DeepComponent);
+        const deep = deepComp.deep;
         const depthMovingComp = entity.get(DepthMovingComponent);
         const stairs = this.getStairs(depthMovingComp.toDeep, deepComp.deep);
         if (depthMovingComp.toDeep == null) {
@@ -53,7 +54,13 @@ export default class DepthMovingSystem extends BaseSystem {
                     })
             );
         }
-        let newPosition = getRandomElement(this.getMovablePositions(newDeep));
+        const stairsBack = this.getStairs(deep, newDeep);
+        let newPosition;
+        if (stairsBack) {
+            newPosition = stairsBack.get(Position2DComponent);
+        } else {
+            newPosition = getRandomElement(this.getMovablePositions(newDeep));
+        }
         positionComp
             .setup({
                 x: newPosition.x,
