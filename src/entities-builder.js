@@ -24,6 +24,7 @@ import IdComponent from "./components/id-component";
 import DeepComponent from "./components/deep-compnent";
 import DepthMovingComponent from "./components/depth-moving-component";
 import SimpleAiComponent from "./components/simple-ai-component";
+import KillComponent from "./components/kill-component";
 
 export default class EntitiesBuilder {
     constructor() {
@@ -125,7 +126,7 @@ export default class EntitiesBuilder {
                 .setup({
                     level: 1,
                     currentExperience: 0,
-                    nextLevelExperience: 100,
+                    nextLevelExperience: config.experience.experienceEnhancer,
                 }),
             new PhysicalDamageComponent()
                 .setup({
@@ -203,6 +204,20 @@ export default class EntitiesBuilder {
                 .setup({
                     attackingId: attackingId,
                     protectingId: protectingId,
+                })
+        ]);
+        return this;
+    }
+    /**
+     * @param {number} attackingId 
+     * @param {number} protectingId 
+     */
+    createKillEntity(killerId, killedId) {
+        this.entities.push([
+            new KillComponent()
+                .setup({
+                    killerId: killerId,
+                    killedId: killedId,
                 })
         ]);
         return this;

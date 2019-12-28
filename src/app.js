@@ -39,6 +39,8 @@ import SimpleAiSystem from "./systems/simple-ai-system";
 import SimpleAiComponent from "./components/simple-ai-component";
 import Scene from "./scenes/scene";
 import LoseScene from "./scenes/lose-scene";
+import KillComponent from "./components/kill-component";
+import ExperienceLevelSystem from "./systems/experience-level-system";
 
 export default class App {
     constructor() {
@@ -100,6 +102,7 @@ export default class App {
         this.engine.addSystem(new DepthMovingSystem(this.engine));
         this.engine.addSystem(new MovementSystem(this.engine));
         this.engine.addSystem(new AutoAttackSystem(this.engine));
+        this.engine.addSystem(new ExperienceLevelSystem(this.engine));
         this.engine.addSystem(new GrimReaperSystem(this.engine));
         this.engine.addSystem(new FovSystem(this.engine));
         this.engine.addSystem(new MemorizedFovAreasSystem(this.engine));
@@ -126,6 +129,7 @@ export default class App {
         this.engine.registerComponentClass(TeamComponent);
         this.engine.registerComponentClass(DepthMovingComponent);
         this.engine.registerComponentClass(SimpleAiComponent);
+        this.engine.registerComponentClass(KillComponent);
         this.initSystems();
     }
     initDisplay() {

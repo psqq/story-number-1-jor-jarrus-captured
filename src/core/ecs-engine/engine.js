@@ -4,6 +4,7 @@ import getuid from "../../tools/getuid";
 import Entity from "./entity";
 import EventEmitter from "wolfy87-eventemitter";
 import coreConfig from "../core-config";
+import SmartEntitiesContainer from "./smart-entities-container";
 
 export default class Engine extends EventEmitter {
     constructor() {
@@ -15,6 +16,25 @@ export default class Engine extends EventEmitter {
         this.entities = new Map();
         /** @type {Map<string, new(...args:any[]) => Component>} */
         this.registeredComponentClasses = new Map();
+        /** @type {SmartEntitiesContainer[]} */
+        this.smartEntityConatiners = [];
+    }
+    /**
+     * @param {{[key: string]: (new(...args:any[]) => Component)[]}} options
+     * @returns {{[key: string]: SmartEntitiesContainer}}
+     */
+    getSmartEntityContainers(options) {
+        const result = {};
+        for(let key in options) {
+            result[key] = new SmartEntitiesContainer(this, options[key]);
+        }
+        return result;
+    }
+    /**
+     * @param {(new(...args:any[]) => Component)[]} ComponentClasses 
+     */
+    getSmartEntityContainer(ComponentClasses) {
+        return new SmartEntitiesContainer(this, ComponentClasses);
     }
     erase() {
         for (let system of this.systems) {
@@ -27,6 +47,10 @@ export default class Engine extends EventEmitter {
         }
         this.entities = new Map();
         this.registeredComponentClasses = new Map();
+        for(let container of this.smartEntityConatiners) {
+            container.erase();
+        }
+        this.smartEntityConatiners = [];
     }
     /**
      * @param {number} entityId 

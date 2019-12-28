@@ -1,9 +1,9 @@
 import Engine from "../core/ecs-engine/engine";
-import SmartEntitiesContainer from "../core/ecs-engine/smart-entities-container";
 import BaseSystem from "./base-system";
 import AutoAttackComponent from "../components/auto-attack-component";
 import PhysicalDamageComponent from "../components/physical-damage-component";
 import HealthPointsComponent from "../components/health-points-component";
+import EntitiesBuilder from "../entities-builder";
 
 export default class AutoAttackSystem extends BaseSystem {
     /**
@@ -11,36 +11,38 @@ export default class AutoAttackSystem extends BaseSystem {
      */
     constructor(engine) {
         super(engine);
-        this.attackableEntities = new SmartEntitiesContainer(engine, [
-            PhysicalDamageComponent,
-        ]);
-        this.protectableEntities = new SmartEntitiesContainer(engine, [
-            HealthPointsComponent,
-        ]);
-        this.autoAttacksEntities = new SmartEntitiesContainer(engine, [
-            AutoAttackComponent
-        ]);
-    }
-    erase() {
-        super.erase();
-        this.attackableEntities.erase();
-        this.protectableEntities.erase();
-        this.autoAttacksEntities.erase();
+        this.es = {
+            attackable: this.engine.getSmartEntityContainer([
+                PhysicalDamageComponent
+            ]),
+            protectable: this.engine.getSmartEntityContainer([
+                HealthPointsComponent
+            ]),
+            aa: this.engine.getSmartEntityContainer([
+                AutoAttackComponent
+            ]),
+        };
     }
     /**
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for (let aaEntity of this.autoAttacksEntities.getEnties()) {
+        for (let aaEntity of this.es.aa.getEnties()) {
             const aaComp = aaEntity.get(AutoAttackComponent);
-            const attacker = this.attackableEntities.getEntityById(aaComp.attackingId);
-            const protecter = this.protectableEntities.getEntityById(aaComp.protectingId);
+            const attacker = this.es.attackable.getEntityById(aaComp.attackingId);
+            const protecter = this.es.protectable.getEntityById(aaComp.protectingId);
             if (!attacker || !protecter) {
-                this.engine.removeEntity(aaEntity.getId());
                 continue;
             }
             protecter.get(HealthPointsComponent).currentHealthPoints -=
                 attacker.get(PhysicalDamageComponent).currentPhysicalDamage;
+            if (protecter.get(HealthPointsComponent).currentHealthPoints <= 0) {
+                new EntitiesBuilder()
+                    .createKillEntity(aaComp.attackingId, aaComp.protectingId)
+                    .addCreatedEntitiesToEngine(this.engine);
+            }
+        }
+        for (let aaEntity of this.es.aa.getEnties()) {
             this.engine.removeEntity(aaEntity.getId());
         }
     }
