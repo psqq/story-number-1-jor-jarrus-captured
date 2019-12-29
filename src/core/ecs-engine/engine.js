@@ -202,7 +202,7 @@ export default class Engine extends EventEmitter {
         }
     }
     getEntityData(entityId) {
-        const componentsOfEntity = this.entities[entityId];
+        const componentsOfEntity = this.entities.get(entityId);
         const data = {};
         for (let [nameOfComponentClass, components] of componentsOfEntity) {
             data[nameOfComponentClass] = [];

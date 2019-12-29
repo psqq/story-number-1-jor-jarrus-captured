@@ -197,7 +197,7 @@ export default class App {
     saveGame() {
         localStorage.setItem('engine', this.engine.toString());
         localStorage.setItem('userName', this.userName);
-        localStorage.setItem('date', moment().format("MMM Do YY, hh:mm:ss"));
+        localStorage.setItem('date', moment().format("MMM Do YY, HH:mm:ss"));
         localStorage.setItem('deep', '' + this.baseSystem.getPlayerDeep());
     }
     loadGame() {
