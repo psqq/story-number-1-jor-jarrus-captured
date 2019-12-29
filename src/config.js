@@ -94,16 +94,16 @@ const sceneNames = {
     game: "game-scene",
 };
 
-const mapSize = { x: 40, y: 30 };
+const mapSize = { x: 30, y: 30 };
 
-const leftRightPadding = 10;
+const leftRightPadding = 0;
 
 const gameSceneTopBar = {
     x: 0,
     y: 0,
     viewX: 0,
     viewY: 0,
-    height: 2,
+    height: 0,
 };
 
 const gameSceneBottomBar = {
@@ -111,7 +111,7 @@ const gameSceneBottomBar = {
     y: gameSceneTopBar.height + mapSize.y,
     viewX: 0,
     viewY: gameSceneTopBar.height + mapSize.y + 1,
-    height: 2,
+    height: 0,
 };
 
 const gameSceneBars = {

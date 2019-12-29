@@ -47,6 +47,9 @@ export default class BaseSystem extends System {
         this.baseTeamBeingsEntities = new SmartEntitiesContainer(engine, [
             TeamComponent, Position2DComponent, DeepComponent,
         ]);
+        this.basePositionEntities = new SmartEntitiesContainer(engine, [
+            Position2DComponent, DeepComponent,
+        ]);
     }
     erase() {
         super.erase();
@@ -55,6 +58,27 @@ export default class BaseSystem extends System {
         this.baseTeamBeingsEntities.erase();
         this.baseStairsEntities.erase();
         this.baseObstacleEntities.erase();
+    }
+    /**
+     * @param {Victor} position 
+     * @param {number} deep 
+     */
+    getEntitiesInPosition(position, deep = null) {
+        if (deep == null) {
+            deep = this.getPlayerDeep();
+        }
+        const result = [];
+        for(let entity of this.basePositionEntities.getEnties()) {
+            const posComp = entity.get(Position2DComponent);
+            const deepComp = entity.get(DeepComponent);
+            if (deepComp.deep != deep) {
+                continue;
+            }
+            if (position.isEqualTo(posComp)) {
+                result.push(entity);
+            }
+        }
+        return result;
     }
     /**
      * @param {Victor} position 

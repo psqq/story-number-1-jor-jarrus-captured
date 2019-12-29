@@ -47,6 +47,10 @@ export default class App {
         // display
         this.appElement = null;
         this.display = new Display(config.rotjsDisplayOptions);
+        /** @type {HTMLDivElement} */
+        this.leftBar = document.querySelector('.left-bar');
+        /** @type {HTMLDivElement} */
+        this.rightBar = document.querySelector('.right-bar');
         // engine
         this.engine = new Engine();
         this.baseSystem = null;
@@ -106,7 +110,7 @@ export default class App {
         this.engine.addSystem(new GrimReaperSystem(this.engine));
         this.engine.addSystem(new FovSystem(this.engine));
         this.engine.addSystem(new MemorizedFovAreasSystem(this.engine));
-        this.engine.addSystem(new GameSceneUiSystem(this.engine, this.display));
+        this.engine.addSystem(new GameSceneUiSystem(this.engine, this));
         this.engine.addSystem(new DungeonDisplaySystem(this.engine, this.display));
         this.engine.addSystem(new DisplaySystem(this.engine, this.display));
     }
@@ -159,8 +163,27 @@ export default class App {
         this.initEngine();
         this.createEntities();
     }
+    adjustElementSizes() {
+        const displayCanvas = document.querySelector('canvas');
+        const paddingsOfBars = 10;
+        const widthOfBars =
+            (window.innerWidth - displayCanvas.width - 4 * paddingsOfBars) / 2;
+        const heightOfBars = window.innerHeight - 2 * paddingsOfBars;
+        this.leftBar.style.width = widthOfBars + "px";
+        this.leftBar.style.height = heightOfBars + "px";
+        this.leftBar.style.left = paddingsOfBars + "px";
+        this.leftBar.style.top = paddingsOfBars + "px";
+        this.rightBar.style.width = widthOfBars + "px";
+        this.rightBar.style.height = heightOfBars + "px";
+        this.rightBar.style.right = paddingsOfBars + "px";
+        this.rightBar.style.top = paddingsOfBars + "px";
+    }
     run() {
         this.menuScene.start();
+        this.adjustElementSizes();
+        window.addEventListener("resize", (event) => {
+            this.adjustElementSizes();
+        });
     }
     saveGame() {
         localStorage.setItem('engine', this.engine.toString());

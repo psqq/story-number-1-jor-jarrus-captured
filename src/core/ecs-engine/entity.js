@@ -11,6 +11,7 @@ export default class Entity {
         this.id = id;
         this.components = components;
         this.engine = engine;
+        this.noExpcetions = true;
     }
     /**
      * Destructor
@@ -18,6 +19,14 @@ export default class Entity {
     erase() {}
     getId() {
         return this.id;
+    }
+    getAllComponents() {
+        /** @type {Component[]} */
+        const allComponents = [];
+        for(let [nameOfComponentClass, components] of this.components) {
+            allComponents = allComponents.concat(components);
+        }
+        return allComponents;
     }
     /**
      * @param {new (...arg: any) => T} ComponentClass 
@@ -27,11 +36,19 @@ export default class Entity {
     get(ComponentClass) {
         const nameOfComponentClass = this.engine.getNameOfComponentClass(ComponentClass);
         if (!this.components.has(nameOfComponentClass)) {
-            throw "Component not found in entity: " + nameOfComponentClass;
+            if (this.noExpcetions) {
+                return;
+            } else {
+                throw "Component not found in entity: " + nameOfComponentClass;
+            }
         }
         const componentsOfThisComponentClass = this.components.get(nameOfComponentClass);
         if (componentsOfThisComponentClass.length == 0) {
-            throw "Component not found in entity: " + nameOfComponentClass;
+            if (this.noExpcetions) {
+                return;
+            } else {
+                throw "Component not found in entity: " + nameOfComponentClass;
+            }
         }
         return componentsOfThisComponentClass[0];
     }
@@ -43,11 +60,19 @@ export default class Entity {
     gets(ComponentClass) {
         const nameOfComponentClass = this.engine.getNameOfComponentClass(ComponentClass);
         if (!this.components.has(nameOfComponentClass)) {
-            throw "Component not found in entity: " + nameOfComponentClass;
+            if (this.noExpcetions) {
+                return;
+            } else {
+                throw "Component not found in entity: " + nameOfComponentClass;
+            }
         }
         const componentsOfThisComponentClass = this.components.get(nameOfComponentClass);
         if (componentsOfThisComponentClass.length == 0) {
-            throw "Component not found in entity: " + nameOfComponentClass;
+            if (this.noExpcetions) {
+                return;
+            } else {
+                throw "Component not found in entity: " + nameOfComponentClass;
+            }
         }
         return componentsOfThisComponentClass;
     }

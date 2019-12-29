@@ -25,7 +25,7 @@ export default class Engine extends EventEmitter {
      */
     getSmartEntityContainers(options) {
         const result = {};
-        for(let key in options) {
+        for (let key in options) {
             result[key] = new SmartEntitiesContainer(this, options[key]);
         }
         return result;
@@ -47,7 +47,7 @@ export default class Engine extends EventEmitter {
         }
         this.entities = new Map();
         this.registeredComponentClasses = new Map();
-        for(let container of this.smartEntityConatiners) {
+        for (let container of this.smartEntityConatiners) {
             container.erase();
         }
         this.smartEntityConatiners = [];
@@ -194,25 +194,28 @@ export default class Engine extends EventEmitter {
         this.emit(coreConfig.engineEvents.entityRemoved, entityId);
     }
     /**
-     * @param {number} dt 
+     * @param {number} deltaTime 
      */
-    update(dt = 0) {
+    update(deltaTime = 0) {
         for (let system of this.systems) {
-            system.update(dt);
+            system.update(deltaTime);
         }
+    }
+    getEntityData(entityId) {
+        const componentsOfEntity = this.entities[entityId];
+        const data = {};
+        for (let [nameOfComponentClass, components] of componentsOfEntity) {
+            data[nameOfComponentClass] = [];
+            for (let component of components) {
+                data[nameOfComponentClass].push(component);
+            }
+        }
+        return data;
     }
     toString() {
         const data = { entities: {} };
-        for (let [entityId, componentsOfEntity] of this.entities) {
-            data.entities[entityId] = {};
-            for (let [nameOfComponentClass, components] of componentsOfEntity) {
-                data.entities[entityId][nameOfComponentClass] = [];
-                for (let component of components) {
-                    data.entities[entityId][nameOfComponentClass].push(
-                        component
-                    );
-                }
-            }
+        for (let entityId of this.entities.keys()) {
+            data.entities[entityId] = this.getEntityData(entityId);
         }
         return JSON.stringify(data);
     }

@@ -7,6 +7,8 @@ import TeamComponent from '../components/team-component';
 import DepthMovingComponent from '../components/depth-moving-component';
 import DeepComponent from '../components/deep-compnent';
 import MoveDirection2DComponent from '../components/move-direction-2d-component';
+import Informer from '../informer';
+import Victor from "victor";
 
 /**
  * Represents the scene that displays the menu.
@@ -17,22 +19,53 @@ export default class GameScene extends Scene {
      */
     constructor(app) {
         super(app);
+        this.informer = new Informer(this.app);
+        /** @type {Victor} */
+        this.infoPosition = null;
     }
     /**
      * Opens the menu scene.
      */
     start() {
         super.start();
-        this.app.update();
+        this.update();
     }
     /**
      * Draw screen.
      */
-    draw() { }
+    draw() {
+        if (!this.app.baseSystem.getPlayer()) {
+            return;
+        }
+        this.app.leftBar.innerHTML = this.informer.getInfo(this.app.baseSystem.getPlayer());
+        if (this.infoPosition) {
+            const fov = this.app.baseSystem.getPlayerFov().fov;
+            if (fov[this.infoPosition.x] && fov[this.infoPosition.x][this.infoPosition.y]) {
+                this.app.rightBar.innerHTML = this.informer.getInfoAboutPosition(this.infoPosition);
+            }
+        }
+    }
+    /**
+     * @param {number} deltaTime 
+     */
+    update(deltaTime = 0) {
+        this.app.update(deltaTime);
+        this.draw();
+    }
     /**
      * @param {Event} event
      */
     handleEvent(event) {
+        super.handleEvent(event);
+        if (event.type == 'mousemove') {
+            if (this.infoPosition == null
+                || !this.infoPosition.isEqualTo(this.mouseMovePosition)
+            ) {
+                this.infoPosition = this.mouseMovePosition;
+                console.log(this.infoPosition);
+                this.draw();
+            }
+        }
         if (event.type == 'keydown') {
             /** @type {KeyboardEvent} */
             const keyboardEvent = event;
@@ -54,7 +87,7 @@ export default class GameScene extends Scene {
                     .setup({
                         toDeep: deep + 1,
                     });
-                this.app.update();
+                this.update();
                 return;
             }
             if (keyboardEvent.key == '<' && keyboardEvent.shiftKey) {
@@ -62,7 +95,7 @@ export default class GameScene extends Scene {
                     .setup({
                         toDeep: deep - 1,
                     });
-                this.app.update();
+                this.update();
                 return;
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);
@@ -82,7 +115,7 @@ export default class GameScene extends Scene {
                         enemy.getId(),
                     )
                     .addCreatedEntitiesToEngine(this.app.engine);
-                this.app.update();
+                this.update();
                 return;
             }
             player.get(MoveDirection2DComponent)
@@ -90,7 +123,7 @@ export default class GameScene extends Scene {
                     x: direction.x,
                     y: direction.y,
                 });
-            this.app.update();
+            this.update();
             return;
         }
     }
