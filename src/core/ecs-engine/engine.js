@@ -55,6 +55,12 @@ export default class Engine extends EventEmitter {
     /**
      * @param {number} entityId 
      */
+    isEntity(entityId) {
+        return this.entities.has(entityId);
+    }
+    /**
+     * @param {number} entityId 
+     */
     getEntityById(entityId, ComponentClasses) {
         const components = this.entities.get(entityId);
         const entity = new Entity(entityId, components, this, ComponentClasses);

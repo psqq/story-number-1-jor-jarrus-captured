@@ -65,3 +65,7 @@ canvas {
     left: 0;
     right: 0;
 }
+
+.indent {
+    padding-left: 20px;    
+}

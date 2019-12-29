@@ -23,6 +23,7 @@ import DeepComponent from "./components/deep-compnent";
 import DepthMovingComponent from "./components/depth-moving-component";
 import SimpleAiComponent from "./components/simple-ai-component";
 import KillComponent from "./components/kill-component";
+import TypeComponent from "./components/type-component";
 
 export default class EntitiesBuilder {
     constructor() {
@@ -94,9 +95,13 @@ export default class EntitiesBuilder {
      */
     createPlayer(position, deep) {
         this.entities.push([
+            new TypeComponent()
+                .setup({
+                    typeName: config.beingTypes.player,
+                }),
             new TeamComponent()
                 .setup({
-                    teamName: 'humans',
+                    teamName: config.teams.humans,
                 }),
             new ObstacleComponent(),
             new FovComponent()
@@ -157,9 +162,13 @@ export default class EntitiesBuilder {
      */
     createGoblinMinion(position, deep) {
         this.entities.push([
+            new TypeComponent()
+                .setup({
+                    typeName: config.beingTypes.goblinMinion,
+                }),
             new TeamComponent()
                 .setup({
-                    teamName: 'goblins',
+                    teamName: config.teams.goblins,
                 }),
             new ObstacleComponent(),
             new SimpleAiComponent(),
@@ -233,6 +242,10 @@ export default class EntitiesBuilder {
      */
     createStairs(position, deep, toDeep) {
         this.entities.push([
+            new TypeComponent()
+                .setup({
+                    typeName: config.beingTypes.stairs,
+                }),
             new StairsComponent()
                 .setup({
                     toDeep

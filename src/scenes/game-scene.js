@@ -10,6 +10,8 @@ import MoveDirection2DComponent from '../components/move-direction-2d-component'
 import Informer from '../informer';
 import Victor from "victor";
 import config from '../config';
+import { el, list, mount, text, unmount } from "redom";
+import Entity from '../core/ecs-engine/entity';
 
 /**
  * Represents the scene that displays the menu.
@@ -23,7 +25,11 @@ export default class GameScene extends Scene {
         this.informer = new Informer(this.app);
         /** @type {Victor} */
         this.infoPosition = null;
+        /** @type {Entity} */
+        this.infoEntity = null;
         this.el = document.querySelector(config.screens.game.elementSelector);
+        this.leftInfoEl = null;
+        this.rightInfoEl = null;
     }
     /**
      * Opens the menu scene.
@@ -47,12 +53,29 @@ export default class GameScene extends Scene {
         if (this.app.currentScene != this) {
             return;
         }
-        this.app.leftBar.innerHTML = this.informer.getInfo(this.app.baseSystem.getPlayer());
-        if (this.infoPosition) {
+        if (this.leftInfoEl) {
+            unmount(this.app.leftBar, this.leftInfoEl);
+            this.leftInfoEl = null;
+        }
+        if (this.rightInfoEl) {
+            unmount(this.app.rightBar, this.rightInfoEl);
+            this.rightInfoEl = null;
+        }
+        this.leftInfoEl = this.informer.getInfoEl(this.app.baseSystem.getPlayer());
+        if (this.infoEntity) {
+            if (this.app.engine.isEntity(this.infoEntity.getId())) {
+                this.rightInfoEl = this.informer.getInfoEl(this.infoEntity);
+            }
+        }
+        if (!this.rightInfoEl && this.infoPosition) {
             const fov = this.app.baseSystem.getPlayerFov().fov;
             if (fov[this.infoPosition.x] && fov[this.infoPosition.x][this.infoPosition.y]) {
-                this.app.rightBar.innerHTML = this.informer.getInfoAboutPosition(this.infoPosition);
+                this.rightInfoEl = this.informer.getInfoElAboutPosition(this.infoPosition);
             }
+        }
+        mount(this.app.leftBar, this.leftInfoEl);
+        if (this.rightInfoEl) {
+            mount(this.app.rightBar, this.rightInfoEl);
         }
     }
     /**

@@ -42,6 +42,7 @@ import LoseScene from "./scenes/lose-scene";
 import KillComponent from "./components/kill-component";
 import ExperienceLevelSystem from "./systems/experience-level-system";
 import CharacteristicsSystem from "./systems/characteristics-system";
+import TypeComponent from "./components/type-component";
 
 export default class App {
     constructor() {
@@ -143,6 +144,7 @@ export default class App {
         this.engine.registerComponentClass(DepthMovingComponent);
         this.engine.registerComponentClass(SimpleAiComponent);
         this.engine.registerComponentClass(KillComponent);
+        this.engine.registerComponentClass(TypeComponent);
         this.initSystems();
     }
     initDisplay() {

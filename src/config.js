@@ -182,6 +182,15 @@ const config = {
             elementSelector: '.lose-screen',
         },
     },
+    teams: {
+        goblins: 'goblins',
+        humans: 'humans',
+    },
+    beingTypes: {
+        goblinMinion: 'goblin-minion',
+        player: 'player',
+        stairs: 'stairs',
+    }
 };
 
 export default config;
