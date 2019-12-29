@@ -184,7 +184,7 @@ const config = {
         fontFamily: 'Typori',
     },
     defaultUserName: 'User Name',
-    appElementSelector: '.app',
+    mainMenuElementSelector: '.main-menu',
 };
 
 export default config;

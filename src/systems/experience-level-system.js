@@ -3,6 +3,8 @@ import BaseSystem from "./base-system";
 import KillComponent from "../components/kill-component";
 import ExperienceLevelComponent from "../components/experience-level-component";
 import config from "../config";
+import HealthPointsComponent from "../components/health-points-component";
+import Entity from "../core/ecs-engine/entity";
 
 export default class ExperienceLevelSystem extends BaseSystem {
     /**
@@ -54,5 +56,9 @@ export default class ExperienceLevelSystem extends BaseSystem {
     /**
      * @param {Entity} entity 
      */
-    levelup(entity) { }
+    levelup(entity) {
+        const hpComp = entity.get(HealthPointsComponent);
+        hpComp.currentHealthPoints += hpComp.healthPointsPerLevel;
+        hpComp.baseHealthPoints += hpComp.healthPointsPerLevel;
+    }
 }

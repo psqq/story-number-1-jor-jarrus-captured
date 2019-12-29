@@ -62,7 +62,6 @@ export default class GameScene extends Scene {
                 || !this.infoPosition.isEqualTo(this.mouseMovePosition)
             ) {
                 this.infoPosition = this.mouseMovePosition;
-                console.log(this.infoPosition);
                 this.draw();
             }
         }

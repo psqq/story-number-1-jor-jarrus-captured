@@ -137,7 +137,7 @@ export default class EntitiesBuilder {
                     basePhysicalDamage: config.heroStats.physicalDamage,
                     bonusPhysicalDamage: 0,
                     currentPhysicalDamage: config.heroStats.physicalDamage,
-                    enhancerPhysicalDamagePerLevel: config.heroStats.physicalDamagePerLevel,
+                    physicalDamagePerLevel: config.heroStats.physicalDamagePerLevel,
                     maxPhysicalDamage: config.heroStats.physicalDamage,
                 }),
             new HealthPointsComponent()
@@ -145,7 +145,7 @@ export default class EntitiesBuilder {
                     baseHealthPoints: config.heroStats.healthPoints,
                     bonusHealthPoints: 0,
                     currentHealthPoints: config.heroStats.healthPoints,
-                    enhancerHealthPointsPerLevel: config.heroStats.healthPointsPerLevel,
+                    healthPointsPerLevel: config.heroStats.healthPointsPerLevel,
                     maxHealthPoints: config.heroStats.healthPoints,
                 }),
         ]);
@@ -184,7 +184,7 @@ export default class EntitiesBuilder {
                     basePhysicalDamage: config.goblinMinionStats.physicalDamage,
                     bonusPhysicalDamage: 0,
                     currentPhysicalDamage: config.goblinMinionStats.physicalDamage,
-                    enhancerPhysicalDamagePerLevel: config.goblinMinionStats.physicalDamagePerLevel,
+                    physicalDamagePerLevel: config.goblinMinionStats.physicalDamagePerLevel,
                     maxPhysicalDamage: config.goblinMinionStats.physicalDamage,
                 }),
             new HealthPointsComponent()
@@ -192,7 +192,7 @@ export default class EntitiesBuilder {
                     baseHealthPoints: config.goblinMinionStats.healthPoints,
                     bonusHealthPoints: 0,
                     currentHealthPoints: config.goblinMinionStats.healthPoints,
-                    enhancerHealthPointsPerLevel: config.goblinMinionStats.healthPointsPerLevel,
+                    healthPointsPerLevel: config.goblinMinionStats.healthPointsPerLevel,
                     maxHealthPoints: config.goblinMinionStats.healthPoints,
                 }),
         ]);

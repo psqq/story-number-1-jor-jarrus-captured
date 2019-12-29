@@ -41,11 +41,12 @@ import Scene from "./scenes/scene";
 import LoseScene from "./scenes/lose-scene";
 import KillComponent from "./components/kill-component";
 import ExperienceLevelSystem from "./systems/experience-level-system";
+import CharacteristicsSystem from "./systems/characteristics-system";
 
 export default class App {
     constructor() {
         // display
-        this.appElement = null;
+        this.mainMenuEl = null;
         this.display = new Display(config.rotjsDisplayOptions);
         /** @type {HTMLDivElement} */
         this.leftBar = document.querySelector('.left-bar');
@@ -100,14 +101,19 @@ export default class App {
             ;
     }
     initSystems() {
+        // System with base functions
         this.baseSystem = new BaseSystem(this.engine);
         this.engine.addSystem(this.baseSystem);
+        // Prepare systems
+        this.engine.addSystem(new CharacteristicsSystem(this.engine));
         this.engine.addSystem(new SimpleAiSystem(this.engine));
+        // Action systems
         this.engine.addSystem(new DepthMovingSystem(this.engine));
         this.engine.addSystem(new MovementSystem(this.engine));
         this.engine.addSystem(new AutoAttackSystem(this.engine));
         this.engine.addSystem(new ExperienceLevelSystem(this.engine));
         this.engine.addSystem(new GrimReaperSystem(this.engine));
+        // Display systems
         this.engine.addSystem(new FovSystem(this.engine));
         this.engine.addSystem(new MemorizedFovAreasSystem(this.engine));
         this.engine.addSystem(new GameSceneUiSystem(this.engine, this));
@@ -137,8 +143,8 @@ export default class App {
         this.initSystems();
     }
     initDisplay() {
-        this.appElement = document.querySelector(config.appElementSelector);
-        this.appElement.appendChild(this.display.getContainer());
+        this.mainMenuEl = document.querySelector(config.mainMenuElementSelector);
+        this.mainMenuEl.appendChild(this.display.getContainer());
     }
     init() {
         this.restoreLocale();
