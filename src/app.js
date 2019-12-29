@@ -160,6 +160,7 @@ export default class App {
     update(deltaTime = 0) {
         this.display.clear();
         this.engine.update(deltaTime);
+        this.engine.update(0);
         if (!this.baseSystem.getPlayer()) {
             this.startNewGame();
             this.currentScene.switchTo(this.loseScene);

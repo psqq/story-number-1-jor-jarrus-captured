@@ -44,6 +44,15 @@ export default class MenuScene extends Scene {
         if (this.menuEl) {
             unmount(this.el, this.menuEl);
         }
+        const userName = localStorage.getItem('userName');
+        const deep = localStorage.getItem('deep');
+        const date = localStorage.getItem('date');
+        let loadStatus = '';
+        if (!userName || !deep || !date) {
+            loadStatus += ': ' + _("no saved games");
+        } else {
+            loadStatus += `: ${userName} (${_("deep:")} ${deep}) ${date}`;
+        }
         this.menuEl = el("div.main-menu-list", [
             el("p.story-msg", [
                 text(_('Welcome to game') + `, `),
@@ -72,7 +81,7 @@ export default class MenuScene extends Scene {
                     text(_("Save"))
                 ]),
                 this.loadEl = el("li.text-button", [
-                    text(_("Load"))
+                    text(_("Load") + loadStatus)
                 ]),
                 this.changeLangEl = el("li.text-button", [
                     text(_("Change language") + ' (Change language)')

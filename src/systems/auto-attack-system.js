@@ -37,8 +37,8 @@ export default class AutoAttackSystem extends BaseSystem {
             if (!attacker || !protecter) {
                 continue;
             }
-            protecter.get(HealthPointsComponent).currentHealthPoints -=
-                attacker.get(PhysicalDamageComponent).currentPhysicalDamage;
+            const dmg = attacker.get(PhysicalDamageComponent).currentPhysicalDamage;
+            protecter.get(HealthPointsComponent).currentHealthPoints -= dmg;
             if (protecter.get(HealthPointsComponent).currentHealthPoints <= 0) {
                 new EntitiesBuilder()
                     .createKillEntity(aaComp.attackingId, aaComp.protectingId)

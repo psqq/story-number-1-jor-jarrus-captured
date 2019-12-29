@@ -29,7 +29,13 @@ export default class SimpleAiSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
+        if (deltaTime <= 0) {
+            return;
+        }
         const player = this.getPlayer();
+        if (!player) {
+            return;
+        }
         const playerFov = player.get(FovComponent).fov;
         const playerPos = new Victor().copy(player.get(Position2DComponent));
         for (let aiEntity of this.aiEntities.getEnties()) {

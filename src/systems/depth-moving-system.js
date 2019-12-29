@@ -25,6 +25,9 @@ export default class DepthMovingSystem extends BaseSystem {
      */
     update(deltaTime) {
         const entity = this.getPlayer();
+        if (!entity) {
+            return;
+        }
         const positionComp = entity.get(Position2DComponent);
         const deepComp = entity.get(DeepComponent);
         const deep = deepComp.deep;
