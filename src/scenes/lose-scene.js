@@ -30,6 +30,7 @@ export default class LoseScene extends Scene {
             el("pre", [
                 text(_(config.messages.enLoseScreenText))
             ]),
+            el("hr"),
             this.backEl = el("span.text-button", [
                 text(_('Main menu'))
             ]),

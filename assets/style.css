@@ -6,6 +6,13 @@ body {
     font-size: 12pt;
 }
 
+hr {
+    border: none;
+    color: #777;
+    background-color: #777;
+    height: 1px;
+}
+
 .story-msg {
     font-style: italic;
 }
@@ -25,6 +32,8 @@ body {
     left: 0;
     right: 0;
     top: 20px;
+    bottom: 20px;
+    overflow-y: auto;
 }
 
 .left-bar {

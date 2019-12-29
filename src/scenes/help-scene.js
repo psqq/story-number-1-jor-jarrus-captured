@@ -28,9 +28,11 @@ export default class HelpScene extends Scene {
             el("h3", [
                 text(_("Help"))
             ]),
+            el("hr"),
             el("pre", [
                 text(_(config.messages.enHelpScreenText))
             ]),
+            el("hr"),
             this.backEl = el("span.text-button", [
                 text(_('Back'))
             ]),
@@ -44,5 +46,12 @@ export default class HelpScene extends Scene {
      * @param {Event} event
      */
     handleEvent(event) {
+        if (event.type === 'keydown') {
+            /** @type {KeyboardEvent} */
+            const keyboardEvent = event;
+            if (keyboardEvent.code === 'Escape') {
+                this.back();
+            }
+        }
     }
 }
