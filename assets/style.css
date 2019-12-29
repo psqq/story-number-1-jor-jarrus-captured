@@ -3,24 +3,14 @@ body {
     background-color: black;
     overflow: hidden;
     color: #bbb;
+    font-size: 12pt;
 }
 
 .story-msg {
     font-style: italic;
 }
 
-canvas {
-    padding: 0;
-    margin: auto;
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.main-menu-list li:hover {
+.text-button:hover {
     font-weight: bold;
     cursor: pointer;
 }
@@ -44,7 +34,6 @@ canvas {
     bottom: 10px;
     width: 200px;
     overflow-y: auto;
-    font-size: 12pt;
 }
 
 .right-bar {
@@ -55,5 +44,14 @@ canvas {
     bottom: 10px;
     width: 200px;
     overflow-y: auto;
-    font-size: 12pt;
+}
+
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
 }

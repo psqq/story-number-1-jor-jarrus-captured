@@ -38,6 +38,13 @@ export default class DepthMovingSystem extends BaseSystem {
                 .copy(stairs.get(Position2DComponent))
                 .isEqualTo(positionComp) == false
         ) {
+            depthMovingComp
+                .setup({
+                    toDeep: null
+                });
+            return;
+        }
+        if (deltaTime <= 0) {
             return;
         }
         const newDeep = depthMovingComp.toDeep;

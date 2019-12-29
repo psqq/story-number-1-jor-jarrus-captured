@@ -14,7 +14,6 @@ export default class MenuScene extends Scene {
         super(app);
         this.el = document.querySelector(config.screens.mainMenu.elementSelector);
         this.locales = ["en", "ru"];
-        this.choosedLocale = this.locales.indexOf(messages.getLocale());
     }
     /**
      * @param {number} dx 
@@ -34,6 +33,7 @@ export default class MenuScene extends Scene {
      */
     start() {
         super.start();
+        this.choosedLocale = this.locales.indexOf(messages.getLocale());
         this.draw();
     }
     /**
@@ -45,29 +45,39 @@ export default class MenuScene extends Scene {
             unmount(this.el, this.menuEl);
         }
         this.menuEl = el("div.main-menu-list", [
+            el("p.story-msg", [
+                text(_('Welcome to game') + `, `),
+                el("b", [
+                    text(`${this.app.userName}`)
+                ]),
+                text('!'),
+            ]),
+            el("p.story-msg", [
+                text(`${_('Current deep:')} ${this.app.baseSystem.getPlayerDeep()}`)
+            ]),
             el("h3", [
                 text(_("Main menu"))
             ]),
             el("ol", [
-                this.changeNameEl = el("li", [
+                this.changeNameEl = el("li.text-button", [
                     text(_("Change name"))
                 ]),
-                this.startNewGameEl = el("li", [
+                this.startNewGameEl = el("li.text-button", [
                     text(_("Start new game"))
                 ]),
-                this.ContinueEl = el("li", [
+                this.continueEl = el("li.text-button", [
                     text(_("Continue"))
                 ]),
-                this.saveEl = el("li", [
+                this.saveEl = el("li.text-button", [
                     text(_("Save"))
                 ]),
-                this.loadEl = el("li", [
+                this.loadEl = el("li.text-button", [
                     text(_("Load"))
                 ]),
-                this.changeLangEl = el("li", [
-                    text(_("Change language"))
+                this.changeLangEl = el("li.text-button", [
+                    text(_("Change language") + ' (Change language)')
                 ]),
-                this.helpEl = el("li", [
+                this.helpEl = el("li.text-button", [
                     text(_("Help"))
                 ]),
             ]),
@@ -78,9 +88,32 @@ export default class MenuScene extends Scene {
                 text(textToOneLineString(_(config.messages.enPurposeMsg)))
             ]),
         ]);
+        this.changeNameEl.onclick = () => {
+            let newName = prompt("Enter your name");
+            this.app.userName = newName;
+            this.draw();
+        };
+        this.startNewGameEl.onclick = () => {
+            this.app.startNewGame();
+            this.switchTo(this.app.gameScene);
+        };
+        this.continueEl.onclick = () => {
+            this.switchTo(this.app.gameScene);
+        };
+        this.saveEl.onclick = () => {
+            this.app.saveGame();
+            this.draw();
+        };
+        this.loadEl.onclick = () => {
+            this.app.loadGame();
+            this.draw();
+        };
         this.changeLangEl.onclick = () => {
             this.changeLanguage(1);
             this.draw();
+        };
+        this.helpEl.onclick = () => {
+            this.switchTo(this.app.helpScene);
         };
         mount(this.el, this.menuEl);
     }
@@ -89,60 +122,5 @@ export default class MenuScene extends Scene {
      * @param {Event} event
      */
     handleEvent(event) {
-        if (event.type === 'keydown') {
-            /** @type {KeyboardEvent} */
-            const keyboardEvent = event;
-            if (keyboardEvent.code === 'Enter') {
-                if (this.menuList[this.selected - 1] === this.menuItems.changName) {
-                    let newName = prompt("Enter your name");
-                    this.app.userName = newName;
-                    this.draw();
-                    return;
-                }
-                if (this.menuList[this.selected - 1] === this.menuItems.startNewGame) {
-                    this.app.startNewGame();
-                    this.switchTo(this.app.gameScene);
-                    return;
-                }
-                if (this.menuList[this.selected - 1] === "Continue") {
-                    this.switchTo(this.app.gameScene);
-                    return;
-                }
-                if (this.menuList[this.selected - 1] === "Save") {
-                    this.app.saveGame();
-                    this.draw();
-                    return;
-                }
-                if (this.menuList[this.selected - 1] === "Load") {
-                    this.app.loadGame();
-                    this.draw();
-                    return;
-                }
-                if (this.menuList[this.selected - 1] === "Help") {
-                    this.switchTo(this.app.helpScene);
-                    return;
-                }
-            }
-            const direction = getDirectionByKeyboardEvent(keyboardEvent);
-            if (!direction) {
-                return;
-            }
-            if (this.menuList[this.selected - 1] === this.menuItems.changeLanguage) {
-                if (direction.x != 0) {
-                    this.changeLanguage(direction.x);
-                    this.draw();
-                    return;
-                }
-            }
-            this.selected += direction.y;
-            if (this.selected < 1) {
-                this.selected = this.menuList.length;
-            }
-            if (this.selected > this.menuList.length) {
-                this.selected = 1;
-            }
-            this.selected = Math.max(1, Math.min(this.menuList.length, this.selected));
-            this.draw();
-        }
     }
 }

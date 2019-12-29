@@ -28,6 +28,7 @@ messages.setMessages(
         'Help': 'Справка',
         "Change language": "Изменить язык",
         'Current:': 'Текущий:',
+        'Back': 'Назад',
     }
 );
 

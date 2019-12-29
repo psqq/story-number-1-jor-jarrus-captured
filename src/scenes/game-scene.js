@@ -32,11 +32,19 @@ export default class GameScene extends Scene {
         super.start();
         this.update();
     }
+    finish() {
+        super.finish();
+        this.app.leftBar.innerHTML = '';
+        this.app.rightBar.innerHTML = '';
+    }
     /**
      * Draw screen.
      */
     draw() {
         if (!this.app.baseSystem.getPlayer()) {
+            return;
+        }
+        if (this.app.currentScene != this) {
             return;
         }
         this.app.leftBar.innerHTML = this.informer.getInfo(this.app.baseSystem.getPlayer());
@@ -89,6 +97,9 @@ export default class GameScene extends Scene {
                         toDeep: deep + 1,
                     });
                 this.update();
+                if (player.get(DepthMovingComponent).isInitialized()) {
+                    this.update(1);
+                }
                 return;
             }
             if (keyboardEvent.key == '<' && keyboardEvent.shiftKey) {
@@ -97,6 +108,9 @@ export default class GameScene extends Scene {
                         toDeep: deep - 1,
                     });
                 this.update();
+                if (player.get(DepthMovingComponent).isInitialized()) {
+                    this.update(1);
+                }
                 return;
             }
             const direction = getDirectionByKeyboardEvent(keyboardEvent);
@@ -116,7 +130,7 @@ export default class GameScene extends Scene {
                         enemy.getId(),
                     )
                     .addCreatedEntitiesToEngine(this.app.engine);
-                this.update();
+                this.update(1);
                 return;
             }
             player.get(MoveDirection2DComponent)
@@ -125,6 +139,9 @@ export default class GameScene extends Scene {
                     y: direction.y,
                 });
             this.update();
+            if (player.get(MoveDirection2DComponent).isInitialized()) {
+                this.update(1);
+            }
             return;
         }
     }

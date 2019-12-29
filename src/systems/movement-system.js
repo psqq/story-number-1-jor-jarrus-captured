@@ -30,10 +30,15 @@ export default class MovementSystem extends BaseSystem {
             const moveDirectionComp = entity.get(MoveDirection2DComponent);
             const newPosition =
                 new Victor().copy(positionComp).add(moveDirectionComp);
-            if (this.isMovablePosition(newPosition, deepComp.deep)) {
-                positionComp.x = newPosition.x;
-                positionComp.y = newPosition.y;
+            if (!this.isMovablePosition(newPosition, deepComp.deep)) {
+                moveDirectionComp.erase();
+                continue;
             }
+            if (deltaTime <= 0) {
+                return;
+            }
+            positionComp.x = newPosition.x;
+            positionComp.y = newPosition.y;
             moveDirectionComp.erase();
         }
     }

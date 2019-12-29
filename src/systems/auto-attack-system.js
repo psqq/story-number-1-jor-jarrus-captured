@@ -27,6 +27,9 @@ export default class AutoAttackSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
+        if (deltaTime <= 0) {
+            return;
+        }
         for (let aaEntity of this.es.aa.getEnties()) {
             const aaComp = aaEntity.get(AutoAttackComponent);
             const attacker = this.es.attackable.getEntityById(aaComp.attackingId);

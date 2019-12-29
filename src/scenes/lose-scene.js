@@ -2,6 +2,7 @@ import Scene from './scene';
 import App from '../app';
 import messages from '../messages';
 import config from '../config';
+import { el, list, mount, text, unmount } from "redom";
 
 export default class LoseScene extends Scene {
     /**
@@ -21,22 +22,26 @@ export default class LoseScene extends Scene {
      * Draw screen.
      */
     draw() {
-        this.app.display.clear();
-        this.app.display.drawText(
-            0, 0,
-            messages.gettext(config.messages.enLoseScreenText)
-        );
+        const _ = messages.gettext.bind(messages);
+        if (this.loseEl) {
+            unmount(this.el, this.loseEl);
+        }
+        this.loseEl = el("div", [
+            el("pre", [
+                text(_(config.messages.enLoseScreenText))
+            ]),
+            this.backEl = el("span.text-button", [
+                text(_('Main menu'))
+            ]),
+        ]);
+        this.backEl.onclick = () => {
+            this.switchTo(this.app.menuScene);
+        };
+        mount(this.el, this.loseEl);
     }
     /**
      * @param {Event} event
      */
     handleEvent(event) {
-        if (event.type === 'keydown') {
-            /** @type {KeyboardEvent} */
-            const keyboardEvent = event;
-            if (keyboardEvent.code === 'Enter') {
-                this.switchTo(this.app.menuScene);
-            }
-        }
     }
 }

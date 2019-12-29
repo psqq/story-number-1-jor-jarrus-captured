@@ -26,25 +26,13 @@ const enPurposeMsg = `Purpose: to save the crew of the ship.`;
 const ruPurposeMsg = `Цель: спасти экипаж корабля.`;
 
 const enHelpScreenText = `
-Help
-
 Movement or attack: hjklyubn, Numpad, Arrows
 Help:               ?
-
-
-
-* back
 `.trim();
 
 const ruHelpScreenText = `
-Справка
-
 Передвижеие или атака: hjklyubn, Numpad, Стрелки
 Вывод этой справки:    ?
-
-
-
-* Назад
 `.trim();
 
 const enLoseScreenText = `
@@ -52,8 +40,6 @@ You died ... :(
 
 ... like the rest of the crew of the ship ...
 ... one at a time in terrible dungeons with goblins ...
-    
-* Main menu
 `.trim();
 
 const ruLoseScreenText = `
@@ -61,8 +47,6 @@ const ruLoseScreenText = `
 
 ... как и весь остальной экипаж коробля ...
 ... по одному в жутких подземельях с гоблинами ...
-
-* Главное меню
 `.trim();
 
 /** @type {{[key: string]: Victor}} */
@@ -195,7 +179,7 @@ const config = {
             elementSelector: '.game-screen',
         },
         lose: {
-            elementSelector: '.game-screen',
+            elementSelector: '.lose-screen',
         },
     },
 };
