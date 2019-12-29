@@ -9,6 +9,7 @@ export default class HelpScene extends Scene {
      */
     constructor(app) {
         super(app);
+        this.el = document.querySelector(config.screens.help.elementSelector);
     }
 
     start() {

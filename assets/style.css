@@ -2,6 +2,11 @@ body {
     margin: 0;
     background-color: black;
     overflow: hidden;
+    color: #bbb;
+}
+
+.story-msg {
+    font-style: italic;
 }
 
 canvas {
@@ -15,6 +20,22 @@ canvas {
     right: 0;
 }
 
+.main-menu-list li:hover {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.screen {
+    padding: 0;
+    margin: auto;
+    display: none;
+    position: absolute;
+    width: 500px;
+    left: 0;
+    right: 0;
+    top: 20px;
+}
+
 .left-bar {
     position: absolute;
     display: block;
@@ -22,7 +43,6 @@ canvas {
     left: 10px;
     bottom: 10px;
     width: 200px;
-    color: grey;
     overflow-y: auto;
     font-size: 12pt;
 }
@@ -34,7 +54,6 @@ canvas {
     right: 0px;
     bottom: 10px;
     width: 200px;
-    color: grey;
     overflow-y: auto;
     font-size: 12pt;
 }

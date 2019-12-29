@@ -9,6 +9,7 @@ import DeepComponent from '../components/deep-compnent';
 import MoveDirection2DComponent from '../components/move-direction-2d-component';
 import Informer from '../informer';
 import Victor from "victor";
+import config from '../config';
 
 /**
  * Represents the scene that displays the menu.
@@ -22,6 +23,7 @@ export default class GameScene extends Scene {
         this.informer = new Informer(this.app);
         /** @type {Victor} */
         this.infoPosition = null;
+        this.el = document.querySelector(config.screens.game.elementSelector);
     }
     /**
      * Opens the menu scene.

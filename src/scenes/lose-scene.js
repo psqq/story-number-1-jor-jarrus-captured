@@ -9,6 +9,7 @@ export default class LoseScene extends Scene {
      */
     constructor(app) {
         super(app);
+        this.el = document.querySelector(config.screens.lose.elementSelector);
     }
 
     start() {

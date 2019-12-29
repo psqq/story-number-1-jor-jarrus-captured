@@ -9,9 +9,16 @@ export default class Scene {
         this.app = app;
         this.previousScene = null;
         /** @type {Victor} */
-        this.mouseMovePosition  = null;
+        this.mouseMovePosition = null;
+        /** @type {HTMLDivElement} */
+        this.el = null;
     }
+    bindEvents() {}
+    unbindEvents() {}
     start() {
+        if (this.el) {
+            this.el.style.display = 'block';
+        }
         this.app.currentScene = this;
         window.addEventListener('keydown', this);
         window.addEventListener('mousemove', this);
@@ -19,7 +26,11 @@ export default class Scene {
         window.addEventListener('mouseup', this);
     }
     draw() { }
-    finish() { }
+    finish() {
+        if (this.el) {
+            this.el.style.display = 'none';
+        }
+    }
     /**
      * @param {Event} event 
      */
@@ -40,6 +51,7 @@ export default class Scene {
         window.removeEventListener('mousemove', this);
         window.removeEventListener('mousedown', this);
         window.removeEventListener('mouseup', this);
+        this.unbindEvents();
         scene.start();
     }
     back() {

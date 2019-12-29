@@ -4,6 +4,7 @@ import getDirectionByKeyboardEvent from '../tools/get-direction-by-keyboard-even
 import config from '../config';
 import messages from '../messages';
 import textToOneLineString from '../tools/text-to-one-line-string';
+import { el, list, mount, text, unmount } from "redom";
 
 export default class MenuScene extends Scene {
     /**
@@ -11,23 +12,9 @@ export default class MenuScene extends Scene {
      */
     constructor(app) {
         super(app);
-        /** @type {number} */
-        this.selected = 1;
+        this.el = document.querySelector(config.screens.mainMenu.elementSelector);
         this.locales = ["en", "ru"];
         this.choosedLocale = this.locales.indexOf(messages.getLocale());
-        this.menuItems = {
-            changName: "Change name",
-            startNewGame: "Start new game",
-            continue: "Continue",
-            save: "Save",
-            load: "Load",
-            changeLanguage: "Change language",
-            help: "Help",
-        };
-        this.menuList = [];
-        for(let key in this.menuItems) {
-            this.menuList.push(this.menuItems[key]);
-        }
     }
     /**
      * @param {number} dx 
@@ -53,50 +40,50 @@ export default class MenuScene extends Scene {
      * Draw screen.
      */
     draw() {
-        this.app.display.clear();
-        let y = 0;
-        this.app.display.drawText(
-            0, y,
-            messages.gettext('Welcome to game') + `, ${this.app.userName}!`
-        );
-        y++;
-        this.app.display.drawText(0, y,
-            `${messages.gettext('Current deep:')} ${this.app.baseSystem.getPlayerDeep()}`
-        );
-        y += 2;
-        this.app.display.drawText(
-            0, y,
-            messages.gettext('Main menu:')
-        );
-        let i = 1;
-        y += 2;
-        for (let menuItem of this.menuList) {
-            let s = `${i}. ${messages.gettext(menuItem)}`;
-            if (menuItem == this.menuItems.load) {
-                const userName = localStorage.getItem('userName');
-                const deep = localStorage.getItem('deep');
-                const date = localStorage.getItem('date');
-                if (!userName || !deep || !date) {
-                    s += ': no saved games';
-                } else {
-                    s += `: ${userName} (deep: ${deep}) ${date}`;
-                }
-            }
-            if (menuItem == this.menuItems.changeLanguage) {
-                s += `. ${messages.gettext('Current:')} ${messages.getLocale()}`;
-            }
-            this.app.display.drawText(3, y, s);
-            y++;
-            i++;
+        const _ = messages.gettext.bind(messages);
+        if (this.menuEl) {
+            unmount(this.el, this.menuEl);
         }
-        this.app.display.draw(1, 4 + this.selected, '*', 'white', 'black');
-        let menuScreenMsg = '';
-        menuScreenMsg = textToOneLineString(messages.gettext(config.messages.enSotryMessage));
-        menuScreenMsg += '\n\n' + messages.gettext(config.messages.enPurposeMsg);
-        y += 2;
-        this.app.display.drawText(0, y, menuScreenMsg);
+        this.menuEl = el("div.main-menu-list", [
+            el("h3", [
+                text(_("Main menu"))
+            ]),
+            el("ol", [
+                this.changeNameEl = el("li", [
+                    text(_("Change name"))
+                ]),
+                this.startNewGameEl = el("li", [
+                    text(_("Start new game"))
+                ]),
+                this.ContinueEl = el("li", [
+                    text(_("Continue"))
+                ]),
+                this.saveEl = el("li", [
+                    text(_("Save"))
+                ]),
+                this.loadEl = el("li", [
+                    text(_("Load"))
+                ]),
+                this.changeLangEl = el("li", [
+                    text(_("Change language"))
+                ]),
+                this.helpEl = el("li", [
+                    text(_("Help"))
+                ]),
+            ]),
+            el("p.story-msg", [
+                text(textToOneLineString(_(config.messages.enSotryMessage)))
+            ]),
+            el("p.story-msg", [
+                text(textToOneLineString(_(config.messages.enPurposeMsg)))
+            ]),
+        ]);
+        this.changeLangEl.onclick = () => {
+            this.changeLanguage(1);
+            this.draw();
+        };
+        mount(this.el, this.menuEl);
     }
-
     /**
      * Handles the keydown and mousedown events of this scene.
      * @param {Event} event
@@ -148,10 +135,10 @@ export default class MenuScene extends Scene {
                 }
             }
             this.selected += direction.y;
-            if (this.selected < 1){
+            if (this.selected < 1) {
                 this.selected = this.menuList.length;
             }
-            if (this.selected > this.menuList.length){
+            if (this.selected > this.menuList.length) {
                 this.selected = 1;
             }
             this.selected = Math.max(1, Math.min(this.menuList.length, this.selected));

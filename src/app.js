@@ -46,15 +46,18 @@ import CharacteristicsSystem from "./systems/characteristics-system";
 export default class App {
     constructor() {
         // display
-        this.mainMenuEl = null;
         this.display = new Display(config.rotjsDisplayOptions);
+
+        // Left/right bars
         /** @type {HTMLDivElement} */
         this.leftBar = document.querySelector('.left-bar');
         /** @type {HTMLDivElement} */
         this.rightBar = document.querySelector('.right-bar');
+
         // engine
         this.engine = new Engine();
         this.baseSystem = null;
+
         // scenes
         this.menuScene = new MenuScene(this);
         this.helpScene = new HelpScene(this);
@@ -143,8 +146,7 @@ export default class App {
         this.initSystems();
     }
     initDisplay() {
-        this.mainMenuEl = document.querySelector(config.mainMenuElementSelector);
-        this.mainMenuEl.appendChild(this.display.getContainer());
+        this.gameScene.el.appendChild(this.display.getContainer());
     }
     init() {
         this.restoreLocale();

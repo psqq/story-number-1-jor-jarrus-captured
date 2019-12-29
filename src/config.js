@@ -184,7 +184,20 @@ const config = {
         fontFamily: 'Typori',
     },
     defaultUserName: 'User Name',
-    mainMenuElementSelector: '.main-menu',
+    screens: {
+        mainMenu: {
+            elementSelector: '.main-menu-screen',
+        },
+        help: {
+            elementSelector: '.help-screen',
+        },
+        game: {
+            elementSelector: '.game-screen',
+        },
+        lose: {
+            elementSelector: '.game-screen',
+        },
+    },
 };
 
 export default config;

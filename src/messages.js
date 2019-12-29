@@ -18,7 +18,7 @@ messages.setMessages(
         [config.messages.enHelpScreenText]: config.messages.ruHelpScreenText,
         [config.messages.enLoseScreenText]: config.messages.ruLoseScreenText,
         'Welcome to game': 'Добро пожаловать в игру',
-        'Main menu:': 'Главное меню:',
+        'Main menu': 'Главное меню',
         'Current deep:': 'Текущая глубина:',
         "Change name": 'Изменить имя',
         'Start new game': 'Начать новую игру',
