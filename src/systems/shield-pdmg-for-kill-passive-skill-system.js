@@ -3,6 +3,8 @@ import Engine from "../core/ecs-engine/engine";
 import BaseSystem from "./base-system";
 import ShieldPDmgForKillPassiveSkillComponent from '../components/shield-pdmg-for-kill-passive-skill-component';
 import DamageComponent from '../components/damage-component';
+import config from '../config';
+import ExperienceLevelComponent from '../components/experience-level-component';
 
 export default class ShieldPDmgForKillPassiveSkillSystem extends BaseSystem {
     /**
@@ -11,7 +13,7 @@ export default class ShieldPDmgForKillPassiveSkillSystem extends BaseSystem {
     constructor(engine, beforDmg = false) {
         super(engine);
         this.skilledEntities = this.engine.getSmartEntityContainer([
-            ShieldPDmgForKillPassiveSkillComponent
+            ShieldPDmgForKillPassiveSkillComponent, ExperienceLevelComponent
         ]);
         this.killEntities = this.engine.getSmartEntityContainer([
             KillComponent
@@ -28,7 +30,7 @@ export default class ShieldPDmgForKillPassiveSkillSystem extends BaseSystem {
         if (this.beforDmg) {
             for (let skilledEntity of this.skilledEntities.getEnties()) {
                 const skillComp = skilledEntity.get(ShieldPDmgForKillPassiveSkillComponent);
-                for(let damageEntity of this.damageEntities.getEnties()) {
+                for (let damageEntity of this.damageEntities.getEnties()) {
                     const dmgComp = damageEntity.get(DamageComponent);
                     if (skilledEntity.getId() == dmgComp.targetId) {
                         let val = Math.min(skillComp.shield, dmgComp.physicalDamage);
@@ -47,6 +49,17 @@ export default class ShieldPDmgForKillPassiveSkillSystem extends BaseSystem {
                     if (killEntity.get(KillComponent).killerId == skilledEntity.getId()) {
                         skillComp.pDmg += skillComp.pDmgForKill;
                         skillComp.shield += skillComp.shieldForKill;
+                        skillComp.duration =
+                            config.skills.shieldPDmgForKillPassiveSkillComponent
+                                .duration[skilledEntity.get(ExperienceLevelComponent).level];
+                    }
+                }
+                if (deltaTime > 0) {
+                    skillComp.duration -= deltaTime;
+                    if (skillComp.duration <= 0) {
+                        skillComp.pDmg = 0;
+                        skillComp.shield = 0;
+                        skillComp.duration = 0;
                     }
                 }
             }
