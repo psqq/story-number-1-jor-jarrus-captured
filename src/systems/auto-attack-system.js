@@ -3,7 +3,8 @@ import BaseSystem from "./base-system";
 import AutoAttackComponent from "../components/auto-attack-component";
 import PhysicalDamageComponent from "../components/physical-damage-component";
 import HealthPointsComponent from "../components/health-points-component";
-import EntitiesBuilder from "../entities-builder";
+import DamageComponent from "../components/damage-component";
+import With from '../tools/with';
 
 export default class AutoAttackSystem extends BaseSystem {
     /**
@@ -38,12 +39,17 @@ export default class AutoAttackSystem extends BaseSystem {
                 continue;
             }
             const dmg = attacker.get(PhysicalDamageComponent).currentPhysicalDamage;
-            protecter.get(HealthPointsComponent).currentHealthPoints -= dmg;
-            if (protecter.get(HealthPointsComponent).currentHealthPoints <= 0) {
-                new EntitiesBuilder()
-                    .createKillEntity(aaComp.attackingId, aaComp.protectingId)
-                    .addCreatedEntitiesToEngine(this.engine);
-            }
+            this.engine.createEntity([
+                new With(new DamageComponent())
+                    .do(x => {
+                        x.sourceId = aaComp.attackingId;
+                        x.targetId = aaComp.protectingId;
+                        x.physicalDamage = dmg;
+                        x.trueDamage = 0;
+                        x.magicDamage = 0;
+                    })
+                    .finish()
+            ]);
         }
         for (let aaEntity of this.es.aa.getEnties()) {
             this.engine.removeEntity(aaEntity.getId());

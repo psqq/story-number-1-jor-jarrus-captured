@@ -5,6 +5,7 @@ import ExperienceLevelComponent from "../components/experience-level-component";
 import config from "../config";
 import HealthPointsComponent from "../components/health-points-component";
 import Entity from "../core/ecs-engine/entity";
+import PhysicalDamageComponent from '../components/physical-damage-component';
 
 export default class ExperienceLevelSystem extends BaseSystem {
     /**
@@ -60,5 +61,8 @@ export default class ExperienceLevelSystem extends BaseSystem {
         const hpComp = entity.get(HealthPointsComponent);
         hpComp.currentHealthPoints += hpComp.healthPointsPerLevel;
         hpComp.baseHealthPoints += hpComp.healthPointsPerLevel;
+        const pDmgComp = entity.get(PhysicalDamageComponent);
+        pDmgComp.currentPhysicalDamage += pDmgComp.physicalDamagePerLevel;
+        pDmgComp.totalPhysicalDamage += pDmgComp.physicalDamagePerLevel;
     }
 }

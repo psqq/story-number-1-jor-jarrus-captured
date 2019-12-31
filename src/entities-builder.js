@@ -24,6 +24,8 @@ import DepthMovingComponent from "./components/depth-moving-component";
 import SimpleAiComponent from "./components/simple-ai-component";
 import KillComponent from "./components/kill-component";
 import TypeComponent from "./components/type-component";
+import With from "./tools/with";
+import ShieldPDmgForKillPassiveSkillComponent from "./components/shield-pdmg-for-kill-passive-skill-component";
 
 export default class EntitiesBuilder {
     constructor() {
@@ -153,6 +155,15 @@ export default class EntitiesBuilder {
                     healthPointsPerLevel: config.heroStats.healthPointsPerLevel,
                     maxHealthPoints: config.heroStats.healthPoints,
                 }),
+            new With(new ShieldPDmgForKillPassiveSkillComponent())
+                .do(x => {
+                    const skill = config.skills.shieldPDmgForKillPassiveSkillComponent;
+                    x.shield = 0;
+                    x.shieldForKill = skill.shieldForKill[1];
+                    x.pDmg = 0;
+                    x.pDmgForKill = skill.pDmgForKill[1];
+                })
+                .finish()
         ]);
         return this;
     }
@@ -242,14 +253,12 @@ export default class EntitiesBuilder {
      */
     createStairs(position, deep, toDeep) {
         this.entities.push([
-            new TypeComponent()
-                .setup({
-                    typeName: config.beingTypes.stairs,
-                }),
-            new StairsComponent()
-                .setup({
-                    toDeep
-                }),
+            new With(new TypeComponent())
+                .do(x => x.typeName = config.beingTypes.stairs)
+                .finish(),
+            new With(new StairsComponent())
+                .do(x => x.toDeep = toDeep)
+                .finish(),
             new Position2DComponent()
                 .setup({
                     x: position.x,

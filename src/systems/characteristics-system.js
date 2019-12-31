@@ -1,6 +1,9 @@
 import Engine from "../core/ecs-engine/engine";
 import BaseSystem from "./base-system";
 import HealthPointsComponent from "../components/health-points-component";
+import With from '../tools/with';
+import PhysicalDamageComponent from "../components/physical-damage-component";
+import ShieldPDmgForKillPassiveSkillComponent from "../components/shield-pdmg-for-kill-passive-skill-component";
 
 export default class CharacteristicsSystem extends BaseSystem {
     /**
@@ -8,19 +11,32 @@ export default class CharacteristicsSystem extends BaseSystem {
      */
     constructor(engine) {
         super(engine);
-        this.es = {
-            withHealth: this.engine.getSmartEntityContainer([
-                HealthPointsComponent
-            ]),
-        };
+        this.healthComponents = this.engine.getSmartEntityContainer([
+            HealthPointsComponent, PhysicalDamageComponent
+        ]);
+        this.skilledEntities = this.engine.getSmartEntityContainer([
+            ShieldPDmgForKillPassiveSkillComponent, PhysicalDamageComponent
+        ]);
     }
     /**
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for (let entity of this.es.withHealth.getEnties()) {
-            const hpComp = entity.get(HealthPointsComponent);
-            hpComp.totalHealthPoints = hpComp.baseHealthPoints + hpComp.bonusHealthPoints;
+        for (let entity of this.skilledEntities.getEnties()) {
+            const skillComp = entity.get(ShieldPDmgForKillPassiveSkillComponent);
+            new With(entity.get(PhysicalDamageComponent))
+                .do(x => x.bonusPhysicalDamage += skillComp.pDmg);
+        }
+        for (let entity of this.healthComponents.getEnties()) {
+            new With(entity.get(HealthPointsComponent))
+                .do(x => {
+                    x.totalHealthPoints = x.baseHealthPoints + x.bonusHealthPoints;
+                });
+            new With(entity.get(PhysicalDamageComponent))
+                .do(x => {
+                    x.totalPhysicalDamage = x.basePhysicalDamage + x.bonusPhysicalDamage;
+                    x.currentPhysicalDamage = x.totalPhysicalDamage;
+                });
         }
     }
 }

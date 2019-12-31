@@ -2,7 +2,7 @@ import Engine from "../core/ecs-engine/engine";
 import SmartEntitiesContainer from "../core/ecs-engine/smart-entities-container";
 import BaseSystem from "./base-system";
 import HealthPointsComponent from "../components/health-points-component";
-import TeamComponent from "../components/team-component";
+import KillComponent from "../components/kill-component";
 
 export default class GrimReaperSystem extends BaseSystem {
     /**
@@ -10,13 +10,12 @@ export default class GrimReaperSystem extends BaseSystem {
      */
     constructor(engine) {
         super(engine);
-        this.healthEntities = new SmartEntitiesContainer(engine, [
-            HealthPointsComponent, TeamComponent,
+        this.healthEntities = this.engine.getSmartEntityContainer([
+            HealthPointsComponent,
         ]);
-    }
-    erase() {
-        super.erase();
-        this.healthEntities.erase();
+        this.killEntities = this.engine.getSmartEntityContainer([
+            KillComponent
+        ]);
     }
     /**
      * @param {number} deltaTime 
@@ -26,6 +25,9 @@ export default class GrimReaperSystem extends BaseSystem {
             if (entity.get(HealthPointsComponent).currentHealthPoints <= 0) {
                 this.engine.removeEntity(entity.getId());
             }
+        }
+        for (let entity of this.killEntities.getEnties()) {
+            this.engine.removeEntity(entity.getId());
         }
     }
 }

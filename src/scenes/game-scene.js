@@ -101,6 +101,7 @@ export default class GameScene extends Scene {
         if (event.type == 'keydown') {
             /** @type {KeyboardEvent} */
             const keyboardEvent = event;
+            // console.log(event);
             if (keyboardEvent.code === 'Escape') {
                 this.switchTo(this.app.menuScene);
                 return;
@@ -156,14 +157,18 @@ export default class GameScene extends Scene {
                 this.update(1);
                 return;
             }
-            player.get(MoveDirection2DComponent)
-                .setup({
-                    x: direction.x,
-                    y: direction.y,
-                });
-            this.update();
-            if (player.get(MoveDirection2DComponent).isInitialized()) {
+            if (direction.isZero()) {
                 this.update(1);
+            } else {
+                player.get(MoveDirection2DComponent)
+                    .setup({
+                        x: direction.x,
+                        y: direction.y,
+                    });
+                this.update();
+                if (player.get(MoveDirection2DComponent).isInitialized()) {
+                    this.update(1);
+                }
             }
             return;
         }

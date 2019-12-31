@@ -51,6 +51,7 @@ const ruLoseScreenText = `
 
 /** @type {{[key: string]: Victor}} */
 const directionByKeyCode = {
+    'Period': new Victor(0, 0),
     'KeyH': new Victor(-1, 0),
     'KeyL': new Victor(1, 0),
     'KeyK': new Victor(0, -1),
@@ -59,6 +60,7 @@ const directionByKeyCode = {
     'KeyU': new Victor(1, -1),
     'KeyB': new Victor(-1, 1),
     'KeyN': new Victor(1, 1),
+    'Numpad5': new Victor(0, 0),
     'Numpad4': new Victor(-1, 0),
     'Numpad6': new Victor(1, 0),
     'Numpad8': new Victor(0, -1),
@@ -190,6 +192,19 @@ const config = {
         goblinMinion: 'goblin-minion',
         player: 'player',
         stairs: 'stairs',
+    },
+    skills: {
+        shieldPDmgForKillPassiveSkillComponent: {
+            shieldForKill: [
+                0, 4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84, 89, 94, 99
+            ],
+            pDmgForKill: [
+                0, 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50, 53, 56, 59
+            ],
+            duration: [
+                5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 11, 11, 11, 11, 11
+            ],
+        }
     }
 };
 

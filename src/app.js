@@ -43,6 +43,13 @@ import KillComponent from "./components/kill-component";
 import ExperienceLevelSystem from "./systems/experience-level-system";
 import CharacteristicsSystem from "./systems/characteristics-system";
 import TypeComponent from "./components/type-component";
+import DamageComponent from "./components/damage-component";
+import ShieldComponent from "./components/shield-component";
+import ShieldPDmgForKillPassiveSkillComponent from "./components/shield-pdmg-for-kill-passive-skill-component";
+import DamageSystem from "./systems/damage-system";
+import ShieldSystem from "./systems/shield-system";
+import ShieldPDmgForKillPassiveSkillSystem from "./systems/shield-pdmg-for-kill-passive-skill-system";
+import InitCharacteristicsSystem from './systems/init-characteristics-system';
 
 export default class App {
     constructor() {
@@ -108,14 +115,23 @@ export default class App {
         // System with base functions
         this.baseSystem = new BaseSystem(this.engine);
         this.engine.addSystem(this.baseSystem);
-        // Prepare systems
-        this.engine.addSystem(new CharacteristicsSystem(this.engine));
+        // Ai
         this.engine.addSystem(new SimpleAiSystem(this.engine));
         // Action systems
         this.engine.addSystem(new DepthMovingSystem(this.engine));
         this.engine.addSystem(new MovementSystem(this.engine));
         this.engine.addSystem(new AutoAttackSystem(this.engine));
+        // Appling systems
+        this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
+        this.engine.addSystem(new CharacteristicsSystem(this.engine));
+        this.engine.addSystem(new ShieldSystem(this.engine));
+        this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, true));
+        this.engine.addSystem(new DamageSystem(this.engine));
+        this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, false));
+        this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
+        this.engine.addSystem(new CharacteristicsSystem(this.engine));
         this.engine.addSystem(new ExperienceLevelSystem(this.engine));
+        // Clear systems
         this.engine.addSystem(new GrimReaperSystem(this.engine));
         // Display systems
         this.engine.addSystem(new FovSystem(this.engine));
@@ -145,6 +161,9 @@ export default class App {
         this.engine.registerComponentClass(SimpleAiComponent);
         this.engine.registerComponentClass(KillComponent);
         this.engine.registerComponentClass(TypeComponent);
+        this.engine.registerComponentClass(DamageComponent);
+        this.engine.registerComponentClass(ShieldComponent);
+        this.engine.registerComponentClass(ShieldPDmgForKillPassiveSkillComponent);
         this.initSystems();
     }
     initDisplay() {

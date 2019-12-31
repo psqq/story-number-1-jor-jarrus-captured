@@ -5,9 +5,11 @@ import ExperienceLevelComponent from "./components/experience-level-component";
 import Victor from "victor";
 import { el, list, mount, text, unmount } from "redom";
 import messages from "./messages";
-import TeamComponent from "./components/team-component";
 import TypeComponent from "./components/type-component";
 import config from "./config";
+import PhysicalDamageComponent from "./components/physical-damage-component";
+import ShieldPDmgForKillPassiveSkillComponent from "./components/shield-pdmg-for-kill-passive-skill-component";
+import DeepComponent from './components/deep-compnent';
 
 export default class Informer {
     /**
@@ -43,7 +45,7 @@ export default class Informer {
     getInfoEl(entity) {
         const _ = messages.gettext.bind(messages);
         let childs = [];
-        // TeamComponent
+        // TypeComponent
         const typeComp = entity.get(TypeComponent);
         if (typeComp) {
             if (typeComp.typeName == config.beingTypes.goblinMinion) {
@@ -76,6 +78,18 @@ export default class Informer {
                     ]
                 );
             }
+        }
+        // ExperienceLevelComponent
+        const deepComp = entity.get(DeepComponent);
+        if (deepComp) {
+            childs = childs.concat(
+                [
+                    el('span.indent', [
+                        text(`${_("Deep")}: ${deepComp.deep}`)
+                    ]),
+                    el('br'),
+                ]
+            );
         }
         // ExperienceLevelComponent
         const xpComp = entity.get(ExperienceLevelComponent);
@@ -113,6 +127,45 @@ export default class Informer {
                 [
                     el('span.indent', [
                         text(`${_("Health")}: ${hp} / ${maxHp} (${baseHp} + ${bonusHp}) [${hpPercent} %]`)
+                    ]),
+                    el('br'),
+                ]
+            );
+        }
+        // PhysicalDamageComponent
+        const pDmgComp = entity.get(PhysicalDamageComponent);
+        if (hpComp) {
+            const pDmg = pDmgComp.currentPhysicalDamage;
+            const basePDmg = pDmgComp.basePhysicalDamage;
+            const bonusPDmg = pDmgComp.bonusPhysicalDamage;
+            childs = childs.concat(
+                [
+                    el('span.indent', [
+                        text(`${_("Physical damage")}: ${pDmg} (${basePDmg} + ${bonusPDmg})`)
+                    ]),
+                    el('br'),
+                ]
+            );
+        }
+        // ShieldPDmgForKillPassiveSkillComponent
+        const skillComp = entity.get(ShieldPDmgForKillPassiveSkillComponent);
+        if (skillComp) {
+            childs = childs.concat(
+                [
+                    el('span.indent', [
+                        text(`${_("Passive skill")}:`)
+                    ]),
+                    el('br'),
+                    el('span.indent2', [
+                        text(`${_("Shield")}: ${skillComp.shield}`)
+                    ]),
+                    el('br'),
+                    el('span.indent2', [
+                        text(`${_("Bonus pDmg")}: ${skillComp.pDmg}`)
+                    ]),
+                    el('br'),
+                    el('span.indent2', [
+                        text(`${_("Duration")}: ${skillComp.duration}`)
                     ]),
                     el('br'),
                 ]
