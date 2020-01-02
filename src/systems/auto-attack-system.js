@@ -12,17 +12,9 @@ export default class AutoAttackSystem extends BaseSystem {
      */
     constructor(engine) {
         super(engine);
-        this.es = {
-            attackable: this.engine.getSmartEntityContainer([
-                PhysicalDamageComponent
-            ]),
-            protectable: this.engine.getSmartEntityContainer([
-                HealthPointsComponent
-            ]),
-            aa: this.engine.getSmartEntityContainer([
-                AutoAttackComponent
-            ]),
-        };
+        this.aaCont = this.engine.getSmartEntityContainer([
+            AutoAttackComponent
+        ]);
     }
     /**
      * @param {number} deltaTime 
@@ -31,28 +23,14 @@ export default class AutoAttackSystem extends BaseSystem {
         if (deltaTime <= 0) {
             return;
         }
-        for (let aaEntity of this.es.aa.getEnties()) {
-            const aaComp = aaEntity.get(AutoAttackComponent);
-            const attacker = this.es.attackable.getEntityById(aaComp.attackingId);
-            const protecter = this.es.protectable.getEntityById(aaComp.protectingId);
-            if (!attacker || !protecter) {
+        for (let attackerEnt of this.aaCont.getEnabledEnties()) {
+            const aaComp = attackerEnt.get(AutoAttackComponent);
+            const protecterEnt = this.engine.getEntityById(aaComp.targetId);
+            if (!protecterEnt) {
                 continue;
             }
-            const dmg = attacker.get(PhysicalDamageComponent).currentPhysicalDamage;
-            this.engine.createEntity([
-                new With(new DamageComponent())
-                    .do(x => {
-                        x.sourceId = aaComp.attackingId;
-                        x.targetId = aaComp.protectingId;
-                        x.physicalDamage = dmg;
-                        x.trueDamage = 0;
-                        x.magicDamage = 0;
-                    })
-                    .finish()
-            ]);
-        }
-        for (let aaEntity of this.es.aa.getEnties()) {
-            this.engine.removeEntity(aaEntity.getId());
+            this.doAa(attackerEnt, protecterEnt);
+            aaComp.targetId = null;
         }
     }
 }

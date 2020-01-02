@@ -13,21 +13,15 @@ export default class GrimReaperSystem extends BaseSystem {
         this.healthEntities = this.engine.getSmartEntityContainer([
             HealthPointsComponent,
         ]);
-        this.killEntities = this.engine.getSmartEntityContainer([
-            KillComponent
-        ]);
     }
     /**
      * @param {number} deltaTime 
      */
     update(deltaTime = 0) {
-        for (let entity of this.healthEntities.getEnties()) {
-            if (entity.get(HealthPointsComponent).currentHealthPoints <= 0) {
+        for (let entity of this.healthEntities.getEnabledEnties()) {
+            if (!this.isAlive(entity)) {
                 this.engine.removeEntity(entity.getId());
             }
-        }
-        for (let entity of this.killEntities.getEnties()) {
-            this.engine.removeEntity(entity.getId());
         }
     }
 }

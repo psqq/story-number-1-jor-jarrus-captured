@@ -38,7 +38,7 @@ export default class SimpleAiSystem extends BaseSystem {
         }
         const playerFov = player.get(FovComponent).fov;
         const playerPos = new Victor().copy(player.get(Position2DComponent));
-        for (let aiEntity of this.aiEntities.getEnties()) {
+        for (let aiEntity of this.aiEntities.getEnabledEnties()) {
             if (aiEntity.get(DeepComponent).deep != player.get(DeepComponent).deep) {
                 continue;
             }

@@ -29,7 +29,6 @@ import DisplaySystem from "./systems/display-system";
 import GameScene from "./scenes/game-scene";
 import FovSystem from "./systems/fov-system";
 import DungeonDisplaySystem from "./systems/dungeon-display-system";
-import GameSceneUiSystem from "./systems/game-scene-ui-system";
 import MovementSystem from "./systems/movement-system";
 import DepthMovingSystem from "./systems/depth-moving-system";
 import MemorizedFovAreasSystem from "./systems/memorized-fov-areas-system";
@@ -50,6 +49,9 @@ import DamageSystem from "./systems/damage-system";
 import ShieldSystem from "./systems/shield-system";
 import ShieldPDmgForKillPassiveSkillSystem from "./systems/shield-pdmg-for-kill-passive-skill-system";
 import InitCharacteristicsSystem from './systems/init-characteristics-system';
+import HeroQSkillComponent from './components/hero-qskill-component';
+import Updater from './classes/updater';
+import With from './tools/with';
 
 export default class App {
     constructor() {
@@ -65,6 +67,7 @@ export default class App {
         // engine
         this.engine = new Engine();
         this.baseSystem = null;
+        this.updater = new Updater(this.engine);
 
         // scenes
         this.menuScene = new MenuScene(this);
@@ -103,68 +106,122 @@ export default class App {
             .addCreatedEntitiesToEngine(this.engine)
             ;
         const position = this.baseSystem.getRandomMovablePosition();
-        this.baseSystem.getPlayer()
-            .get(Position2DComponent)
-            .setup({
-                x: position.x,
-                y: position.y
-            })
-            ;
+        new With(
+            this.baseSystem.getPlayer()
+                .get(Position2DComponent)
+        )
+            .do(pos => {
+                pos.x = position.x;
+                pos.y = position.y;
+            });
     }
     initSystems() {
         // System with base functions
         this.baseSystem = new BaseSystem(this.engine);
-        this.engine.addSystem(this.baseSystem);
+        this.engine.addSystem(
+            this.baseSystem,
+            [
+                config.systemGroups.base,
+            ]
+        );
+        // this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
         // Ai
-        this.engine.addSystem(new SimpleAiSystem(this.engine));
+        // this.engine.addSystem(new SimpleAiSystem(this.engine));
         // Action systems
-        this.engine.addSystem(new DepthMovingSystem(this.engine));
-        this.engine.addSystem(new MovementSystem(this.engine));
-        this.engine.addSystem(new AutoAttackSystem(this.engine));
+        this.engine.addSystem(
+            new DepthMovingSystem(this.engine),
+            [
+                config.systemGroups.move,
+                config.systemGroups.depthMove,
+            ]
+        );
+        this.engine.addSystem(
+            new MovementSystem(this.engine),
+            [
+                config.systemGroups.move,
+                config.systemGroups.flatMove,
+            ]
+        );
+        this.engine.addSystem(
+            new AutoAttackSystem(this.engine),
+            [
+                config.systemGroups.attack,
+            ]
+        );
         // Appling systems
-        this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
-        this.engine.addSystem(new CharacteristicsSystem(this.engine));
-        this.engine.addSystem(new ShieldSystem(this.engine));
-        this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, true));
-        this.engine.addSystem(new DamageSystem(this.engine));
-        this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, false));
-        this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
-        this.engine.addSystem(new CharacteristicsSystem(this.engine));
-        this.engine.addSystem(new ExperienceLevelSystem(this.engine));
+        // this.engine.addSystem(new CharacteristicsSystem(this.engine));
+        // this.engine.addSystem(new ShieldSystem(this.engine));
+        // this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, true));
+        // this.engine.addSystem(new DamageSystem(this.engine));
+        // this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, false));
+        // this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
+        // this.engine.addSystem(new CharacteristicsSystem(this.engine));
+        // this.engine.addSystem(new ExperienceLevelSystem(this.engine));
         // Clear systems
-        this.engine.addSystem(new GrimReaperSystem(this.engine));
+        this.engine.addSystem(
+            new GrimReaperSystem(this.engine),
+            [
+                config.systemGroups.clear,
+                config.systemGroups.grimReaper,
+            ]
+        );
         // Display systems
-        this.engine.addSystem(new FovSystem(this.engine));
-        this.engine.addSystem(new MemorizedFovAreasSystem(this.engine));
-        this.engine.addSystem(new GameSceneUiSystem(this.engine, this));
-        this.engine.addSystem(new DungeonDisplaySystem(this.engine, this.display));
-        this.engine.addSystem(new DisplaySystem(this.engine, this.display));
+        this.engine.addSystem(
+            new FovSystem(this.engine),
+            [
+                config.systemGroups.fov,
+                config.systemGroups.display,
+            ]
+        );
+        this.engine.addSystem(
+            new MemorizedFovAreasSystem(this.engine),
+            [
+                config.systemGroups.fov,
+                config.systemGroups.display,
+            ]
+        );
+        this.engine.addSystem(
+            new DungeonDisplaySystem(this.engine, this.display),
+            [
+                config.systemGroups.display,
+            ]
+        );
+        this.engine.addSystem(
+            new DisplaySystem(this.engine, this.display),
+            [
+                config.systemGroups.display,
+            ]
+        );
     }
     initEngine() {
-        this.engine.registerComponentClass(AutoAttackComponent);
-        this.engine.registerComponentClass(DeepComponent);
-        this.engine.registerComponentClass(DungeonComponent);
-        this.engine.registerComponentClass(ExperienceLevelComponent);
-        this.engine.registerComponentClass(FovComponent);
-        this.engine.registerComponentClass(GlyphComponent);
-        this.engine.registerComponentClass(HealthPointsComponent);
-        this.engine.registerComponentClass(IdComponent);
-        this.engine.registerComponentClass(MemorizedFovAreaComponent);
-        this.engine.registerComponentClass(MoveDirection2DComponent);
-        this.engine.registerComponentClass(ObstacleComponent);
-        this.engine.registerComponentClass(PhysicalDamageComponent);
-        this.engine.registerComponentClass(PlayerComponent);
-        this.engine.registerComponentClass(Position2DComponent);
-        this.engine.registerComponentClass(StairsComponent);
-        this.engine.registerComponentClass(TeamComponent);
-        this.engine.registerComponentClass(DepthMovingComponent);
-        this.engine.registerComponentClass(SimpleAiComponent);
-        this.engine.registerComponentClass(KillComponent);
-        this.engine.registerComponentClass(TypeComponent);
-        this.engine.registerComponentClass(DamageComponent);
-        this.engine.registerComponentClass(ShieldComponent);
-        this.engine.registerComponentClass(ShieldPDmgForKillPassiveSkillComponent);
+        this.engine.registerComponentClasses([
+            AutoAttackComponent,
+            DeepComponent,
+            DungeonComponent,
+            ExperienceLevelComponent,
+            FovComponent,
+            GlyphComponent,
+            HealthPointsComponent,
+            IdComponent,
+            MemorizedFovAreaComponent,
+            MoveDirection2DComponent,
+            ObstacleComponent,
+            PhysicalDamageComponent,
+            PlayerComponent,
+            Position2DComponent,
+            StairsComponent,
+            TeamComponent,
+            DepthMovingComponent,
+            SimpleAiComponent,
+            KillComponent,
+            TypeComponent,
+            DamageComponent,
+            ShieldComponent,
+            ShieldPDmgForKillPassiveSkillComponent,
+            HeroQSkillComponent,
+        ])
         this.initSystems();
+        this.updater = new Updater(this.engine);
     }
     initDisplay() {
         this.gameScene.el.appendChild(this.display.getContainer());
@@ -180,9 +237,9 @@ export default class App {
      */
     update(deltaTime = 0) {
         this.display.clear();
-        this.engine.update(deltaTime);
-        this.engine.update(0);
-        if (!this.baseSystem.getPlayer()) {
+        this.updater.update(deltaTime);
+        this.engine.updateSystemGroups(["display"], [], 0);
+        if (!this.baseSystem.getPlayer() || !this.baseSystem.isAlive(this.baseSystem.getPlayer())) {
             this.startNewGame();
             this.currentScene.switchTo(this.loseScene);
             return;
@@ -193,6 +250,9 @@ export default class App {
         this.initEngine();
         this.createEntities();
     }
+    /**
+     * Configure size of left/right bars.
+     */
     adjustElementSizes() {
         const displayCanvas = document.querySelector('canvas');
         const paddingsOfBars = 10;

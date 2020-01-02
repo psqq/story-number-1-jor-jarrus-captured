@@ -28,7 +28,7 @@ export default class MemorizedFovAreasSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime = 0) {
-        for (let entity of this.fovEntities.getEnties()) {
+        for (let entity of this.fovEntities.getEnabledEnties()) {
             const positionComp = entity.get(Position2DComponent);
             const deepComp = entity.get(DeepComponent);
             const fovComp = entity.get(FovComponent);

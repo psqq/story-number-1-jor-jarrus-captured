@@ -19,16 +19,26 @@ import MoveDirection2DComponent from "../components/move-direction-2d-component"
 import DeepComponent from "../components/deep-compnent";
 import Entity from '../core/ecs-engine/entity';
 
+class Damage {
+    constructor(physical, magic) {
+        this.physical = physical;
+        this.magic = magic;
+    }
+    getTotal() {
+        return this.physical + this.magic;
+    }
+}
+
 export default class BaseSystem extends System {
     /**
      * @param {Engine} engine 
      */
     constructor(engine) {
         super(engine);
-        this.baseDungeonEntities = new SmartEntitiesContainer(engine, [
+        this.baseDungeonEntities = this.engine.getSmartEntityContainer([
             DungeonComponent, DeepComponent
         ]);
-        this.basePlayerEntities = new SmartEntitiesContainer(engine, [
+        this.basePlayerEntities = this.engine.getSmartEntityContainer([
             PlayerComponent,
             TeamComponent,
             Position2DComponent, DeepComponent,
@@ -38,18 +48,62 @@ export default class BaseSystem extends System {
             PhysicalDamageComponent,
             ObstacleComponent,
         ]);
-        this.baseStairsEntities = new SmartEntitiesContainer(engine, [
+        this.baseStairsEntities = this.engine.getSmartEntityContainer([
             StairsComponent, Position2DComponent, DeepComponent
         ]);
-        this.baseObstacleEntities = new SmartEntitiesContainer(engine, [
+        this.baseObstacleEntities = this.engine.getSmartEntityContainer([
             Position2DComponent, DeepComponent, ObstacleComponent
         ]);
-        this.baseTeamBeingsEntities = new SmartEntitiesContainer(engine, [
+        this.baseTeamBeingsEntities = this.engine.getSmartEntityContainer([
             TeamComponent, Position2DComponent, DeepComponent,
         ]);
-        this.basePositionEntities = new SmartEntitiesContainer(engine, [
+        this.basePositionEntities = this.engine.getSmartEntityContainer([
             Position2DComponent, DeepComponent,
         ]);
+    }
+    /**
+     * @param {Entity} attacker 
+     * @param {Entity} protecter 
+     */
+    onKill(attacker, protecter) {
+    }
+    /**
+     * @param {Entity} attacker 
+     * @param {Entity} protecter 
+     */
+    doAa(attacker, protecter) {
+        const dmg = this.getAaDamage(attacker);
+        this.takeDamage(protecter, dmg);
+        if (!this.isAlive(protecter)) {
+            this.onKill(attacker, protecter);
+        }
+    }
+    /**
+     * @param {Entity} entity
+     */
+    isAlive(entity) {
+        const hpComp = entity.get(HealthPointsComponent);
+        if (hpComp && hpComp.currentHealthPoints <= 0) {
+            return false;
+        }
+        return true;
+    }
+    /**
+     * @param {Entity} attacker 
+     */
+    getAaDamage(attacker) {
+        return new Damage(
+            attacker.get(PhysicalDamageComponent).currentPhysicalDamage,
+            0
+        );
+    }
+    /**
+     * @param {Entity} protecter 
+     * @param {Damage} damage
+     */
+    takeDamage(protecter, damage) {
+        const hpComp = protecter.get(HealthPointsComponent);
+        hpComp.currentHealthPoints -= damage.getTotal();
     }
     erase() {
         super.erase();
@@ -68,7 +122,7 @@ export default class BaseSystem extends System {
             deep = this.getPlayerDeep();
         }
         const result = [];
-        for(let entity of this.basePositionEntities.getEnties()) {
+        for (let entity of this.basePositionEntities.getEnabledEnties()) {
             const posComp = entity.get(Position2DComponent);
             const deepComp = entity.get(DeepComponent);
             if (deepComp.deep != deep) {
@@ -85,14 +139,28 @@ export default class BaseSystem extends System {
      * @param {number} deep 
      */
     getTeamBeing(position, deep = null) {
-        for (let teamBeing of this.baseTeamBeingsEntities.getEnties()) {
-            if (
-                position.isEqualTo(
-                    teamBeing.get(Position2DComponent)
-                )
-            ) {
+        for (let teamBeing of this.baseTeamBeingsEntities.getAllEnties()) {
+            const teamBeingPos = this.getPosition(teamBeing);
+            if (teamBeingPos.isEqualTo(position)) {
                 return teamBeing;
             }
+        }
+    }
+    /**
+     * @param {Victor} position 
+     * @param {number} deep 
+     */
+    getEnemy(position, deep = null) {
+        if (deep == null) {
+            deep = this.getPlayerDeep();
+        }
+        const enemy = this.getTeamBeing(position, deep);
+        if (!enemy) {
+            return;
+        }
+        const team = enemy.get(TeamComponent).teamName;
+        if (enemy && team == config.teams.goblins) {
+            return enemy;
         }
     }
     /**
@@ -125,7 +193,7 @@ export default class BaseSystem extends System {
         if (deep == null) {
             deep = this.getPlayerDeep();
         }
-        for (let stairs of this.baseStairsEntities.getEnties()) {
+        for (let stairs of this.baseStairsEntities.getAllEnties()) {
             if (stairs.get(DeepComponent).deep == deep
                 && stairs.get(StairsComponent).toDeep == toDeep
             ) {
@@ -134,7 +202,13 @@ export default class BaseSystem extends System {
         }
     }
     getPlayer() {
-        return this.basePlayerEntities.getEnties()[0];
+        return this.basePlayerEntities.getAllEnties()[0];
+    }
+    getPlayerPosition() {
+        return this.getPosition(this.getPlayer());
+    }
+    getPosition(entity) {
+        return new Victor().copy(entity.get(Position2DComponent));
     }
     /**
      * @param {number} deep 
@@ -143,7 +217,7 @@ export default class BaseSystem extends System {
         if (deep == null) {
             deep = this.getPlayerDeep();
         }
-        for (let dungeon of this.baseDungeonEntities.getEnties()) {
+        for (let dungeon of this.baseDungeonEntities.getAllEnties()) {
             const deepComp = dungeon.get(DeepComponent);
             if (deepComp.deep === deep) {
                 return dungeon;
@@ -222,7 +296,7 @@ export default class BaseSystem extends System {
         if (map[x][y] === config.map.wall.symbol) {
             return false;
         }
-        for (let obstacleEntity of this.baseObstacleEntities.getEnties()) {
+        for (let obstacleEntity of this.baseObstacleEntities.getEnabledEnties()) {
             let posComp = obstacleEntity.get(Position2DComponent);
             if (obstacleEntity.get(DeepComponent).deep != deep) {
                 continue;

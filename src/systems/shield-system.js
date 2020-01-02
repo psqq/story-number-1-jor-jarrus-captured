@@ -23,9 +23,9 @@ export default class ShieldSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for(let shieldedEntity of this.shieldedEntities.getEnties()) {
+        for(let shieldedEntity of this.shieldedEntities.getEnabledEnties()) {
             const shieldComp = shieldedEntity.get(ShieldComponent);
-            for(let damageEntity of this.damageEntities.getEnties()) {
+            for(let damageEntity of this.damageEntities.getEnabledEnties()) {
                 const dmgComp = damageEntity.get(DamageComponent);
                 if (shieldedEntity.getId() == dmgComp.targetId) {
                     let val = Math.min(shieldComp.shield, dmgComp.physicalDamage);

@@ -22,7 +22,7 @@ export default class DisplaySystem extends BaseSystem {
         this.drawableEntities.on(
             coreConfig.smartEntitiesContainerEvents.changed,
             () => {
-                this.drawableEntities.getEnties().sort((a, b) => {
+                this.drawableEntities.getAllEnties().sort((a, b) => {
                     return a.get(GlyphComponent).zLevel - b.get(GlyphComponent).zLevel;
                 });
             }
@@ -43,7 +43,7 @@ export default class DisplaySystem extends BaseSystem {
         let fov = this.getPlayerFov().fov;
         let memorizedFovArea = this.getPlayerMemorizedFovArea().memorizedFovArea;
         const deepOfPlayer = this.getPlayerDeep();
-        for (let entity of this.drawableEntities.getEnties()) {
+        for (let entity of this.drawableEntities.getEnabledEnties()) {
             const position = entity.get(Position2DCompoent);
             const deepOfEntity = entity.get(DeepComponent).deep;
             if (deepOfEntity != deepOfPlayer) {

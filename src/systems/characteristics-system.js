@@ -22,12 +22,12 @@ export default class CharacteristicsSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for (let entity of this.skilledEntities.getEnties()) {
+        for (let entity of this.skilledEntities.getEnabledEnties()) {
             const skillComp = entity.get(ShieldPDmgForKillPassiveSkillComponent);
             new With(entity.get(PhysicalDamageComponent))
                 .do(x => x.bonusPhysicalDamage += skillComp.pDmg);
         }
-        for (let entity of this.healthComponents.getEnties()) {
+        for (let entity of this.healthComponents.getEnabledEnties()) {
             new With(entity.get(HealthPointsComponent))
                 .do(x => {
                     x.totalHealthPoints = x.baseHealthPoints + x.bonusHealthPoints;

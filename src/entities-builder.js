@@ -26,11 +26,14 @@ import KillComponent from "./components/kill-component";
 import TypeComponent from "./components/type-component";
 import With from "./tools/with";
 import ShieldPDmgForKillPassiveSkillComponent from "./components/shield-pdmg-for-kill-passive-skill-component";
+import HeroQSkillComponent from './components/hero-qskill-component';
 
 export default class EntitiesBuilder {
     constructor() {
         /** @type {Component[][]} */
         this.entities = [];
+        /** @type {{componets: Component[], groups: string[]}[]} */
+        this.entitiesWithGroups = [];
     }
     /**
      * @param {Engine} engine 
@@ -38,6 +41,9 @@ export default class EntitiesBuilder {
     addCreatedEntitiesToEngine(engine) {
         for (let components of this.entities) {
             engine.createEntity(components);
+        }
+        for (let entityOptions of this.entitiesWithGroups) {
+            engine.createEntity(entityOptions.componets, entityOptions.groups);
         }
         this.entities = [];
         return this;
@@ -97,10 +103,16 @@ export default class EntitiesBuilder {
      */
     createPlayer(position, deep) {
         this.entities.push([
-            new TypeComponent()
-                .setup({
-                    typeName: config.beingTypes.player,
-                }),
+            new With(new AutoAttackComponent())
+                .do(x => {
+                    x.targetId = null;
+                })
+                .finish(),
+            new With(new TypeComponent())
+                .do(x => {
+                    x.typeName = config.beingTypes.player;
+                })
+                .finish(),
             new TeamComponent()
                 .setup({
                     teamName: config.teams.humans,
@@ -162,6 +174,11 @@ export default class EntitiesBuilder {
                     x.shieldForKill = skill.shieldForKill[1];
                     x.pDmg = 0;
                     x.pDmgForKill = skill.pDmgForKill[1];
+                })
+                .finish(),
+            new With(new HeroQSkillComponent())
+                .do(x => {
+                    x.level = 1;
                 })
                 .finish()
         ]);

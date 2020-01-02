@@ -21,7 +21,7 @@ export default class DamageSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for (let dmgEntity of this.damageEntities.getEnties()) {
+        for (let dmgEntity of this.damageEntities.getEnabledEnties()) {
             const dmgComp = dmgEntity.get(DamageComponent);
             const targetHpComp =
                 this.engine.getEntityById(dmgComp.targetId)
@@ -40,7 +40,7 @@ export default class DamageSystem extends BaseSystem {
                 ]);
             }
         }
-        for (let dmgEntity of this.damageEntities.getEnties()) {
+        for (let dmgEntity of this.damageEntities.getEnabledEnties()) {
             this.engine.removeEntity(dmgEntity.getId());
         }
     }

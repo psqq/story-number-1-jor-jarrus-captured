@@ -28,9 +28,9 @@ export default class ShieldPDmgForKillPassiveSkillSystem extends BaseSystem {
      */
     update(deltaTime) {
         if (this.beforDmg) {
-            for (let skilledEntity of this.skilledEntities.getEnties()) {
+            for (let skilledEntity of this.skilledEntities.getEnabledEnties()) {
                 const skillComp = skilledEntity.get(ShieldPDmgForKillPassiveSkillComponent);
-                for (let damageEntity of this.damageEntities.getEnties()) {
+                for (let damageEntity of this.damageEntities.getEnabledEnties()) {
                     const dmgComp = damageEntity.get(DamageComponent);
                     if (skilledEntity.getId() == dmgComp.targetId) {
                         let val = Math.min(skillComp.shield, dmgComp.physicalDamage);
@@ -43,9 +43,9 @@ export default class ShieldPDmgForKillPassiveSkillSystem extends BaseSystem {
                 }
             }
         } else {
-            for (let skilledEntity of this.skilledEntities.getEnties()) {
+            for (let skilledEntity of this.skilledEntities.getEnabledEnties()) {
                 const skillComp = skilledEntity.get(ShieldPDmgForKillPassiveSkillComponent);
-                for (let killEntity of this.killEntities.getEnties()) {
+                for (let killEntity of this.killEntities.getEnabledEnties()) {
                     if (killEntity.get(KillComponent).killerId == skilledEntity.getId()) {
                         skillComp.pDmg += skillComp.pDmgForKill;
                         skillComp.shield += skillComp.shieldForKill;

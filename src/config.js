@@ -111,6 +111,18 @@ const mapOffset = {
 };
 
 const config = {
+    systemGroups: {
+        attack: 'attack',
+        fov: 'fov',
+        system: 'system',
+        display: 'display',
+        base: 'base',
+        move: 'move',
+        depthMove: 'depth-move',
+        flatMove: 'flat-move',
+        grimReaper: 'grim-reaper',
+        clear: 'clear',
+    },
     messages: {
         enSotryMessage,
         ruSotryMessage,
@@ -204,7 +216,31 @@ const config = {
             duration: [
                 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 11, 11, 11, 11, 11
             ],
-        }
+        },
+        heroQSkill: {
+            duration: [
+                0, 2, 3, 4, 5, 6,
+            ],
+            damage: [
+                0, 0.3, 0.35, 0.40, 0.45, 0.5,
+            ],
+            damageReduction: [
+                0, 0.5, 0.6, 0.7, 0.8, 0.9,
+            ],
+            critDamage: [
+                0, 0.5, 0.7, 0.8, 0.9, 1,
+            ],
+            coolDown: [
+                0, 14, 13, 12, 11, 10,
+            ]
+        },
+        heroWSkill: {
+            coolDown: [
+                0, 22, 21, 20, 18, 16,
+            ],
+        },
+        heroESkill: {},
+        heroRSkill: {},
     }
 };
 

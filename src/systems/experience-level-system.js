@@ -26,7 +26,7 @@ export default class ExperienceLevelSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for (let killEntity of this.es.kills.getEnties()) {
+        for (let killEntity of this.es.kills.getEnabledEnties()) {
             const killComp = killEntity.get(KillComponent);
             const killer = this.es.experienced.getEntityById(killComp.killerId);
             if (!killer) {
@@ -50,7 +50,7 @@ export default class ExperienceLevelSystem extends BaseSystem {
                 this.levelup(killer);
             }
         }
-        for (let killEntity of this.es.kills.getEnties()) {
+        for (let killEntity of this.es.kills.getEnabledEnties()) {
             this.engine.removeEntity(killEntity.getId());
         }
     }

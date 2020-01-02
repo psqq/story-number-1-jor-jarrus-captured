@@ -5,19 +5,37 @@ import Entity from "./entity";
 import EventEmitter from "wolfy87-eventemitter";
 import coreConfig from "../core-config";
 import SmartEntitiesContainer from "./smart-entities-container";
+import EnabledComponent from './enabled-component';
+import With from '../../tools/with';
 
 export default class Engine extends EventEmitter {
     constructor() {
         super();
+        // Systems
         /** @type {System[]} */
         this.systems = [];
+        /** @type {Map<string, Set<System>>} */
+        this.systemGroups = new Map();
         this.priorityForNextSystem = 0;
+        // Entiteis
         /** @type {Map<number, Map<string, Component[]>>} */
         this.entities = new Map();
-        /** @type {Map<string, new(...args:any[]) => Component>} */
-        this.registeredComponentClasses = new Map();
         /** @type {SmartEntitiesContainer[]} */
         this.smartEntityConatiners = [];
+        this.allEntities = this.getSmartEntityContainer();
+        /** @type {Map<string, Set<Entity>>} */
+        this.entityGroups = new Map();
+        // Components
+        /** @type {Map<string, new(...args:any[]) => Component>} */
+        this.registeredComponentClasses = new Map();
+        this.registerComponentClass(EnabledComponent);
+    }
+    getAllEntities() {
+        const allEntities = [];
+        for (let entityId of this.entities.keys()) {
+            allEntities.push(this.getEntityById(entityId));
+        }
+        return allEntities;
     }
     /**
      * @param {{[key: string]: (new(...args:any[]) => Component)[]}} options
@@ -26,7 +44,7 @@ export default class Engine extends EventEmitter {
     getSmartEntityContainers(options) {
         const result = {};
         for (let key in options) {
-            result[key] = new SmartEntitiesContainer(this, options[key]);
+            result[key] = this.getSmartEntityContainer(options[key]);
         }
         return result;
     }
@@ -34,23 +52,32 @@ export default class Engine extends EventEmitter {
      * @param {(new(...args:any[]) => Component)[]} ComponentClasses 
      */
     getSmartEntityContainer(ComponentClasses) {
-        return new SmartEntitiesContainer(this, ComponentClasses);
+        const container = new SmartEntitiesContainer(this, ComponentClasses);
+        this.smartEntityConatiners.push(container);
+        return container;
     }
     erase() {
+        // Systems
         for (let system of this.systems) {
             system.erase();
         }
         this.systems = [];
+        this.systemGroups = new Map();
         this.priorityForNextSystem = 0;
+        // Entiteis
         for (let entityId of this.entities.keys()) {
             this.removeEntity(entityId);
         }
         this.entities = new Map();
-        this.registeredComponentClasses = new Map();
+        this.entityGroups = new Map();
         for (let container of this.smartEntityConatiners) {
             container.erase();
         }
         this.smartEntityConatiners = [];
+        this.allEntities = this.getSmartEntityContainer();
+        // Components
+        this.registeredComponentClasses = new Map();
+        this.registerComponentClass(EnabledComponent);
     }
     /**
      * @param {number} entityId 
@@ -61,9 +88,12 @@ export default class Engine extends EventEmitter {
     /**
      * @param {number} entityId 
      */
-    getEntityById(entityId, ComponentClasses) {
+    getEntityById(entityId) {
+        if (entityId == null) {
+            return;
+        }
         const components = this.entities.get(entityId);
-        const entity = new Entity(entityId, components, this, ComponentClasses);
+        const entity = new Entity(entityId, components, this);
         return entity;
     }
     /**
@@ -71,6 +101,9 @@ export default class Engine extends EventEmitter {
      * @param {Component} ComponentClass 
      */
     isEntityHasComponent(entityId, ComponentClass) {
+        if (!ComponentClass) {
+            return true;
+        }
         const nameOfComponentClass = this.getNameOfComponentClass(ComponentClass);
         if (!this.entities.get(entityId).has(nameOfComponentClass)) {
             return false;
@@ -82,6 +115,9 @@ export default class Engine extends EventEmitter {
      * @param {Component[]} ComponentClasses 
      */
     isEntityHasComponentes(entityId, ComponentClasses) {
+        if (!ComponentClasses) {
+            return true;
+        }
         for (let ComponentClass of ComponentClasses) {
             if (!this.isEntityHasComponent(entityId, ComponentClass)) {
                 return false;
@@ -102,8 +138,9 @@ export default class Engine extends EventEmitter {
     }
     /**
      * @param {System} system 
+     * @param {string[]} groups 
      */
-    addSystem(system) {
+    addSystem(system, groups) {
         if (system.engine != null && system.engine !== this) {
             throw "System is already in some system";
         }
@@ -115,6 +152,17 @@ export default class Engine extends EventEmitter {
             this.priorityForNextSystem -= 1;
         }
         this.systems.push(system);
+        if (!groups) {
+            groups = [];
+        }
+        groups = [...groups];
+        groups.push('system');
+        for (let group of groups) {
+            if (!this.systemGroups.has(group)) {
+                this.systemGroups.set(group, new Set());
+            }
+            this.systemGroups.get(group).add(system);
+        }
     }
     /**
      * @param {new(...args:any[]) => Component} ComponentClass 
@@ -132,6 +180,14 @@ export default class Engine extends EventEmitter {
         }
         this.registeredComponentClasses
             .set(nameOfComponentClass, ComponentClass);
+    }
+    /**
+     * @param {(new(...args:any[]) => Component)[]} ComponentClasses 
+     */
+    registerComponentClasses(ComponentClasses) {
+        for (let ComponentClass of ComponentClasses) {
+            this.registerComponentClass(ComponentClass);
+        }
     }
     /**
      * @param {new(...args:any[]) => Component} ComponentClass 
@@ -161,18 +217,35 @@ export default class Engine extends EventEmitter {
     }
     /**
      * @param {Component[]} components 
+     * @param {string[]} groups 
      */
-    createEntity(components) {
+    createEntity(components, groups) {
         let entityId = getuid();
-        this.createEntityWithId(entityId, components);
+        this.createEntityWithId(entityId, components, groups);
     }
     /**
+     * @param {number} entityId 
      * @param {Component[]} components 
+     * @param {string[]} groups 
      */
-    createEntityWithId(entityId, components) {
+    createEntityWithId(entityId, components, groups) {
+        components.push(
+            new With(new EnabledComponent())
+                .do(x => x.enabled = true)
+                .finish()
+        );
         this.entities.set(entityId, new Map());
         for (let component of components) {
             this.addComponentToEntity(entityId, component);
+        }
+        groups = groups || [];
+        groups = [...groups];
+        groups.push('entity');
+        for (let group of groups) {
+            if (!this.entityGroups.has(group)) {
+                this.entityGroups.set(group, new Set());
+            }
+            this.entityGroups.get(group).add(entityId);
         }
         this.emit(coreConfig.engineEvents.entityCreated, entityId);
         return entityId;
@@ -200,12 +273,35 @@ export default class Engine extends EventEmitter {
         this.emit(coreConfig.engineEvents.entityRemoved, entityId);
     }
     /**
+     * @param {System[]} systems 
+     * @param {number} deltaTime 
+     */
+    updateSystems(systems, deltaTime = 0) {
+        for (let system of systems) {
+            system.update(deltaTime);
+        }
+    }
+    /**
+     * @param {string[]} includeGroups 
+     * @param {string[]} excludeGroups 
+     * @param {number} deltaTime 
+     */
+    updateSystemGroups(includeGroups, excludeGroups, deltaTime = 0) {
+        let systems = new Set();
+        for (let group of includeGroups) {
+            systems = new Set([...systems, ...this.systemGroups.get(group)]);
+        }
+        for (let group of excludeGroups) {
+            systems = new Set([...systems].filter(x => !this.systemGroups.get(group).has(x)));
+        }
+        this.updateSystems(systems, deltaTime);
+    }
+    /**
+     * @param {System[]} systems 
      * @param {number} deltaTime 
      */
     update(deltaTime = 0) {
-        for (let system of this.systems) {
-            system.update(deltaTime);
-        }
+        this.updateSystems(this.systems, deltaTime);
     }
     getEntityData(entityId) {
         const componentsOfEntity = this.entities.get(entityId);

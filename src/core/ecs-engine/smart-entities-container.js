@@ -3,6 +3,7 @@ import coreConfig from "../core-config";
 import Entity from "./entity";
 import EventEmitter from "wolfy87-eventemitter";
 import Component from "./component";
+import EnabledComponent from './enabled-component';
 
 export default class SmartEntitiesContainer extends EventEmitter {
     /**
@@ -78,7 +79,11 @@ export default class SmartEntitiesContainer extends EventEmitter {
             }
         }
     }
-    getEnties() {
+    getEnabledEnties() {
+        const enabledEntities = this.entities.filter(x => x.get(EnabledComponent).enabled);
+        return enabledEntities;
+    }
+    getAllEnties() {
         return this.entities;
     }
 }

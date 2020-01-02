@@ -26,7 +26,7 @@ export default class FovSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime = 0) {
-        for (let entity of this.fovEntities.getEnties()) {
+        for (let entity of this.fovEntities.getEnabledEnties()) {
             const position = entity.get(Position2DComponent);
             const deepComp = entity.get(DeepComponent);
             const fovComponent = entity.get(FovComponent);

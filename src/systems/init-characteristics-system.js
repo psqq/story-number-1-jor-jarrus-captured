@@ -3,7 +3,6 @@ import BaseSystem from "./base-system";
 import HealthPointsComponent from "../components/health-points-component";
 import With from '../tools/with';
 import PhysicalDamageComponent from "../components/physical-damage-component";
-import ShieldPDmgForKillPassiveSkillComponent from "../components/shield-pdmg-for-kill-passive-skill-component";
 
 export default class InitCharacteristicsSystem extends BaseSystem {
     /**
@@ -19,16 +18,14 @@ export default class InitCharacteristicsSystem extends BaseSystem {
      * @param {number} deltaTime 
      */
     update(deltaTime) {
-        for (let entity of this.healthEntity.getEnties()) {
+        for (let entity of this.healthEntity.getEnabledEnties()) {
             new With(entity.get(HealthPointsComponent))
                 .do(x => {
                     x.bonusHealthPoints = 0;
-                    x.totalHealthPoints = 0;
                 });
             new With(entity.get(PhysicalDamageComponent))
                 .do(x => {
                     x.bonusPhysicalDamage = 0;
-                    x.totalPhysicalDamage = 0;
                 });
         }
     }
