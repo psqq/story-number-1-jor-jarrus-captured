@@ -9,6 +9,8 @@ import SimpleAiComponent from '../components/simple-ai-component';
 import FovComponent from '../components/fov-component';
 import Dijkstra from 'rot-js/lib/path/dijkstra';
 import EntitiesBuilder from '../entities-builder';
+import With from '../tools/with';
+import AutoAttackComponent from '../components/auto-attack-component';
 
 export default class SimpleAiSystem extends BaseSystem {
     /**
@@ -36,10 +38,13 @@ export default class SimpleAiSystem extends BaseSystem {
         if (!player) {
             return;
         }
-        const playerFov = player.get(FovComponent).fov;
-        const playerPos = new Victor().copy(player.get(Position2DComponent));
+        const playerFov = this.getPlayerFov().fov;
+        const playerPos = this.getPosition(player);
         for (let aiEntity of this.aiEntities.getEnabledEnties()) {
             if (aiEntity.get(DeepComponent).deep != player.get(DeepComponent).deep) {
+                continue;
+            }
+            if (!this.isAlive(aiEntity)) {
                 continue;
             }
             const aiPos = new Victor().copy(aiEntity.get(Position2DComponent));
@@ -72,21 +77,17 @@ export default class SimpleAiSystem extends BaseSystem {
             if (!target || target.x == null || target.y == null) {
                 continue;
             }
-            if (new Victor().copy(target).isEqualTo(playerPos)) {
-                new EntitiesBuilder()
-                    .createAutoAttackEntity(
-                        aiEntity.getId(),
-                        player.getId(),
-                    )
-                    .addCreatedEntitiesToEngine(this.engine);
+            if (playerPos.isEqualTo(target)) {
+                new With(aiEntity.get(AutoAttackComponent))
+                    .do(x => x.targetId = player.getId());
             } else {
                 const direction =
                     new Victor().copy(target)
                         .subtract(aiPos);
-                aiEntity.get(MoveDirection2DComponent)
-                    .setup({
-                        x: direction.x,
-                        y: direction.y,
+                new With(aiEntity.get(MoveDirection2DComponent))
+                    .do(dir => {
+                        dir.x = direction.x;
+                        dir.y = direction.y;
                     });
             }
         }

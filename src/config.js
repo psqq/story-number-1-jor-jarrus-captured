@@ -112,6 +112,8 @@ const mapOffset = {
 
 const config = {
     systemGroups: {
+        init: 'init',
+        characteristics: 'characteristics',
         attack: 'attack',
         fov: 'fov',
         system: 'system',
@@ -134,16 +136,16 @@ const config = {
         ruLoseScreenText,
     },
     heroStats: {
-        healthPoints: 70,
-        healthPointsPerLevel: 8,
-        physicalDamage: 12,
-        physicalDamagePerLevel: 4,
+        healthPoints: [65, 75],
+        healthPointsPerLevel: [5, 10],
+        physicalDamage: [10, 14],
+        physicalDamagePerLevel: [3, 5],
     },
     goblinMinionStats: {
-        healthPoints: 22,
-        healthPointsPerLevel: 2,
-        physicalDamage: 8,
-        physicalDamagePerLevel: 2,
+        healthPoints: [20, 24],
+        healthPointsPerLevel: [2, 4],
+        physicalDamage: [5, 11],
+        physicalDamagePerLevel: [1, 4],
     },
     experience: {
         maxLevel: 20,

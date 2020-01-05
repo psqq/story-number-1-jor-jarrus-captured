@@ -27,6 +27,8 @@ import TypeComponent from "./components/type-component";
 import With from "./tools/with";
 import ShieldPDmgForKillPassiveSkillComponent from "./components/shield-pdmg-for-kill-passive-skill-component";
 import HeroQSkillComponent from './components/hero-qskill-component';
+import CharacteristicsComponent from './components/characteristics-component';
+import randint from "./tools/randint";
 
 export default class EntitiesBuilder {
     constructor() {
@@ -151,22 +153,28 @@ export default class EntitiesBuilder {
                     currentExperience: 0,
                     nextLevelExperience: config.experience.experienceEnhancer,
                 }),
-            new PhysicalDamageComponent()
-                .setup({
-                    basePhysicalDamage: config.heroStats.physicalDamage,
-                    bonusPhysicalDamage: 0,
-                    currentPhysicalDamage: config.heroStats.physicalDamage,
-                    physicalDamagePerLevel: config.heroStats.physicalDamagePerLevel,
-                    maxPhysicalDamage: config.heroStats.physicalDamage,
-                }),
-            new HealthPointsComponent()
-                .setup({
-                    baseHealthPoints: config.heroStats.healthPoints,
-                    bonusHealthPoints: 0,
-                    currentHealthPoints: config.heroStats.healthPoints,
-                    healthPointsPerLevel: config.heroStats.healthPointsPerLevel,
-                    maxHealthPoints: config.heroStats.healthPoints,
-                }),
+            new With(new CharacteristicsComponent())
+                .do(x => {
+                    const hp = randint(...config.heroStats.healthPoints);
+                    const hpPerLvl = randint(...config.heroStats.healthPointsPerLevel);
+                    x.healthPoints = {
+                        current: hp,
+                        base: hp,
+                        bonus: 0,
+                        total: 0,
+                        perLevel: hpPerLvl,
+                    };
+                    const pDmg = randint(...config.heroStats.physicalDamage);
+                    const pDmgPerLvl = randint(...config.heroStats.physicalDamagePerLevel);
+                    x.physicalDamage = {
+                        current: 0,
+                        base: 0,
+                        bonus: 0,
+                        total: 0,
+                        perLevel: 0,
+                    };
+                })
+                .finish(),
             new With(new ShieldPDmgForKillPassiveSkillComponent())
                 .do(x => {
                     const skill = config.skills.shieldPDmgForKillPassiveSkillComponent;
@@ -190,6 +198,11 @@ export default class EntitiesBuilder {
      */
     createGoblinMinion(position, deep) {
         this.entities.push([
+            new With(new AutoAttackComponent())
+                .do(x => {
+                    x.targetId = null;
+                })
+                .finish(),
             new TypeComponent()
                 .setup({
                     typeName: config.beingTypes.goblinMinion,
@@ -216,22 +229,28 @@ export default class EntitiesBuilder {
                     fgColor: 'green',
                     zLevel: 500
                 }),
-            new PhysicalDamageComponent()
-                .setup({
-                    basePhysicalDamage: config.goblinMinionStats.physicalDamage,
-                    bonusPhysicalDamage: 0,
-                    currentPhysicalDamage: config.goblinMinionStats.physicalDamage,
-                    physicalDamagePerLevel: config.goblinMinionStats.physicalDamagePerLevel,
-                    maxPhysicalDamage: config.goblinMinionStats.physicalDamage,
-                }),
-            new HealthPointsComponent()
-                .setup({
-                    baseHealthPoints: config.goblinMinionStats.healthPoints,
-                    bonusHealthPoints: 0,
-                    currentHealthPoints: config.goblinMinionStats.healthPoints,
-                    healthPointsPerLevel: config.goblinMinionStats.healthPointsPerLevel,
-                    maxHealthPoints: config.goblinMinionStats.healthPoints,
-                }),
+            new With(new CharacteristicsComponent())
+                .do(x => {
+                    const hp = randint(...config.goblinMinionStats.healthPoints);
+                    const hpPerLvl = randint(...config.goblinMinionStats.healthPointsPerLevel);
+                    x.healthPoints = {
+                        current: hp,
+                        base: hp,
+                        bonus: 0,
+                        total: hp,
+                        perLevel: hpPerLvl,
+                    };
+                    const pDmg = randint(...config.goblinMinionStats.physicalDamage);
+                    const pDmgPerLvl = randint(...config.goblinMinionStats.physicalDamagePerLevel);
+                    x.physicalDamage = {
+                        current: pDmg,
+                        base: pDmg,
+                        bonus: 0,
+                        total: 0,
+                        perLevel: pDmgPerLvl,
+                    };
+                })
+                .finish(),
         ]);
         return this;
     }

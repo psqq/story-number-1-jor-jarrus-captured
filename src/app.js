@@ -52,6 +52,7 @@ import InitCharacteristicsSystem from './systems/init-characteristics-system';
 import HeroQSkillComponent from './components/hero-qskill-component';
 import Updater from './classes/updater';
 import With from './tools/with';
+import CharacteristicsComponent from "./components/characteristics-component";
 
 export default class App {
     constructor() {
@@ -125,8 +126,16 @@ export default class App {
             ]
         );
         // this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
+        
+        this.engine.addSystem(
+            this.baseSystem,
+            [
+                config.systemGroups.base,
+            ]
+        );
+        this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
         // Ai
-        // this.engine.addSystem(new SimpleAiSystem(this.engine));
+        this.engine.addSystem(new SimpleAiSystem(this.engine));
         // Action systems
         this.engine.addSystem(
             new DepthMovingSystem(this.engine),
@@ -154,7 +163,7 @@ export default class App {
         // this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, true));
         // this.engine.addSystem(new DamageSystem(this.engine));
         // this.engine.addSystem(new ShieldPDmgForKillPassiveSkillSystem(this.engine, false));
-        // this.engine.addSystem(new InitCharacteristicsSystem(this.engine));
+        
         // this.engine.addSystem(new CharacteristicsSystem(this.engine));
         // this.engine.addSystem(new ExperienceLevelSystem(this.engine));
         // Clear systems
@@ -219,7 +228,8 @@ export default class App {
             ShieldComponent,
             ShieldPDmgForKillPassiveSkillComponent,
             HeroQSkillComponent,
-        ])
+            CharacteristicsComponent,
+        ]);
         this.initSystems();
         this.updater = new Updater(this.engine);
     }

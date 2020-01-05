@@ -16,7 +16,6 @@ export default class CharacteristicsComponent extends Component {
         this.magicDamage = Object.assign({}, statOptions);
         this.physicalArmor = Object.assign({}, statOptions);
         this.magicArmor = Object.assign({}, statOptions);
-        this.magicArmor = Object.assign({}, statOptions);
         this.criticalChance = Object.assign({}, statOptions);
     }
 }
