@@ -36,30 +36,15 @@ hr {
     overflow-y: auto;
 }
 
-.left-bar {
-    position: absolute;
-    display: block;
-    top: 10px;
-    left: 10px;
-    bottom: 10px;
-    width: 200px;
-    overflow-y: auto;
-}
-
-.right-bar {
-    position: absolute;
-    display: block;
-    top: 10px;
-    right: 0px;
-    bottom: 10px;
-    width: 200px;
-    overflow-y: auto;
-}
-
 canvas {
+    text-align: center;
+}
+
+.app {
     padding: 0;
     margin: auto;
     display: block;
+    width: 700px;
     position: absolute;
     top: 20px;
     left: 0;

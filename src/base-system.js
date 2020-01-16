@@ -45,14 +45,16 @@ export default class BaseSystem extends ecs.System {
      */
     tryMove(e, deltaTime) {
         if (deltaTime <= 0) {
-            return;
+            return false;
         }
         if (!this.canMove(e)) {
-            return;
+            return false;
         }
         const pos = e.get(c.Position);
         const dir = e.get(c.MoveDirection);
         pos.x += dir.x;
         pos.y += dir.y;
+        this.app.game.screens.msgbox.addMsg("Your are moved!");
+        return true;
     }
 }

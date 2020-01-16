@@ -41,12 +41,13 @@ export class Moving extends BaseSystem {
             [c.Position, c.MoveDirection]
         );
         for (let e of moveableEntities) {
-            if (!this.canMove(e)) {
-                continue;
+            if (this.canMove(e)) {
+                if (this.tryMove(e, deltaTime)) {
+                    e.get(c.MoveDirection).erase();
+                }
             } else {
-                this.tryMove(e, deltaTime);
+                e.get(c.MoveDirection).erase();
             }
-            e.get(c.MoveDirection).erase();
         }
     }
 }

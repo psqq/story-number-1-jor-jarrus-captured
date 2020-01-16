@@ -5,6 +5,7 @@ import * as s from "./systems";
 import App from "./app";
 import GameScreen from "./screens/game-screen";
 import BaseSystem from "./base-system";
+import MsgboxScreen from "./screens/msgbox-screen";
 
 export default class Game {
     /**
@@ -23,7 +24,9 @@ export default class Game {
         this.displaySystems = [];
         this.screens = {
             game: new GameScreen(this.app),
+            msgbox: new MsgboxScreen(this.app),
         };
+        this.time = 0;
     }
     init() {
         this.engine = new ecs.Engine();
@@ -48,6 +51,7 @@ export default class Game {
         this.pause = false;
         // Open game screen
         this.screens.game.open();
+        this.screens.msgbox.addMsg('Welcome to game!');
     }
     createNewGame() {
         this.pause = true;
@@ -66,24 +70,34 @@ export default class Game {
             }
             // Update only if player need it
             if (this.player.isNeedUpdate()) {
-                // First update player
+                // Prepare for update
                 this.engine.update(
                     this.gameSystems,
-                    [this.player],
-                    1,
+                    this.engine.getAllEntities(),
+                    0,
                 );
-                // Next update other entities
-                const notPlayers = [];
-                for(let e of this.engine.getAllEntities()) {
-                    if (!e.get(c.Player)) {
-                        notPlayers.push(e);
+                // Updae if realy need
+                if (this.player.isNeedUpdate()) {
+                    // First update player
+                    this.engine.update(
+                        this.gameSystems,
+                        [this.player],
+                        1,
+                    );
+                    // Next update other entities
+                    const notPlayers = [];
+                    for (let e of this.engine.getAllEntities()) {
+                        if (!e.get(c.Player)) {
+                            notPlayers.push(e);
+                        }
                     }
+                    this.engine.update(
+                        this.gameSystems,
+                        notPlayers,
+                        1,
+                    );
+                    this.time++;
                 }
-                this.engine.update(
-                    this.gameSystems,
-                    notPlayers,
-                    1,
-                );
             }
             // Draw all
             this.draw();

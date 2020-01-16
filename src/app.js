@@ -27,7 +27,7 @@ export default class App {
         messages.setLocale(locale);
     }
     init() {
-        document.querySelector(".app")
+        document.querySelector(".display")
             .appendChild(this.display.getContainer());
         this.game.init();
         this.game.createNewGame();
