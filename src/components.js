@@ -1,13 +1,15 @@
-import Component from "./core/ecs-engine/component";
+import * as ecs from "./ecs";
 
-export class AutoAttack extends Component {
+export class AutoAttack extends ecs.Component {
     constructor() {
+        super();
         this.targetId = 0;
     }
 }
 
-export class Characteristics extends Component {
+export class Characteristics extends ecs.Component {
     constructor() {
+        super();
         const statOptions = {
             current: 0,
             base: 0,
@@ -25,8 +27,9 @@ export class Characteristics extends Component {
     }
 }
 
-export class Damage extends Component {
+export class Damage extends ecs.Component {
     constructor() {
+        super();
         this.sourceId = 0;
         this.targetId = 0;
         this.physicalDamage = 0;
@@ -35,29 +38,33 @@ export class Damage extends Component {
     }
 }
 
-export class Deep extends Component {
+export class Deep extends ecs.Component {
     constructor() {
+        super();
         /** @type {number} */
         this.deep = null;
     }
 }
 
-export class DepthMoving extends Component {
+export class DepthMoving extends ecs.Component {
     constructor() {
+        super();
         /** @type {number} */
         this.toDeep = null;
     }
 }
 
-export class Dungeon extends Component {
+export class Dungeon extends ecs.Component {
     constructor() {
+        super();
         /** @type {string[][]} */
         this.map = null;
     }
 }
 
-export class ExperienceLevel extends Component {
+export class ExperienceLevel extends ecs.Component {
     constructor() {
+        super();
         this.level = 0;
         this.currentExperience = 0;
         this.currentLevelExperience = 0;
@@ -65,15 +72,17 @@ export class ExperienceLevel extends Component {
     }
 }
 
-export class Fov extends Component {
+export class Fov extends ecs.Component {
     constructor() {
+        super();
         /** @type {boolean[][]} */
         this.fov = null;
     }
 }
 
-export class Glyph extends Component {
+export class Glyph extends ecs.Component {
     constructor() {
+        super();
         this.symbol = '';
         this.fgColor = '';
         this.bgColor = '';
@@ -81,8 +90,9 @@ export class Glyph extends Component {
     }
 }
 
-export class HealthPoints extends Component {
+export class HealthPoints extends ecs.Component {
     constructor() {
+        super();
         this.currentHealthPoints = 0;
         this.baseHealthPoints = 0;
         this.bonusHealthPoints = 0;
@@ -91,8 +101,9 @@ export class HealthPoints extends Component {
     }
 }
 
-export class HeroQSkill extends Component {
+export class HeroQSkill extends ecs.Component {
     constructor() {
+        super();
         this.level = 0;
         this.duration = 0;
         this.damage = 0;
@@ -101,46 +112,53 @@ export class HeroQSkill extends Component {
     }
 }
 
-export class MemorizedFovAreaComponent extends Component {
+export class MemorizedFovArea extends ecs.Component {
     constructor() {
+        super();
         /** @type {boolean[][]} */
         this.memorizedFovArea = null;
         this.deep = 0;
     }
 }
 
-export class MoveDirection extends Component {
+export class MoveDirection extends ecs.Component {
     constructor() {
+        super();
         this.x = 0;
         this.y = 0;
     }
 }
 
-export class Obstacle extends Component {
+export class Obstacle extends ecs.Component {
     constructor() {
+        super();
     }
 }
 
-export class Player extends Component {
+export class Player extends ecs.Component {
     constructor() {
+        super();
     }
 }
 
-export class Position extends Component {
+export class Position extends ecs.Component {
     constructor() {
+        super();
         this.x = 0;
         this.y = 0;
     }
 }
 
-export class Shield extends Component {
+export class Shield extends ecs.Component {
     constructor() {
+        super();
         this.shield = 0;
     }
 }
 
-export class HeroPassive extends Component {
+export class HeroPassive extends ecs.Component {
     constructor() {
+        super();
         this.shieldForKill = 0;
         this.shield = 0;
         this.pDmgForKill = 0;
@@ -149,26 +167,30 @@ export class HeroPassive extends Component {
     }
 }
 
-export class SimpleAi extends Component {
+export class SimpleAi extends ecs.Component {
     constructor() {
+        super();
         /** @type {{x:number, y:number}} */
         this.target = { x: null, y: null };
     }
 }
 
-export class Stairs extends Component {
+export class Stairs extends ecs.Component {
     constructor() {
+        super();
         this.toDeep = 0;
     }
 }
 
-export class Enemy extends Component {
+export class Enemy extends ecs.Component {
     constructor() {
+        super();
     }
 }
 
-export class Type extends Component {
+export class Type extends ecs.Component {
     constructor() {
+        super();
         this.typeName = '';
     }
 }

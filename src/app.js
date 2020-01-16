@@ -1,12 +1,12 @@
 import { Display } from "rot-js";
 import config from "./config";
+import Game from "./game";
 
 export default class App {
     constructor() {
-        // display
         this.display = new Display(config.rotjsDisplayOptions);
-        // others
         this.userName = config.defaultUserName;
+        this.game = new Game(this);
     }
     async load() { }
     /**
@@ -27,7 +27,12 @@ export default class App {
         messages.setLocale(locale);
     }
     init() {
+        document.querySelector(".app")
+            .appendChild(this.display.getContainer());
+        this.game.init();
+        this.game.createNewGame();
     }
     run() {
+        this.game.mainloop();
     }
 }

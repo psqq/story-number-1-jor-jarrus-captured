@@ -10,6 +10,9 @@ export class Engine {
         this.entities = new Map();
         this._uid = 0;
     }
+    clearEntities() {
+        this.entities = new Map();
+    }
     /**
      * @param {Component[]} components
      */
@@ -33,6 +36,9 @@ export class Engine {
         return [...this.entities.values()].filter(e => e.has(...ComponentClasses));
     }
     getAllEntities() {
+        return [...this.entities.values()];
+    }
+    getAllSystems() {
         return [...this.entities.values()];
     }
     /**
@@ -108,7 +114,6 @@ export class Entity {
 }
 
 export class Component {
-    constructor() { }
     erase() {
         Object.keys(this).forEach(key => this[key] = null);
     }
