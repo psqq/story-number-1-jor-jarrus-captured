@@ -172,5 +172,3 @@ export class Type extends Component {
         this.typeName = '';
     }
 }
-
-

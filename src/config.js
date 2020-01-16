@@ -21,9 +21,9 @@ const ruSotryMessage = `
 один выход – продвигаться в глубь пещер.
 `;
 
-const enPurposeMsg = `Purpose: to save the crew of the ship.`;
+const enPurposeMessage = `Purpose: to save the crew of the ship.`;
 
-const ruPurposeMsg = `Цель: спасти экипаж корабля.`;
+const ruPurposeMessage = `Цель: спасти экипаж корабля.`;
 
 const enHelpScreenText = `
 Movement or attack: hjklyubn, Numpad, Arrows
@@ -75,61 +75,14 @@ const directionByKeyCode = {
     'ArrowDown': new Victor(0, 1),
 };
 
-const sceneNames = {
-    mainMenu: "main-menu-scene",
-    game: "game-scene",
-};
-
 const mapSize = { x: 30, y: 30 };
 
-const leftRightPadding = 0;
-
-const gameSceneTopBar = {
-    x: 0,
-    y: 0,
-    viewX: 0,
-    viewY: 0,
-    height: 0,
-};
-
-const gameSceneBottomBar = {
-    x: 0,
-    y: gameSceneTopBar.height + mapSize.y,
-    viewX: 0,
-    viewY: gameSceneTopBar.height + mapSize.y + 1,
-    height: 0,
-};
-
-const gameSceneBars = {
-    top: gameSceneTopBar,
-    bottom: gameSceneBottomBar,
-};
-
-const mapOffset = {
-    x: leftRightPadding,
-    y: gameSceneBars.top.height
-};
-
 const config = {
-    systemGroups: {
-        init: 'init',
-        characteristics: 'characteristics',
-        attack: 'attack',
-        fov: 'fov',
-        system: 'system',
-        display: 'display',
-        base: 'base',
-        move: 'move',
-        depthMove: 'depth-move',
-        flatMove: 'flat-move',
-        grimReaper: 'grim-reaper',
-        clear: 'clear',
-    },
     messages: {
         enSotryMessage,
         ruSotryMessage,
-        enPurposeMsg,
-        ruPurposeMsg,
+        enPurposeMessage,
+        ruPurposeMessage,
         enHelpScreenText,
         ruHelpScreenText,
         enLoseScreenText,
@@ -155,7 +108,6 @@ const config = {
     directionByKeyCode,
     eps: 1e-5,
     map: {
-        offset: mapOffset,
         size: mapSize,
         cellSize: 1,
         fgColor: 'white',
@@ -175,40 +127,20 @@ const config = {
             bgColor: 'black',
         },
     },
-    gameSceneBars,
     rotjsDisplayOptions: {
-        width: mapSize.x + 2 * leftRightPadding,
-        height: mapSize.y + gameSceneBars.bottom.height + gameSceneBars.top.height,
+        width: mapSize.x,
+        height: mapSize.y,
         fontSize: 16,
         forceSquareRatio: true,
-        fontFamily: 'Typori',
     },
     defaultUserName: 'User Name',
-    screens: {
-        mainMenu: {
-            elementSelector: '.main-menu-screen',
-        },
-        help: {
-            elementSelector: '.help-screen',
-        },
-        game: {
-            elementSelector: '.game-screen',
-        },
-        lose: {
-            elementSelector: '.lose-screen',
-        },
-    },
-    teams: {
-        goblins: 'goblins',
-        humans: 'humans',
-    },
-    beingTypes: {
+    entityTypes: {
         goblinMinion: 'goblin-minion',
         player: 'player',
         stairs: 'stairs',
     },
     skills: {
-        shieldPDmgForKillPassiveSkillComponent: {
+        heroPassive: {
             shieldForKill: [
                 0, 4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84, 89, 94, 99
             ],
