@@ -127,6 +127,9 @@ export class MoveDirection extends ecs.Component {
         this.x = 0;
         this.y = 0;
     }
+    isNeedUpdate() {
+        return this.isInitialized();
+    }
 }
 
 export class Obstacle extends ecs.Component {

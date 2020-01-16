@@ -35,11 +35,18 @@ export class Engine {
     getEntities(...ComponentClasses) {
         return [...this.entities.values()].filter(e => e.has(...ComponentClasses));
     }
+    /**
+     * @param {(new (...arg: any) => Component)[]} ComponentClasses
+     * @returns {Entity[]}
+     */
+    getPartEntities(entities, ComponentClasses) {
+        return entities.filter(e => e.has(...ComponentClasses));
+    }
     getAllEntities() {
         return [...this.entities.values()];
     }
     getAllSystems() {
-        return [...this.entities.values()];
+        return this.systems;
     }
     /**
      * @type {System} system

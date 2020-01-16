@@ -3,6 +3,8 @@ import * as entities from "./entities";
 import * as c from "./components";
 import * as s from "./systems";
 import App from "./app";
+import GameScreen from "./screens/game-screen";
+import BaseSystem from "./base-system";
 
 export default class Game {
     /**
@@ -12,20 +14,40 @@ export default class Game {
         this.app = app;
         /** @type {ecs.Engine} */
         this.engine = null;
+        /** @type {BaseSystem} */
+        this.bs = null;
         /** @type {ecs.Entity} */
         this.player = null;
         this.pause = true;
+        this.gameSystems = [];
         this.displaySystems = [];
+        this.screens = {
+            game: new GameScreen(this.app),
+        };
     }
     init() {
         this.engine = new ecs.Engine();
+        // Init base system
+        this.bs = new BaseSystem(this.app);
+        this.engine.addSystem(this.bs);
+        // Init other game systems
+        this.gameSystems = [
+            new s.Moving(this.app),
+        ];
+        for (let system of this.gameSystems) {
+            this.engine.addSystem(system);
+        }
+        // Init display systems
         this.displaySystems = [
             new s.DisplayGlyph(this.app),
         ];
         for (let system of this.displaySystems) {
             this.engine.addSystem(system);
         }
+        // Disable pause
         this.pause = false;
+        // Open game screen
+        this.screens.game.open();
     }
     createNewGame() {
         this.pause = true;
@@ -46,7 +68,7 @@ export default class Game {
             if (this.player.isNeedUpdate()) {
                 // First update player
                 this.engine.update(
-                    this.engine.getAllSystems(),
+                    this.gameSystems,
                     [this.player],
                     1,
                 );
@@ -58,7 +80,7 @@ export default class Game {
                     }
                 }
                 this.engine.update(
-                    this.engine.getAllSystems(),
+                    this.gameSystems,
                     notPlayers,
                     1,
                 );
