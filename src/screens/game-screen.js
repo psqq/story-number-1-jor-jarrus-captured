@@ -18,6 +18,11 @@ export default class GameScreen extends Screen {
     }
     handleEvent(e) {
         if (e instanceof KeyboardEvent) {
+            // console.log(e);
+            if (e.key == "Escape") {
+                this.back();
+                return;
+            }
             const dir = getDirectionByKeyboardEvent(e);
             if (dir) {
                 const player = this.app.game.player;

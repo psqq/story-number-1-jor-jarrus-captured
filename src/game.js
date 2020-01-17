@@ -29,6 +29,7 @@ export default class Game {
         };
         this.scr.game.ee.on("open", () => {
             this.pause = false;
+            this.draw();
         });
         this.scr.game.ee.on("close", () => {
             this.pause = true;
@@ -73,42 +74,41 @@ export default class Game {
         }
         this.running = true;
         const go = () => {
-            if (this.pause) {
-                return;
-            }
-            // Update only if player need it
-            if (this.player && this.player.isNeedUpdate()) {
-                // Prepare for update
-                this.engine.update(
-                    this.gameSystems,
-                    this.engine.getAllEntities(),
-                    0,
-                );
-                // Updae if realy need
-                if (this.player.isNeedUpdate()) {
-                    // First update player
+            if (!this.pause) {
+                // Update only if player need it
+                if (this.player && this.player.isNeedUpdate()) {
+                    // Prepare for update
                     this.engine.update(
                         this.gameSystems,
-                        [this.player],
-                        1,
+                        this.engine.getAllEntities(),
+                        0,
                     );
-                    // Next update other entities
-                    const notPlayers = [];
-                    for (let e of this.engine.getAllEntities()) {
-                        if (!e.get(c.Player)) {
-                            notPlayers.push(e);
+                    // Updae if realy need
+                    if (this.player.isNeedUpdate()) {
+                        // First update player
+                        this.engine.update(
+                            this.gameSystems,
+                            [this.player],
+                            1,
+                        );
+                        // Next update other entities
+                        const notPlayers = [];
+                        for (let e of this.engine.getAllEntities()) {
+                            if (!e.get(c.Player)) {
+                                notPlayers.push(e);
+                            }
                         }
+                        this.engine.update(
+                            this.gameSystems,
+                            notPlayers,
+                            1,
+                        );
+                        this.time++;
                     }
-                    this.engine.update(
-                        this.gameSystems,
-                        notPlayers,
-                        1,
-                    );
-                    this.time++;
                 }
+                // Draw all
+                this.draw();
             }
-            // Draw all
-            this.draw();
             requestAnimationFrame(go);
         };
         requestAnimationFrame(go);

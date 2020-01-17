@@ -13,12 +13,13 @@ export default class MainMenuScreen extends Screen {
     constructor(app) {
         super(app);
         this.el = document.querySelector(".main-menu");
+        this.locales = ["en", "ru"];
     }
     draw() {
         if (this.menuEl) {
             unmount(this.el, this.menuEl);
         }
-        let loadStatus = "no saved games";
+        let loadStatus = " - no saved games";
         this.menuEl = el("div.main-menu-list", [
             el("p.story-msg", [
                 text(_('Welcome to game') + `, `),
@@ -38,26 +39,54 @@ export default class MainMenuScreen extends Screen {
                     text(_("Change name"))
                 ]), el => {
                     el.onclick = e => {
-                    }
+                        let newName = prompt(_("Enter your name"));
+                        this.app.userName = newName;
+                        this.draw();
+                    };
                 }),
-                this.startNewGameEl = el("li.text-button", [
+                doWith(el("li.text-button", [
                     text(_("Start new game"))
-                ]),
-                this.continueEl = el("li.text-button", [
+                ]), el => {
+                    el.onclick = e => {
+                        this.app.game.createNewGame();
+                        this.switchTo(this.app.game.scr.game);
+                    };
+                }),
+                doWith(el("li.text-button", [
                     text(_("Continue"))
-                ]),
-                this.saveEl = el("li.text-button", [
+                ]), el => {
+                    el.onclick = e => {
+                    };
+                }),
+                doWith(el("li.text-button", [
                     text(_("Save"))
-                ]),
-                this.loadEl = el("li.text-button", [
+                ]), el => {
+                    el.onclick = e => {
+                    };
+                }),
+                doWith(el("li.text-button", [
                     text(_("Load") + loadStatus)
-                ]),
-                this.changeLangEl = el("li.text-button", [
+                ]), el => {
+                    el.onclick = e => {
+                    };
+                }),
+                doWith(el("li.text-button", [
                     text(_("Change language") + ' (Change language)')
-                ]),
-                this.helpEl = el("li.text-button", [
+                ]), el => {
+                    el.onclick = e => {
+                        let s = new Set(this.locales);
+                        let curLocale = messages.getLocale();
+                        s.delete(curLocale);
+                        this.app.setLocale(s.values().next().value);
+                        this.draw();
+                    };
+                }),
+                doWith(el("li.text-button", [
                     text(_("Help"))
-                ]),
+                ]), el => {
+                    el.onclick = e => {
+                    };
+                }),
             ]),
             el("p.story-msg", [
                 text(_(config.messages.enSotryMessage))

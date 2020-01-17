@@ -1,6 +1,7 @@
 import { Display } from "rot-js";
 import config from "./config";
 import Game from "./game";
+import messages from "./messages";
 
 export default class App {
     constructor() {
@@ -27,6 +28,7 @@ export default class App {
         messages.setLocale(locale);
     }
     init() {
+        this.restoreLocale();
         document.querySelector(".display")
             .appendChild(this.display.getContainer());
         this.game.init();

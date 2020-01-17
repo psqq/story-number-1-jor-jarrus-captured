@@ -10,6 +10,7 @@ export default class Screen {
         this.events = [
             "keydown",
         ];
+        /** @type {Screen} */
         this.previousScreen = null;
         /** @type {HTMLDivElement} */
         this.el = null;
@@ -57,10 +58,10 @@ export default class Screen {
      */
     switchTo(screen) {
         this.close();
-        screen.previousScene()
+        screen.previousScreen = this;
         screen.open();
     }
     back() {
-        this.switchTo(this.previousScene);
+        this.switchTo(this.previousScreen);
     }
 }
