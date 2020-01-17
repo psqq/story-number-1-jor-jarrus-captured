@@ -7,7 +7,7 @@ export class AutoAttack extends ecs.Component {
     }
 }
 
-export class Characteristics extends ecs.Component {
+export class Stats extends ecs.Component {
     constructor() {
         super();
         const statOptions = {

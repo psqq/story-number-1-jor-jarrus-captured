@@ -54,7 +54,6 @@ export default class BaseSystem extends ecs.System {
         const dir = e.get(c.MoveDirection);
         pos.x += dir.x;
         pos.y += dir.y;
-        this.app.game.screens.msgbox.addMsg("Your are moved!");
         return true;
     }
 }

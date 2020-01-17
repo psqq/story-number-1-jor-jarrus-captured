@@ -1,4 +1,5 @@
 import App from "../app";
+import EventEmitter from "wolfy87-eventemitter";
 
 export default class Screen {
     /**
@@ -10,6 +11,21 @@ export default class Screen {
             "keydown",
         ];
         this.previousScreen = null;
+        /** @type {HTMLDivElement} */
+        this.el = null;
+        this.ee = new EventEmitter();
+    }
+    show() {
+        if (!this.el) {
+            return;
+        }
+        this.el.style.display = "block";
+    }
+    hide() {
+        if (!this.el) {
+            return;
+        }
+        this.el.style.display = "none";
     }
     bindEvents() {
         for (let event of this.events) {
@@ -23,9 +39,13 @@ export default class Screen {
     }
     open() {
         this.bindEvents();
+        this.show();
+        this.ee.emit("open");
     }
     close() {
         this.unbindEvents();
+        this.hide();
+        this.ee.emit("close");
     }
     /**
      * @param {Event} event 

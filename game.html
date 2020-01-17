@@ -10,11 +10,12 @@
 </head>
 
 <body>
-    <div class="app">
-        <div class="display"></div>
-        <pre class="msgbox"></pre>
-    </div>
     <div class="screens">
+        <div class="main-menu screen"></div>
+        <div class="game-screen screen">
+            <div class="display"></div>
+            <pre class="msgbox"></pre>
+        </div>
     </div>
     <script>
         document.write(`<script src="./dist/main.js?date=${+new Date()}"><\/script>`);

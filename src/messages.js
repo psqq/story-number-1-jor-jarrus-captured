@@ -6,6 +6,7 @@ if (!new Set(['ru', 'en']).has(userLocale)) {
     userLocale = 'en';
 }
 
+/** @type {i18n.Gettext} */
 const messages = i18n({
     locale: userLocale,
 });
@@ -14,7 +15,7 @@ messages.setMessages(
     'messages',
     'ru', {
         [config.messages.enSotryMessage]: config.messages.ruSotryMessage,
-        [config.messages.enPurposeMsg]: config.messages.ruPurposeMsg,
+        [config.messages.enPurposeMessage]: config.messages.ruPurposeMessage,
         [config.messages.enHelpScreenText]: config.messages.ruHelpScreenText,
         [config.messages.enLoseScreenText]: config.messages.ruLoseScreenText,
         'Welcome to game': 'Добро пожаловать в игру',

@@ -5,7 +5,7 @@ import * as s from "./systems";
 import App from "./app";
 import GameScreen from "./screens/game-screen";
 import BaseSystem from "./base-system";
-import MsgboxScreen from "./screens/msgbox-screen";
+import MainMenuScreen from "./screens/main-menu-screen";
 
 export default class Game {
     /**
@@ -20,12 +20,19 @@ export default class Game {
         /** @type {ecs.Entity} */
         this.player = null;
         this.pause = true;
+        this.running = false;
         this.gameSystems = [];
         this.displaySystems = [];
-        this.screens = {
+        this.scr = {
             game: new GameScreen(this.app),
-            msgbox: new MsgboxScreen(this.app),
+            mainMenu: new MainMenuScreen(this.app),
         };
+        this.scr.game.ee.on("open", () => {
+            this.pause = false;
+        });
+        this.scr.game.ee.on("close", () => {
+            this.pause = true;
+        });
         this.time = 0;
     }
     init() {
@@ -47,29 +54,30 @@ export default class Game {
         for (let system of this.displaySystems) {
             this.engine.addSystem(system);
         }
-        // Disable pause
-        this.pause = false;
-        // Open game screen
-        this.screens.game.open();
-        this.screens.msgbox.addMsg('Welcome to game!');
+        // Open menu screen
+        this.scr.mainMenu.open();
+        this.scr.game.addMsg('Welcome to game!');
     }
     createNewGame() {
         this.pause = true;
         this.engine.clearEntities();
         this.player = this.engine.createEntity(...entities.createPlayer());
-        this.pause = false;
     }
     draw() {
         this.app.display.clear();
         this.engine.update(this.displaySystems, this.engine.getAllEntities(), 0);
     }
     mainloop() {
+        if (this.running) {
+            return;
+        }
+        this.running = true;
         const go = () => {
             if (this.pause) {
                 return;
             }
             // Update only if player need it
-            if (this.player.isNeedUpdate()) {
+            if (this.player && this.player.isNeedUpdate()) {
                 // Prepare for update
                 this.engine.update(
                     this.gameSystems,

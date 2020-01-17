@@ -30,7 +30,6 @@ export default class App {
         document.querySelector(".display")
             .appendChild(this.display.getContainer());
         this.game.init();
-        this.game.createNewGame();
     }
     run() {
         this.game.mainloop();

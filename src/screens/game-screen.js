@@ -8,6 +8,13 @@ export default class GameScreen extends Screen {
      */
     constructor(app) {
         super(app);
+        this.el = document.querySelector(".game-screen");
+        this.msgboxEl = document.querySelector(".msgbox");
+    }
+    addMsg(msg) {
+        const t = this.app.game.time;
+        const s = `[${t}] ${msg}\n`;
+        this.msgboxEl.innerText = s + this.el.innerText;
     }
     handleEvent(e) {
         if (e instanceof KeyboardEvent) {
