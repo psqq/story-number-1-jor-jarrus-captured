@@ -2,6 +2,7 @@ import { Display } from "rot-js";
 import config from "./config";
 import Game from "./game";
 import messages from "./messages";
+import moment from "moment";
 
 export default class App {
     constructor() {
@@ -32,6 +33,18 @@ export default class App {
         document.querySelector(".display")
             .appendChild(this.display.getContainer());
         this.game.init();
+    }
+    saveApp() {
+        const data = {};
+        data.userName = this.userName;
+        data.game = this.game.toString();
+        data.date = moment().format("MMM Do YY, HH:mm:ss");
+        localStorage.setItem('app', JSON.stringify(data));
+    }
+    loadApp() {
+        const data = JSON.parse(localStorage.getItem('app'));
+        this.userName = data.userName;
+        this.game = this.game.fromString(data.game);
     }
     run() {
         this.game.mainloop();

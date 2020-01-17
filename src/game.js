@@ -36,8 +36,36 @@ export default class Game {
         });
         this.time = 0;
     }
+    toString() {
+        const data = {};
+    }
     init() {
         this.engine = new ecs.Engine();
+        this.engine.registerComponentClasses([
+            c.AutoAttack,
+            c.Stats,
+            c.Damage,
+            c.Deep,
+            c.DepthMoving,
+            c.Dungeon,
+            c.ExperienceLevel,
+            c.Fov,
+            c.Glyph,
+            c.HealthPoints,
+            c.HeroQSkill,
+            c.HealthPoints,
+            c.MemorizedFovArea,
+            c.MoveDirection,
+            c.Obstacle,
+            c.Player,
+            c.Position,
+            c.Shield,
+            c.HeroPassive,
+            c.SimpleAi,
+            c.Stairs,
+            c.Enemy,
+            c.Type,
+        ]);
         // Init base system
         this.bs = new BaseSystem(this.app);
         this.engine.addSystem(this.bs);

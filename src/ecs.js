@@ -9,6 +9,16 @@ export class Engine {
         /** @type {Map<number, Entity>} */
         this.entities = new Map();
         this._uid = 0;
+        this.registeredComponents = {};
+    }
+    /**
+     * @param {(new (...arg: any) => Component)[]} ComponentClasses
+     */
+    registerComponentClasses(ComponentClasses) {
+        for (let ComponentClass of ComponentClasses) {
+            const name = ComponentClass.name;
+            this.registeredComponents[name] = ComponentClass;
+        }
     }
     clearEntities() {
         this.entities = new Map();
