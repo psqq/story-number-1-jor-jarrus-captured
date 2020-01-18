@@ -3,6 +3,10 @@ import * as c from "../components";
 import { getDirectionByKeyboardEvent, doWith } from "../tools";
 import Victor from "victor";
 import config from "../config";
+import { el, mount, text, unmount } from "redom";
+import messages from "../messages";
+
+const _ = messages.gettext.bind(messages);
 
 export default class GameScreen extends Screen {
     /**
@@ -12,7 +16,29 @@ export default class GameScreen extends Screen {
         super(app);
         this.el = document.querySelector(".game-screen");
         this.msgboxEl = document.querySelector(".msgbox");
+        this.infoBar = document.querySelector(".top-game-info-bar");
         this.events.push('mousedown');
+    }
+    draw() {
+        if (this.contentEl) {
+            unmount(this.infoBar, this.contentEl);
+        }
+        // Make vars
+        const deep = this.app.game.player.get(c.Deep).deep;
+        // Make content of screen
+        const elements = [
+            el("pre", [
+                text(
+                    _("Deep") + `: ${deep}`
+                )
+            ]),
+        ];
+        this.contentEl = el("div", elements);
+        mount(this.infoBar, this.contentEl);
+    }
+    open() {
+        super.open();
+        this.draw();
     }
     addMsg(msg) {
         const t = this.app.game.time;

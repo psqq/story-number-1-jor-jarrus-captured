@@ -8,6 +8,7 @@ import BaseSystem from "./base-system";
 import MainMenuScreen from "./screens/main-menu-screen";
 import HelpScreen from "./screens/help-screen";
 import CellInfoScreen from "./screens/cell-info-screen";
+import ArenasWorld from "./worlds/arenas";
 
 export default class Game {
     /**
@@ -39,6 +40,7 @@ export default class Game {
             this.pause = true;
         });
         this.time = 0;
+        this.world = new ArenasWorld(this.app);
     }
     toString() {
         const data = {};
@@ -108,7 +110,8 @@ export default class Game {
     createNewGame() {
         this.pause = true;
         this.engine.clearEntities();
-        this.player = this.engine.createEntity(...entities.createPlayer());
+        this.world.createNewGame(this.engine);
+        this.player = this.engine.getEntities(c.Player)[0];
         // Update stats
         this.engine.update(
             this.gameSystems,
@@ -119,6 +122,7 @@ export default class Game {
     draw() {
         this.app.display.clear();
         this.engine.update(this.displaySystems, this.engine.getAllEntities(), 0);
+        this.scr.game.draw();
     }
     mainloop() {
         if (this.running) {
