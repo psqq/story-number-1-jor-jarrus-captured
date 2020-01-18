@@ -6,6 +6,7 @@ import App from "./app";
 import GameScreen from "./screens/game-screen";
 import BaseSystem from "./base-system";
 import MainMenuScreen from "./screens/main-menu-screen";
+import HelpScreen from "./screens/help-screen";
 
 export default class Game {
     /**
@@ -26,6 +27,7 @@ export default class Game {
         this.scr = {
             game: new GameScreen(this.app),
             mainMenu: new MainMenuScreen(this.app),
+            help: new HelpScreen(this.app),
         };
         this.scr.game.ee.on("open", () => {
             this.pause = false;
@@ -38,6 +40,19 @@ export default class Game {
     }
     toString() {
         const data = {};
+        data.engine = this.engine.toString();
+        data.pause = this.pause;
+        data.running = this.running;
+        data.time = this.time;
+        return JSON.stringify(data);
+    }
+    fromString(s) {
+        const data = JSON.parse(s);
+        this.engine.fromString(data.engine);
+        this.pause = data.pause;
+        this.running = data.running;
+        this.time = data.time;
+        this.player = this.engine.getEntities(c.Player)[0];
     }
     init() {
         this.engine = new ecs.Engine();

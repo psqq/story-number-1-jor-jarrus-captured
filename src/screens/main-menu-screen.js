@@ -1,7 +1,7 @@
 import Screen from "./screen";
 import messages from "../messages";
 import { doWith } from "../tools";
-import { el, list, mount, text, unmount } from "redom";
+import { el, mount, text, unmount } from "redom";
 import config from "../config";
 
 const _ = messages.gettext.bind(messages);
@@ -19,7 +19,14 @@ export default class MainMenuScreen extends Screen {
         if (this.menuEl) {
             unmount(this.el, this.menuEl);
         }
-        let loadStatus = " - no saved games";
+        // Check saved game
+        let loadStatus = "no saved games";
+        if (localStorage.getItem('game')) {
+            const userName = localStorage.getItem('userName');
+            const date = localStorage.getItem('date');
+            loadStatus = `${userName} (${date})`;
+        }
+        // Make HTML menu
         this.menuEl = el("div.main-menu-list", [
             el("p.story-msg", [
                 text(_('Welcome to game') + `, `),
@@ -56,18 +63,23 @@ export default class MainMenuScreen extends Screen {
                     text(_("Continue"))
                 ]), el => {
                     el.onclick = e => {
+                        this.switchTo(this.app.game.scr.game);
                     };
                 }),
                 doWith(el("li.text-button", [
                     text(_("Save"))
                 ]), el => {
                     el.onclick = e => {
+                        this.app.saveApp();
+                        this.draw();
                     };
                 }),
                 doWith(el("li.text-button", [
-                    text(_("Load") + loadStatus)
+                    text(_("Load") + " - " + loadStatus)
                 ]), el => {
                     el.onclick = e => {
+                        this.app.loadApp();
+                        this.draw();
                     };
                 }),
                 doWith(el("li.text-button", [
@@ -85,6 +97,7 @@ export default class MainMenuScreen extends Screen {
                     text(_("Help"))
                 ]), el => {
                     el.onclick = e => {
+                        this.switchTo(this.app.game.scr.help);
                     };
                 }),
             ]),

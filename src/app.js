@@ -8,6 +8,7 @@ export default class App {
     constructor() {
         this.display = new Display(config.rotjsDisplayOptions);
         this.userName = config.defaultUserName;
+        /** @type {Game} */
         this.game = new Game(this);
     }
     async load() { }
@@ -35,16 +36,14 @@ export default class App {
         this.game.init();
     }
     saveApp() {
-        const data = {};
-        data.userName = this.userName;
-        data.game = this.game.toString();
-        data.date = moment().format("MMM Do YY, HH:mm:ss");
-        localStorage.setItem('app', JSON.stringify(data));
+        localStorage.setItem('userName', this.userName);
+        const date = moment().format("MMM Do YY, HH:mm:ss")
+        localStorage.setItem('date', date);
+        localStorage.setItem('game', this.game.toString());
     }
     loadApp() {
-        const data = JSON.parse(localStorage.getItem('app'));
-        this.userName = data.userName;
-        this.game = this.game.fromString(data.game);
+        this.userName = localStorage.getItem('userName');
+        this.game.fromString(localStorage.getItem('game'));
     }
     run() {
         this.game.mainloop();
