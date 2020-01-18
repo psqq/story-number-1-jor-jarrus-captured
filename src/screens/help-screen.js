@@ -19,7 +19,7 @@ export default class HelpScreen extends Screen {
         }
         // Make help
         this.contentEl = el("div", [
-            el("h3", [
+            el("h2", [
                 text(_("Help"))
             ]),
             el("pre", [

@@ -14,7 +14,10 @@ export class DisplayGlyph extends BaseSystem {
      * @param {number} deltaTime
      */
     update(entities, deltaTime) {
-        const glyphEntities = this.engine.getEntities(c.Position, c.Glyph);
+        const glyphEntities = this.engine.getPartEntities(
+            entities,
+            [c.Position, c.Glyph]
+        );
         glyphEntities.sort((a, b) => {
             return b.get(c.Glyph).zLevel - a.get(c.Glyph).zLevel;
         });
@@ -47,6 +50,32 @@ export class Moving extends BaseSystem {
                 }
             } else {
                 e.get(c.MoveDirection).erase();
+            }
+        }
+    }
+}
+
+export class Stats extends BaseSystem {
+    /**
+     * @param {App} app 
+     */
+    constructor(app) {
+        super(app);
+    }
+    /**
+     * @param {ecs.Entity[]} entities
+     * @param {number} deltaTime
+     */
+    update(entities, deltaTime) {
+        const moveableEntities = this.engine.getPartEntities(
+            entities,
+            [c.Stats],
+        );
+        for (let e of moveableEntities) {
+            const stats = e.get(c.Stats);
+            this.updateBonusStats(e);
+            for (let stat in stats) {
+                stats[stat].total = stats[stat].base + stats[stat].bonus;
             }
         }
     }

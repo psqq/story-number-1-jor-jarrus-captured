@@ -14,6 +14,19 @@ export default class BaseSystem extends ecs.System {
         this.dispaly = app.display;
     }
     /**
+     * @param {Victor} pos 
+     */
+    getEntitiesByPosition(pos) {
+        const result = [];
+        for(let e of this.engine.getAllEntities()) {
+            const posComp = e.get(c.Position);
+            if (pos.isEqualTo(posComp)) {
+                result.push(e);
+            }
+        }
+        return result;
+    }
+    /**
      * @param {ecs.Entity} e 
      */
     drawGlyph(e) {
@@ -55,5 +68,10 @@ export default class BaseSystem extends ecs.System {
         pos.x += dir.x;
         pos.y += dir.y;
         return true;
+    }
+    /**
+     * @param {ecs.Entity} e 
+     */
+    updateBonusStats(e) {
     }
 }

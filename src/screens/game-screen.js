@@ -1,6 +1,8 @@
 import Screen from "./screen";
 import * as c from "../components";
 import { getDirectionByKeyboardEvent, doWith } from "../tools";
+import Victor from "victor";
+import config from "../config";
 
 export default class GameScreen extends Screen {
     /**
@@ -10,6 +12,7 @@ export default class GameScreen extends Screen {
         super(app);
         this.el = document.querySelector(".game-screen");
         this.msgboxEl = document.querySelector(".msgbox");
+        this.events.push('mousedown');
     }
     addMsg(msg) {
         const t = this.app.game.time;
@@ -20,7 +23,7 @@ export default class GameScreen extends Screen {
         if (e instanceof KeyboardEvent) {
             // console.log(e);
             if (e.key == "Escape") {
-                this.back();
+                this.switchTo(this.app.game.scr.mainMenu);
                 return;
             }
             const dir = getDirectionByKeyboardEvent(e);
@@ -30,6 +33,13 @@ export default class GameScreen extends Screen {
                     c.x = dir.x;
                     c.y = dir.y;
                 });
+            }
+        } else if (e instanceof MouseEvent) {
+            const posArr = this.app.display.eventToPosition(e);
+            const pos = new Victor(posArr[0], posArr[1]);
+            if (pos.x >= 0 && pos.x < config.map.size.x && pos.y >= 0 && pos.y < config.map.size.y) {
+                this.app.game.scr.cellInfo.position = pos;
+                this.switchTo(this.app.game.scr.cellInfo);
             }
         }
     }

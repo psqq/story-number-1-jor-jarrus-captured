@@ -7,6 +7,7 @@ import GameScreen from "./screens/game-screen";
 import BaseSystem from "./base-system";
 import MainMenuScreen from "./screens/main-menu-screen";
 import HelpScreen from "./screens/help-screen";
+import CellInfoScreen from "./screens/cell-info-screen";
 
 export default class Game {
     /**
@@ -28,6 +29,7 @@ export default class Game {
             game: new GameScreen(this.app),
             mainMenu: new MainMenuScreen(this.app),
             help: new HelpScreen(this.app),
+            cellInfo: new CellInfoScreen(this.app),
         };
         this.scr.game.ee.on("open", () => {
             this.pause = false;
@@ -86,6 +88,7 @@ export default class Game {
         this.engine.addSystem(this.bs);
         // Init other game systems
         this.gameSystems = [
+            new s.Stats(this.app),
             new s.Moving(this.app),
         ];
         for (let system of this.gameSystems) {
@@ -106,6 +109,12 @@ export default class Game {
         this.pause = true;
         this.engine.clearEntities();
         this.player = this.engine.createEntity(...entities.createPlayer());
+        // Update stats
+        this.engine.update(
+            this.gameSystems,
+            this.engine.getAllEntities(),
+            0,
+        );
     }
     draw() {
         this.app.display.clear();

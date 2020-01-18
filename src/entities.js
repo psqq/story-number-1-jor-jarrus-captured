@@ -21,5 +21,12 @@ export function createPlayer() {
             c.symbol = '@';
             c.zLevel = 1000;
         }),
+        make(c.Stats, c => {
+            Object.assign(c.healthPoints, {
+                current: 100,
+                base: 100,
+                perLevel: 10,
+            });
+        })
     ];
 }

@@ -38,7 +38,7 @@ export default class MainMenuScreen extends Screen {
             // el("p.story-msg", [
             //     text(`${_('Current deep:')} ${this.app.baseSystem.getPlayerDeep()}`)
             // ]),
-            el("h3", [
+            el("h2", [
                 text(_("Main menu"))
             ]),
             el("ol", [
