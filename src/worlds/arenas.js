@@ -15,7 +15,15 @@ export default class ArenasWorld {
         this.engine = this.game.engine;
     }
     createNewGame() {
+        const entities = [
+            this.createPlayer(),
+            this.createDungeon(),
+        ];
+        for(let e of entities) {
+            this.engine.
+        }
         this.engine.createEntity(...this.createPlayer());
+        this.engine.createEntity(...this.createDungeon());
     }
     createPlayer() {
         return [
