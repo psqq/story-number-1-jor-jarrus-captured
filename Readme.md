@@ -1,4 +1,4 @@
-[Play now!](https://psqq.github.io/story-number-1-jor-jarrus-captured/)
+[Play now!](https://psqq.github.io/story-number-1-jor-jarrus-captured/public/index.html)
 
 # In English
 
