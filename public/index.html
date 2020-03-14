@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Story number 1. Jor Jarrus captured</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vuex"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div id="root">
+    <template v-if="screen == 'mainmenu'">
+      <div class="mainmenu">
+        <h2>Главное меню</h2>
+        <div class="btn" @click="startNewGame">Начать новую игру</div>
+      </div>
+    </template>
+    <template v-else>
+      Странно, но вы недложны этого видеть! :(
+    </template>
+  </div>
+  <script src="../src/index.js" type="module"></script>
+</body>
+
+</html>

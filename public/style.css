@@ -1,0 +1,14 @@
+.mainmenu {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.btn {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
