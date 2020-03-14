@@ -24,6 +24,12 @@ const directionByKeyCode = {
   'ArrowDown': new Victor(0, 1),
 };
 
+const defaultSize = {
+  width: 30,
+  height: 30,
+};
+
 export default {
   directionByKeyCode,
+  defaultSize,
 };
