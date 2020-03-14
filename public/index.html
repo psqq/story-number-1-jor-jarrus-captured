@@ -35,9 +35,22 @@
         </div>
       </div>
     </template>
+    <template v-else-if="screen == 'game'">
+      <div class="game">
+        <div class="game-content">
+          <game-display></game-display>
+        </div>
+        <button @click="openMainMenu">Главное меню</button>
+      </div>
+    </template>
     <template v-else>
       Странно, но вы недложны этого видеть! :(
     </template>
+  </div>
+  <div style="display: none">
+    <div id="game-display">
+      <div class="game-display"></div>
+    </div>
   </div>
   <script src="../src/index.js" type="module"></script>
 </body>
