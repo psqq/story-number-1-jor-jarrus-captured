@@ -4,6 +4,10 @@
   justify-items: center;
 }
 
+.mainmenu-content {
+  max-width: 500px;
+}
+
 .btn {
   border: 1px solid black;
   padding: 5px;
