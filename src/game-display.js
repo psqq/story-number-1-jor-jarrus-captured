@@ -20,13 +20,17 @@ export default {
     handleKeyboardEvnets(e) {
       let dir = config.directionByKeyCode[e.code];
       if (dir) {
-        this.movePlayer(dir);
-        this.$forceUpdate();
+        let newPos = dir.clone().add(this.playerPosition);
+        if (this.isMovablePosition(newPos)) {
+          this.movePlayer(dir);
+          this.$forceUpdate();
+        }
       }
     },
   },
   computed: {
     ...Vuex.mapState(['playerPosition']),
+    ...Vuex.mapGetters(['isMovablePosition']),
   },
   mounted() {
     this.$el.appendChild(display.getContainer());
