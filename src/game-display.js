@@ -14,6 +14,7 @@ export default {
     ...Vuex.mapMutations([
       'movePlayer',
       'attack',
+      'tryAddRandomEnemy',
     ]),
     draw() {
       const p = this.playerPosition;
@@ -30,13 +31,19 @@ export default {
         let enemy = this.getEnemyInThisPosition(newPos);
         if (enemy) {
           this.attack({ defenderId: enemy.id });
-          this.$forceUpdate();
+          this.update();
         } else if (this.isMovablePosition(newPos)) {
           this.movePlayer(dir);
-          this.$forceUpdate();
+          this.update();
         }
       }
     },
+    update() {
+      if (Math.random() < 0.1) {
+        this.tryAddRandomEnemy();
+      }
+      this.$forceUpdate();
+    }
   },
   computed: {
     ...Vuex.mapState(['enemies']),

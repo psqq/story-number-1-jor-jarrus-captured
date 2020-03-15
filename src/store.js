@@ -10,6 +10,7 @@ export default new Vuex.Store({
       hp: 550,
       ad: 75,
     },
+    currentEnemy: null,
     enemies: [
       {
         id: id(),
@@ -31,15 +32,34 @@ export default new Vuex.Store({
       state.player.x += dir.x;
       state.player.y += dir.y;
     },
+    tryAddRandomEnemy(state) {
+      const x = Math.floor(Math.random() * state.defaultSize.width);
+      const y = Math.floor(Math.random() * state.defaultSize.height);
+      if (this.getters.isMovablePosition({ x, y })) {
+        state.enemies.push({
+          id: id(),
+          x, y,
+          ch: 'g',
+          hp: 300 + Math.floor(Math.random() * 200),
+          ad: 25 + Math.floor(Math.random() * 50),
+        });
+      }
+    },
     attack(state, { attackerId, defenderId }) {
       let attacker = attackerId && state.enemies.find(e => e.id == attackerId) || state.player;
       let defender = defenderId && state.enemies.find(e => e.id == defenderId) || state.player;
       if (!defender) {
         return;
       }
+      if (defender.id) {
+        state.currentEnemy = defender;
+      }
       defender.hp -= attacker.ad;
       if (defender.hp <= 0) {
         state.enemies = state.enemies.filter(e => e.hp > 0);
+        if (defender.id) {
+          state.currentEnemy = null;
+        }
       }
     },
   },
@@ -60,7 +80,7 @@ export default new Vuex.Store({
       return new Victor(state.player.x, state.player.y);
     },
     getCurrentEnemy(state) {
-      return state.enemies[0];
+      return state.currentEnemy;
     },
   }
 });
