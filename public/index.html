@@ -6,16 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Story number 1. Jor Jarrus captured</title>
+  <!-- Подключаем стили -->
+  <link rel="stylesheet" href="./style.css">
+  <!-- Фреймворк для содздания пользовательских интерфейсов Vue 
+    и библиотека для урпавления состоянием Vuex -->
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/vuex"></script>
+  <!-- Библиотека для разработки рогаликов Rot.js -->
   <script src="https://unpkg.com/rot-js"></script>
+  <!-- Библиотека для работы с 2d векторами -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/victor/1.1.0/victor.min.js"
     integrity="sha256-QH04jkqJgJzblmzmCljNPAANQK9jgSJDKDow2piEYdQ=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
+  <!-- Корневой элемент приложения -->
   <div id="root">
+    <!-- Главное меню -->
     <template v-if="screen == 'mainmenu'">
       <div class="mainmenu">
         <div class="mainmenu-content">
@@ -37,6 +44,7 @@
         </div>
       </div>
     </template>
+    <!-- Игровой экран -->
     <template v-else-if="screen == 'game'">
       <div class="game">
         <div class="game-content">
@@ -45,15 +53,18 @@
         <button @click="openMainMenu">Главное меню</button>
       </div>
     </template>
+    <!-- На случай, если что-то пойдет совсем не так -->
     <template v-else>
       Странно, но вы недложны этого видеть! :(
     </template>
   </div>
+  <!-- Шаблоны для компонентов -->
   <div style="display: none">
     <div id="game-display">
       <div class="game-display"></div>
     </div>
   </div>
+  <!-- Запуск скриптов -->
   <script src="../src/index.js" type="module"></script>
 </body>
 
