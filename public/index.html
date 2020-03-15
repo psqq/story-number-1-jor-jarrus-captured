@@ -48,7 +48,9 @@
     <template v-else-if="screen == 'game'">
       <div class="game">
         <div class="game-content">
+          <player-short-info></player-short-info>
           <game-display></game-display>
+          <enemy-short-info></enemy-short-info>
         </div>
         <button @click="openMainMenu">Главное меню</button>
       </div>
@@ -62,6 +64,19 @@
   <div style="display: none">
     <div id="game-display">
       <div class="game-display"></div>
+    </div>
+    <div id="player-short-info">
+      <div class="player-short-info">
+        Здоровье: {{ player.hp }} | Урон: {{ player.ad }}
+      </div>
+    </div>
+    <div id="enemy-short-info">
+      <div class="enemy-short-info">
+        Информация о враге:
+        <p>
+          Здоровье: {{ enemy.hp }} | Урон: {{ enemy.ad }}
+        </p>
+      </div>
     </div>
   </div>
   <!-- Запуск скриптов -->

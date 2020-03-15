@@ -1,5 +1,7 @@
 import store from './store.js';
 import GameDisplay from './game-display.js';
+import PlayerShortInfo from './player-short-info.js';
+import EnemyShortInfo from './enemy-short-info.js';
 
 new Vue({
   store,
@@ -10,6 +12,8 @@ new Vue({
     ...Vuex.mapState(['screen']),
   },
   components: {
-    GameDisplay
+    GameDisplay,
+    PlayerShortInfo,
+    EnemyShortInfo,
   },
 }).$mount("#root")
