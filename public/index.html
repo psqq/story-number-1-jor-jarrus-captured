@@ -72,10 +72,15 @@
     </div>
     <div id="enemy-short-info">
       <div class="enemy-short-info">
-        Информация о враге:
-        <p>
-          Здоровье: {{ enemy.hp }} | Урон: {{ enemy.ad }}
-        </p>
+        <template v-if="enemy">
+          Информация о враге:
+          <p>
+            Здоровье: {{ enemy.hp }} | Урон: {{ enemy.ad }}
+          </p>
+        </template>
+        <template v-else>
+          Хм. Не вижу врагов.
+        </template>
       </div>
     </div>
   </div>
