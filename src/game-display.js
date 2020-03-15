@@ -7,7 +7,7 @@ const display = new ROT.Display({
   forceSquareRatio: true,
 });
 
-export default {
+export default Vue.component('game-display', {
   name: 'game-display',
   template: '#game-display',
   methods: {
@@ -71,4 +71,4 @@ export default {
   updated() {
     this.draw();
   },
-}
+});

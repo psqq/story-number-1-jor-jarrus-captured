@@ -1,5 +1,5 @@
 
-export default {
+export default Vue.component('enemy-short-info', {
   name: 'enemy-short-info',
   template: '#enemy-short-info',
   computed: {
@@ -7,4 +7,4 @@ export default {
       enemy: 'getCurrentEnemy',
     }),
   },
-}
+});

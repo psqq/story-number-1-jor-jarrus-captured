@@ -52,7 +52,7 @@
           <game-display></game-display>
           <enemy-short-info></enemy-short-info>
         </div>
-        <button @click="openMainMenu">Главное меню</button>
+        <div class="btn" @click="openMainMenu">Главное меню</div>
       </div>
     </template>
     <!-- Экран проигрыша -->
@@ -74,21 +74,31 @@
     <div id="game-display">
       <div class="game-display"></div>
     </div>
+    <div id="being-base-info">
+      <div>
+        <p>
+          Здоровье: {{ being.hp }} | Урон: {{ being.ad }}
+        </p>
+      </div>
+    </div>
     <div id="player-short-info">
       <div class="player-short-info">
-        Здоровье: {{ player.hp }} | Урон: {{ player.ad }}
+        Ваши статы:
+        <being-base-info :being="player"></being-base-info>
       </div>
     </div>
     <div id="enemy-short-info">
       <div class="enemy-short-info">
         <template v-if="enemy">
-          Информация о враге:
           <p>
-            Здоровье: {{ enemy.hp }} | Урон: {{ enemy.ad }}
+            Информация о враге:
           </p>
+          <being-base-info :being="enemy"></being-base-info>
         </template>
         <template v-else>
-          Вы не кого не атаковали в последнее время.
+          <p>
+            Вы не кого не атаковали в последнее время.
+          </p>
         </template>
       </div>
     </div>
