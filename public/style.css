@@ -1,10 +1,10 @@
-.mainmenu, .game {
+.mainmenu, .game, .lose {
   display: grid;
   align-items: center;
   justify-items: center;
 }
 
-.mainmenu-content, .game-content {
+.mainmenu-content, .game-content, .lose-content {
   max-width: 500px;
 }
 

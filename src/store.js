@@ -1,10 +1,8 @@
 import config from './config.js';
 import id from './id.js';
 
-export default new Vuex.Store({
-  state: {
-    screen: 'mainmenu',
-    defaultSize: config.defaultSize,
+function getInitialState() {
+  return {
     player: {
       x: 3, y: 15,
       hp: 550,
@@ -20,13 +18,25 @@ export default new Vuex.Store({
         ad: 45,
       },
     ]
+  };
+}
+
+export default new Vuex.Store({
+  state: {
+    screen: 'mainmenu',
+    defaultSize: config.defaultSize,
+    ...getInitialState(),
   },
   mutations: {
     startNewGame(state) {
       state.screen = 'game';
+      Object.assign(state, getInitialState());
     },
     openMainMenu(state) {
       state.screen = 'mainmenu';
+    },
+    openLoseScreen(state) {
+      state.screen = 'lose';
     },
     movePlayer(state, dir) {
       state.player.x += dir.x;
@@ -62,6 +72,15 @@ export default new Vuex.Store({
         }
       }
     },
+    turnAi(state) {
+      let p = state.player;
+      let enemiesNearPlayer = state.enemies.filter(
+        e => Math.max(Math.abs(p.x - e.x), Math.abs(p.y - e.y)) <= 1
+      );
+      for (let e of enemiesNearPlayer) {
+        this.commit('attack', { attackerId: e.id });
+      }
+    }
   },
   getters: {
     isMovablePosition(state) {
@@ -78,6 +97,9 @@ export default new Vuex.Store({
     },
     playerPosition(state) {
       return new Victor(state.player.x, state.player.y);
+    },
+    isPlayerAlive(state) {
+      return state.player.hp > 0;
     },
     getCurrentEnemy(state) {
       return state.currentEnemy;

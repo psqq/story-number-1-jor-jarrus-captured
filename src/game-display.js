@@ -15,6 +15,8 @@ export default {
       'movePlayer',
       'attack',
       'tryAddRandomEnemy',
+      'turnAi',
+      'openLoseScreen',
     ]),
     draw() {
       const p = this.playerPosition;
@@ -42,6 +44,10 @@ export default {
       if (Math.random() < 0.1) {
         this.tryAddRandomEnemy();
       }
+      this.turnAi();
+      if (!this.isPlayerAlive) {
+        this.openLoseScreen();
+      }
       this.$forceUpdate();
     }
   },
@@ -51,6 +57,7 @@ export default {
       'playerPosition',
       'isMovablePosition',
       'getEnemyInThisPosition',
+      'isPlayerAlive',
     ]),
   },
   mounted() {
