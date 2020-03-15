@@ -5,7 +5,7 @@ function id() {
   var t = Date.now();
   var s = t.toString(36);
   if (t == prevTime) {
-    counter += Math.floor(Math.random() * 100);
+    counter += Math.floor(Math.random() * 100) + 1;
     s += '-' + counter.toString(36)
   } else {
     counter = 0;
