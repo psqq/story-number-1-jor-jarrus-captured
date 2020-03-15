@@ -11,8 +11,16 @@
 .btn {
   border: 1px solid black;
   padding: 5px;
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-items: center;
 }
 
 .btn:hover {
   cursor: pointer;
+}
+
+h2 {
+  text-align: center;
 }

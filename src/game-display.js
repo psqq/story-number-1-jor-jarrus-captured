@@ -28,7 +28,9 @@ export default Vue.component('game-display', {
     },
     handleKeyboardEvnets(e) {
       let dir = config.directionByKeyCode[e.code];
-      if (dir) {
+      if (dir.isZero()) {
+        this.update();
+      } else {
         let newPos = dir.clone().add(this.playerPosition);
         let enemy = this.getEnemyInThisPosition(newPos);
         if (enemy) {

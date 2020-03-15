@@ -74,11 +74,20 @@ export default new Vuex.Store({
     },
     turnAi(state) {
       let p = state.player;
-      let enemiesNearPlayer = state.enemies.filter(
-        e => Math.max(Math.abs(p.x - e.x), Math.abs(p.y - e.y)) <= 1
-      );
-      for (let e of enemiesNearPlayer) {
-        this.commit('attack', { attackerId: e.id });
+      for (let e of state.enemies) {
+        if (Math.max(Math.abs(p.x - e.x), Math.abs(p.y - e.y)) <= 1) {
+          this.commit('attack', { attackerId: e.id });
+        } else if (Math.random() < 0.8) {
+          let dir = new Victor(
+            [1, -1][Math.floor(Math.random() * 2)],
+            [1, -1][Math.floor(Math.random() * 2)],
+          );
+          let newPos = dir.clone().add(e);
+          if (this.getters.isMovablePosition(newPos)) {
+            e.x += dir.x;
+            e.y += dir.y;
+          }
+        }
       }
     }
   },
@@ -87,7 +96,8 @@ export default new Vuex.Store({
       return (pos) => {
         return pos.x >= 0 && pos.x < state.defaultSize.width
           && pos.y >= 0 && pos.y < state.defaultSize.height
-          && !state.enemies.some(e => e.x == pos.x && e.y == pos.y);
+          && !state.enemies.some(e => e.x == pos.x && e.y == pos.y)
+          && !(pos.x == state.player.x && pos.y == state.player.y);
       };
     },
     getEnemyInThisPosition(state) {

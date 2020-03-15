@@ -51,8 +51,8 @@
           <player-short-info></player-short-info>
           <game-display></game-display>
           <enemy-short-info></enemy-short-info>
+          <div class="btn" @click="openMainMenu">Главное меню</div>
         </div>
-        <div class="btn" @click="openMainMenu">Главное меню</div>
       </div>
     </template>
     <!-- Экран проигрыша -->
@@ -60,8 +60,8 @@
       <div class="lose">
         <div class="lose-content">
           <h2>Вы проиграли :(</h2>
+          <div class="btn" @click="openMainMenu">Главное меню</div>
         </div>
-        <button @click="openMainMenu">Главное меню</button>
       </div>
     </template>
     <!-- На случай, если что-то пойдет совсем не так -->
