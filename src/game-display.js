@@ -28,17 +28,19 @@ export default Vue.component('game-display', {
     },
     handleKeyboardEvnets(e) {
       let dir = config.directionByKeyCode[e.code];
-      if (dir.isZero()) {
-        this.update();
-      } else {
-        let newPos = dir.clone().add(this.playerPosition);
-        let enemy = this.getEnemyInThisPosition(newPos);
-        if (enemy) {
-          this.attack({ defenderId: enemy.id });
+      if (dir) {
+        if (dir.isZero()) {
           this.update();
-        } else if (this.isMovablePosition(newPos)) {
-          this.movePlayer(dir);
-          this.update();
+        } else {
+          let newPos = dir.clone().add(this.playerPosition);
+          let enemy = this.getEnemyInThisPosition(newPos);
+          if (enemy) {
+            this.attack({ defenderId: enemy.id });
+            this.update();
+          } else if (this.isMovablePosition(newPos)) {
+            this.movePlayer(dir);
+            this.update();
+          }
         }
       }
     },
