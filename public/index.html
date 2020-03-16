@@ -52,6 +52,7 @@
           <game-display></game-display>
           <enemy-short-info></enemy-short-info>
           <div class="btn" @click="openMainMenu">Главное меню</div>
+          <div class="btn" @click="openShopScreen">Магазин</div>
         </div>
       </div>
     </template>
@@ -61,6 +62,34 @@
         <div class="lose-content">
           <h2>Вы проиграли :(</h2>
           <div class="btn" @click="openMainMenu">Главное меню</div>
+        </div>
+      </div>
+    </template>
+    <!-- Экран магазина -->
+    <template v-else-if="screen == 'shop'">
+      <div class="shop">
+        <div class="shop-content">
+          <h2>Магазин</h2>
+          <div v-for="(item, index) in items" :key="item.id">
+            <hr v-if="index">
+            <b>{{ item.name }}</b>
+            <p>
+              Цена: {{ item.cost }}
+            </p>
+            <p>
+              {{ item.desc }}
+            </p>
+            Пассивные эффекты:
+            <p v-for="(passiveEffect, index2) in item.passives" :key="index2">
+              <template v-if="passiveEffect.name == 'flat-bonus-ad'">
+                <b>+{{passiveEffect.value}}</b> бонусного урона
+              </template>
+            </p>
+            <button @click="buyItem(item.id)">Купить предмет</button>
+          </div>
+          <p></p>
+          <hr>
+          <div class="btn" @click="openGameScreen">Вернуться в игру</div>
         </div>
       </div>
     </template>

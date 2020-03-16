@@ -1,5 +1,6 @@
 import config from './config.js';
 import id from './id.js';
+import items from './items.js';
 
 function getInitialState() {
   return {
@@ -7,6 +8,8 @@ function getInitialState() {
       x: 3, y: 15,
       hp: 550,
       ad: 75,
+      bonusAd: 0,
+      inventory: [],
     },
     currentEnemy: null,
     enemies: [
@@ -25,6 +28,7 @@ export default new Vuex.Store({
   state: {
     screen: 'mainmenu',
     defaultSize: config.defaultSize,
+    items,
     ...getInitialState(),
   },
   mutations: {
@@ -38,9 +42,25 @@ export default new Vuex.Store({
     openLoseScreen(state) {
       state.screen = 'lose';
     },
+    openGameScreen(state) {
+      state.screen = 'game';
+    },
+    openShopScreen(state) {
+      state.screen = 'shop';
+    },
     movePlayer(state, dir) {
       state.player.x += dir.x;
       state.player.y += dir.y;
+    },
+    buyItem(state, {itemId}) {
+      state.player.inventory.push(itemId);
+    },
+    applyInventory() {
+      const p = state.player;
+      p.bonusAd = 0;
+      for(let itemId of p.inventory) {
+        
+      }
     },
     tryAddRandomEnemy(state) {
       const x = Math.floor(Math.random() * state.defaultSize.width);

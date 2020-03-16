@@ -7,9 +7,14 @@ import './being-base-info.js';
 new Vue({
   store,
   methods: {
-    ...Vuex.mapMutations(['startNewGame', 'openMainMenu']),
+    ...Vuex.mapMutations([
+      'startNewGame',
+      'openMainMenu',
+      'openGameScreen',
+      'openShopScreen',
+    ]),
   },
   computed: {
-    ...Vuex.mapState(['screen']),
+    ...Vuex.mapState(['screen', 'items']),
   },
 }).$mount("#root")
