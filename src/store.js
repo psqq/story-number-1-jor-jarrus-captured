@@ -5,17 +5,18 @@ import items from './items.js';
 function getInitialState() {
   return {
     player: {
-      x: 3, y: 15,
+      x: 15, y: 15,
       hp: 550,
       ad: 75,
       bonusAd: 0,
+      gold: 500,
       inventory: [],
     },
     currentEnemy: null,
     enemies: [
       {
         id: id(),
-        x: 0, y: 0,
+        x: 10, y: 10,
         ch: 'g',
         hp: 400,
         ad: 45,
@@ -53,13 +54,21 @@ export default new Vuex.Store({
       state.player.y += dir.y;
     },
     buyItem(state, { itemId }) {
+      let item = state.items.find(item => item.id == itemId);
+      state.player.gold = item.cost;
       state.player.inventory.push(itemId);
+      this.commit('applyInventory');
     },
-    applyInventory() {
+    applyInventory(state) {
       const p = state.player;
       p.bonusAd = 0;
       for (let itemId of p.inventory) {
-
+        let item = state.items.find(item => item.id == itemId);
+        for (let passiveEffect of item.passives) {
+          if (passiveEffect.name == 'flat-bonus-ad') {
+            p.bonusAd += passiveEffect.value;
+          }
+        }
       }
     },
     tryAddRandomEnemy(state) {

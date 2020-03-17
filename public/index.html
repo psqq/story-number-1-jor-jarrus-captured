@@ -91,7 +91,7 @@
                 <b>+{{passiveEffect.value}}</b> бонусного урона
               </template>
             </p>
-            <button @click="buyItem(item.id)">Купить предмет</button>
+            <button @click="buyItem({itemId: item.id})">Купить предмет</button>
           </div>
           <p></p>
           <hr>
@@ -112,7 +112,12 @@
     <div id="being-base-info">
       <div>
         <p>
-          Здоровье: {{ being.hp }} | Урон: {{ being.ad }}
+          Здоровье: {{ being.hp }}
+          | Урон:
+          {{ being.ad }}
+          <template v-if="being.bonusAd">
+            + {{ being.bonusAd }} = {{ being.ad + being.bonusAd}}
+          </template>
         </p>
       </div>
     </div>

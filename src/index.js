@@ -12,6 +12,7 @@ new Vue({
       'openMainMenu',
       'openGameScreen',
       'openShopScreen',
+      'buyItem',
     ]),
   },
   computed: {
