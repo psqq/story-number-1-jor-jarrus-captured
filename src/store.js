@@ -20,6 +20,7 @@ function getInitialState() {
         ch: 'g',
         hp: 400,
         ad: 45,
+        bonusAd: 0,
       },
     ]
   };
@@ -81,6 +82,7 @@ export default new Vuex.Store({
           ch: 'g',
           hp: 300 + Math.floor(Math.random() * 200),
           ad: 25 + Math.floor(Math.random() * 50),
+          bonusAd: 0,
         });
       }
     },
@@ -93,7 +95,7 @@ export default new Vuex.Store({
       if (defender.id) {
         state.currentEnemy = defender;
       }
-      defender.hp -= attacker.ad;
+      defender.hp -= attacker.ad + attacker.bonusAd;
       if (defender.hp <= 0) {
         state.enemies = state.enemies.filter(e => e.hp > 0);
         if (defender.id) {
