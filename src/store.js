@@ -52,14 +52,14 @@ export default new Vuex.Store({
       state.player.x += dir.x;
       state.player.y += dir.y;
     },
-    buyItem(state, {itemId}) {
+    buyItem(state, { itemId }) {
       state.player.inventory.push(itemId);
     },
     applyInventory() {
       const p = state.player;
       p.bonusAd = 0;
-      for(let itemId of p.inventory) {
-        
+      for (let itemId of p.inventory) {
+
       }
     },
     tryAddRandomEnemy(state) {
@@ -134,5 +134,11 @@ export default new Vuex.Store({
     getCurrentEnemy(state) {
       return state.currentEnemy;
     },
+    getItemNameById(state) {
+      return (itemId) => {
+        let item = state.items.find(item => item.id == itemId);
+        return item && item.name;
+      };
+    }
   }
 });

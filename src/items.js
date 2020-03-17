@@ -4,10 +4,12 @@ export default [
     name: 'Нож',
     desc: 'Незначительно увеличивает урон',
     cost: 130,
-    passives: {
-      name: 'flat-bonus-ad',
-      value: 10,
-    },
+    passives: [
+      {
+        name: 'flat-bonus-ad',
+        value: 10,
+      }
+    ],
   },
   {
     id: 'item-sword',
@@ -15,9 +17,11 @@ export default [
     desc: 'Увеличивает урон',
     cost: 290,
     required: ['item-knife', 'item-knife'],
-    passives: {
-      name: 'flat-bonus-ad',
-      value: 40,
-    },
+    passives: [
+      {
+        name: 'flat-bonus-ad',
+        value: 40,
+      }
+    ],
   },
 ]

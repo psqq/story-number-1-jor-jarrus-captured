@@ -16,5 +16,6 @@ new Vue({
   },
   computed: {
     ...Vuex.mapState(['screen', 'items']),
+    ...Vuex.mapGetters(['getItemNameById']),
   },
 }).$mount("#root")
