@@ -5,7 +5,7 @@
     <Shop v-else-if="screen == 'shop'"></Shop>
     <Lose v-else-if="screen == 'lose'"></Lose>
     <div v-else>
-      Странно, но вы недложны этого видеть! :(
+      Странно, но вы недолжны этого видеть! :(
     </div>
   </div>
 </template>

@@ -1,5 +1,7 @@
 <template>
-  <div class="game-display"></div>
+  <div class="game-display">
+    <img v-show="false" id="dcss-tiles" src="../assets/DungeonCrawl_ProjectUtumnoTileset.png" />
+  </div>
 </template>
 
 <script>
@@ -12,7 +14,16 @@ const display = new ROT.Display({
   width: config.defaultSize.width,
   height: config.defaultSize.height,
   fontSize: 14,
-  forceSquareRatio: true
+  forceSquareRatio: true,
+  layout: "tile",
+  bg: "transparent",
+  tileWidth: 32,
+  tileHeight: 32,
+  tileMap: {
+    "@": [4 * 32, 2 * 32],
+    g: [3 * 32, 2 * 32],
+    ".": [0 * 32, 14 * 32]
+  }
 });
 
 export default {
@@ -26,12 +37,21 @@ export default {
       "turnAi",
       "openLoseScreen"
     ]),
-    draw() {
+    draw(what) {
       const p = this.playerPosition;
       display.clear();
-      display.draw(p.x, p.y, "@", "white", "black");
-      for (let e of this.enemies) {
-        display.draw(e.x, e.y, e.ch, "white", "black");
+      if (!what || what == "floor") {
+        for (let y = 0; y < this.defaultSize.height; y++) {
+          for (let x = 0; x < this.defaultSize.width; x++) {
+            display.draw(x, y, ".");
+          }
+        }
+      }
+      if (!what || what == "beings") {
+        display.draw(p.x, p.y, "@");
+        for (let e of this.enemies) {
+          display.draw(e.x, e.y, e.ch);
+        }
       }
     },
     handleKeyboardEvnets(e) {
@@ -64,7 +84,7 @@ export default {
     }
   },
   computed: {
-    ...Vuex.mapState(["enemies"]),
+    ...Vuex.mapState(["enemies", "defaultSize"]),
     ...Vuex.mapGetters([
       "playerPosition",
       "isMovablePosition",
@@ -74,6 +94,17 @@ export default {
   },
   mounted() {
     this.$el.appendChild(display.getContainer());
+    /** @type {HTMLImageElement} */
+    var tileSet = document.querySelector("#dcss-tiles");
+    display.setOptions({
+      tileSet: tileSet
+    });
+    tileSet.onload = () => {
+      this.draw("floor");
+      setTimeout(() => {
+        this.draw("beings");
+      }, 100);
+    };
     this.draw();
     document.addEventListener("keydown", this.handleKeyboardEvnets);
   },
