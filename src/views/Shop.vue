@@ -2,6 +2,8 @@
   <div class="shop">
     <div class="shop-content">
       <h2>Магазин</h2>
+      <PlayerShortInfo></PlayerShortInfo>
+      <hr />
       <div v-for="(item, index) in items" :key="item.id">
         <hr v-if="index" />
         <b>{{ item.name }}</b>
@@ -22,7 +24,7 @@
             <b>+{{passiveEffect.value}}</b> бонусного урона
           </template>
         </p>
-        <button @click="buyItem({itemId: item.id})">Купить предмет</button>
+        <button @click="tryBuyItem(item)">Купить предмет</button>
       </div>
       <p></p>
       <hr />
@@ -33,17 +35,24 @@
 
 <script>
 import Vuex from "vuex";
+import PlayerShortInfo from "../components/PlayerShortInfo";
 
 export default {
   name: "Shop",
   methods: {
     ...Vuex.mapMutations(["openGameScreen", "buyItem"]),
+    tryBuyItem(item) {
+      if (item.cost <= this.player.gold) {
+        this.buyItem({ itemId: item.id });
+      }
+    }
   },
   computed: {
-    ...Vuex.mapState(["items"]),
-    ...Vuex.mapGetters(['getItemNameById']),
+    ...Vuex.mapState(["items", "player"]),
+    ...Vuex.mapGetters(["getItemNameById"])
   },
   components: {
+    PlayerShortInfo
   }
 };
 </script>

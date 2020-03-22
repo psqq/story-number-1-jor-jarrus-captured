@@ -64,7 +64,7 @@ export default new Vuex.Store({
     },
     buyItem(state, { itemId }) {
       let item = state.items.find(item => item.id == itemId);
-      state.player.gold = item.cost;
+      state.player.gold -= item.cost;
       state.player.inventory.push(itemId);
       this.commit('applyInventory');
     },
