@@ -9,11 +9,12 @@ import items from '../items.js';
 
 Vue.use(Vuex);
 
+
 function getInitialState() {
   return {
     player: {
       x: 15, y: 15,
-      hp: 550,
+      hp: 550, maxHp: 550,
       ad: 75,
       bonusAd: 0,
       gold: 500,
@@ -25,7 +26,7 @@ function getInitialState() {
         id: id(),
         x: 10, y: 10,
         ch: 'g',
-        hp: 400,
+        hp: 400, maxHp: 400,
         ad: 45,
         bonusAd: 0,
       },
@@ -83,11 +84,12 @@ export default new Vuex.Store({
       const x = Math.floor(Math.random() * state.defaultSize.width);
       const y = Math.floor(Math.random() * state.defaultSize.height);
       if (this.getters.isMovablePosition({ x, y })) {
+        const hp = 300 + Math.floor(Math.random() * 200);
         state.enemies.push({
           id: id(),
           x, y,
           ch: 'g',
-          hp: 300 + Math.floor(Math.random() * 200),
+          hp, maxHp: hp,
           ad: 25 + Math.floor(Math.random() * 50),
           bonusAd: 0,
         });

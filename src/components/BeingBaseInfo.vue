@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      Здоровье: {{ being.hp }}
+      Здоровье: {{ being.hp }} / {{ being.maxHp }}
       | Урон:
       {{ being.ad }}
       <template
