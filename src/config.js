@@ -1,3 +1,5 @@
+import Victor from 'victor';
+
 /** @type {{[key: string]: Victor}} */
 const directionByKeyCode = {
   'Period': new Victor(0, 0),

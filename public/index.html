@@ -1,150 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Story number 1. Jor Jarrus captured</title>
-  <!-- Подключаем стили -->
-  <link rel="stylesheet" href="./style.css">
-  <!-- Фреймворк для содздания пользовательских интерфейсов Vue 
-    и библиотека для урпавления состоянием Vuex -->
-  <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vuex"></script>
-  <!-- Библиотека для разработки рогаликов Rot.js -->
-  <script src="https://unpkg.com/rot-js"></script>
-  <!-- Библиотека для работы с 2d векторами -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/victor/1.1.0/victor.min.js"
-    integrity="sha256-QH04jkqJgJzblmzmCljNPAANQK9jgSJDKDow2piEYdQ=" crossorigin="anonymous"></script>
-</head>
-
-<body>
-  <!-- Корневой элемент приложения -->
-  <div id="root">
-    <!-- Главное меню -->
-    <template v-if="screen == 'mainmenu'">
-      <div class="mainmenu">
-        <div class="mainmenu-content">
-          <h2>Главное меню</h2>
-          <div class="btn" @click="startNewGame">Начать новую игру</div>
-          <div>
-            <p>
-              Пираты орки напали на корабль с людьми и захватили их. Выжили не все, а тех кто выжил захватили в плен.
-              Герой игры был одним из захваченных в плен. Его имя Джор Джаррус. Захваченных посадили в тюрьму и по
-              одному отправляли в местные подземелья для расчистки их от гоблинов, живущих там и охраняющих множество
-              ценных вещей.
-              Сами орки только надежно охраняли выход из пещеры, чтобы у жертв был только один выход –
-              продвигаться в глубь пещер.
-            </p>
-            <p>
-              Цель: спасти экипаж корабля.
-            </p>
-          </div>
-        </div>
-      </div>
-    </template>
-    <!-- Игровой экран -->
-    <template v-else-if="screen == 'game'">
-      <div class="game">
-        <div class="game-content">
-          <player-short-info></player-short-info>
-          <game-display></game-display>
-          <enemy-short-info></enemy-short-info>
-          <div class="btn" @click="openMainMenu">Главное меню</div>
-          <div class="btn" @click="openShopScreen">Магазин</div>
-        </div>
-      </div>
-    </template>
-    <!-- Экран проигрыша -->
-    <template v-else-if="screen == 'lose'">
-      <div class="lose">
-        <div class="lose-content">
-          <h2>Вы проиграли :(</h2>
-          <div class="btn" @click="openMainMenu">Главное меню</div>
-        </div>
-      </div>
-    </template>
-    <!-- Экран магазина -->
-    <template v-else-if="screen == 'shop'">
-      <div class="shop">
-        <div class="shop-content">
-          <h2>Магазин</h2>
-          <div v-for="(item, index) in items" :key="item.id">
-            <hr v-if="index">
-            <b>{{ item.name }}</b>
-            <div v-if="item.required">
-              Состовляющие:
-              <span v-for="(reqItem, reqItemIndex) in item.required" :key="reqItemIndex"><template v-if="reqItemIndex">,
-                </template>
-                {{ getItemNameById(reqItem) }}</span>
-            </div>
-            <p>
-              Цена: {{ item.cost }}
-            </p>
-            <p>
-              <i>{{ item.desc }}</i>
-            </p>
-            <u>Пассивные эффекты:</u>
-            <p v-for="(passiveEffect, index2) in item.passives" :key="index2">
-              <template v-if="passiveEffect.name == 'flat-bonus-ad'">
-                <b>+{{passiveEffect.value}}</b> бонусного урона
-              </template>
-            </p>
-            <button @click="buyItem({itemId: item.id})">Купить предмет</button>
-          </div>
-          <p></p>
-          <hr>
-          <div class="btn" @click="openGameScreen">Вернуться в игру</div>
-        </div>
-      </div>
-    </template>
-    <!-- На случай, если что-то пойдет совсем не так -->
-    <template v-else>
-      Странно, но вы недложны этого видеть! :(
-    </template>
-  </div>
-  <!-- Шаблоны для компонентов -->
-  <div style="display: none">
-    <div id="game-display">
-      <div class="game-display"></div>
-    </div>
-    <div id="being-base-info">
-      <div>
-        <p>
-          Здоровье: {{ being.hp }}
-          | Урон:
-          {{ being.ad }}
-          <template v-if="being.bonusAd">
-            + {{ being.bonusAd }} = {{ being.ad + being.bonusAd}}
-          </template>
-        </p>
-      </div>
-    </div>
-    <div id="player-short-info">
-      <div class="player-short-info">
-        Ваши статы:
-        <being-base-info :being="player"></being-base-info>
-      </div>
-    </div>
-    <div id="enemy-short-info">
-      <div class="enemy-short-info">
-        <template v-if="enemy">
-          <p>
-            Информация о враге:
-          </p>
-          <being-base-info :being="enemy"></being-base-info>
-        </template>
-        <template v-else>
-          <p>
-            Вы не кого не атаковали в последнее время.
-          </p>
-        </template>
-      </div>
-    </div>
-  </div>
-  <!-- Запуск скриптов -->
-  <script src="../src/index.js" type="module"></script>
-</body>
-
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but this game doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
 </html>

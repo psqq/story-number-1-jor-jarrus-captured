@@ -1,6 +1,13 @@
-import config from './config.js';
-import id from './id.js';
-import items from './items.js';
+import Vuex from 'vuex';
+import Vue from 'vue';
+import Victor from 'victor';
+
+import config from '../config.js';
+import id from '../id.js';
+import items from '../items.js';
+
+
+Vue.use(Vuex);
 
 function getInitialState() {
   return {
