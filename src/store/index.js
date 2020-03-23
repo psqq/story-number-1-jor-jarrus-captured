@@ -5,31 +5,62 @@ import Victor from 'victor';
 import config from '../config.js';
 import id from '../id.js';
 import items from '../items.js';
+import skills from '../skills.js';
 
 
 Vue.use(Vuex);
 
 
+function makeBeing(options) {
+  const defaultOptions = {
+    x: 0, y: 0,
+    hp: 500, maxHp: 500,
+    ad: 50,
+    bonusAd: 0,
+    gold: 0,
+    ch: '?',
+    inventory: [],
+    skills: [],
+  };
+  return Object.assign(Object.assign({}, defaultOptions), options);
+}
+
+function makeRandomGoblin(x, y) {
+  const hp = 300 + Math.floor(Math.random() * 200);
+  return makeBeing({
+    id: id(),
+    x, y,
+    ch: 'g',
+    hp, maxHp: hp,
+    ad: 25 + Math.floor(Math.random() * 50),
+    bonusAd: 0,
+  });
+}
+
+
 function getInitialState() {
   return {
-    player: {
+    player: makeBeing({
       x: 15, y: 15,
       hp: 550, maxHp: 550,
       ad: 75,
       bonusAd: 0,
       gold: 500,
       inventory: [],
-    },
+      skills: [
+        skills[0],
+      ],
+    }),
     currentEnemy: null,
     enemies: [
-      {
+      makeBeing({
         id: id(),
         x: 10, y: 10,
         ch: 'g',
         hp: 400, maxHp: 400,
         ad: 45,
         bonusAd: 0,
-      },
+      }),
     ]
   };
 }
@@ -68,6 +99,15 @@ export default new Vuex.Store({
       state.player.inventory.push(itemId);
       this.commit('applyInventory');
     },
+    onKill(state, { killer }) {
+      for (let skill of killer.skills) {
+        if (skill.trigger == 'kill-enemy') {
+          if (skill.effect == 'health-10-percent-of-max-hp') {
+            killer.hp = Math.min(killer.maxHp, killer.hp + 0.1 * killer.maxHp);
+          }
+        }
+      }
+    },
     applyInventory(state) {
       const p = state.player;
       p.bonusAd = 0;
@@ -84,15 +124,8 @@ export default new Vuex.Store({
       const x = Math.floor(Math.random() * state.defaultSize.width);
       const y = Math.floor(Math.random() * state.defaultSize.height);
       if (this.getters.isMovablePosition({ x, y })) {
-        const hp = 300 + Math.floor(Math.random() * 200);
-        state.enemies.push({
-          id: id(),
-          x, y,
-          ch: 'g',
-          hp, maxHp: hp,
-          ad: 25 + Math.floor(Math.random() * 50),
-          bonusAd: 0,
-        });
+        const goblin = makeRandomGoblin(x, y);
+        state.enemies.push(goblin);
       }
     },
     attack(state, { attackerId, defenderId }) {
@@ -106,6 +139,7 @@ export default new Vuex.Store({
       }
       defender.hp -= attacker.ad + attacker.bonusAd;
       if (defender.hp <= 0) {
+        this.commit('onKill', { dead: defender, killer: attacker });
         state.enemies = state.enemies.filter(e => e.hp > 0);
         if (defender.id) {
           state.currentEnemy = null;
