@@ -5,7 +5,7 @@
       <BeingBaseInfo :being="enemy"></BeingBaseInfo>
     </template>
     <template v-else>
-      <p>Вы не кого не атаковали в последнее время.</p>
+      <p>Вы никого не атаковали в последнее время.</p>
     </template>
   </div>
 </template>
