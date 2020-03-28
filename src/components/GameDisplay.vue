@@ -22,7 +22,9 @@ const display = new ROT.Display({
   tileMap: {
     "@": [4 * 32, 2 * 32],
     g: [3 * 32, 2 * 32],
-    ".": [7 * 32, 15 * 32]
+    ".": [7 * 32, 15 * 32],
+    "<": [42 * 32, 15 * 32],
+    ">": [41 * 32, 15 * 32]
   }
 });
 
@@ -41,14 +43,23 @@ export default {
     draw(what) {
       const p = this.playerPosition;
       display.clear();
-      if (!what || what == "floor") {
+      if (!what || what.includes("floor")) {
         for (let y = 0; y < this.defaultSize.height; y++) {
           for (let x = 0; x < this.defaultSize.width; x++) {
             display.draw(x, y, ".");
           }
         }
       }
-      if (!what || what == "beings") {
+      if (!what || what.includes("stairs")) {
+        for (let stair of this.stairs) {
+          let ch = "<";
+          if (stair.id == "stair-down") {
+            ch = ">";
+          }
+          display.draw(stair.x, stair.y, ch);
+        }
+      }
+      if (!what || what.includes("beings")) {
         display.draw(p.x, p.y, "@");
         for (let e of this.enemies) {
           display.draw(e.x, e.y, e.ch);
@@ -96,7 +107,7 @@ export default {
     }
   },
   computed: {
-    ...Vuex.mapState(["enemies", "defaultSize", "player", "turn"]),
+    ...Vuex.mapState(["enemies", "defaultSize", "player", "stairs"]),
     ...Vuex.mapGetters([
       "playerPosition",
       "isMovablePosition",
@@ -114,8 +125,11 @@ export default {
     tileSet.onload = () => {
       this.draw("floor");
       setTimeout(() => {
-        this.draw("beings");
+        this.draw("stairs");
       }, 100);
+      setTimeout(() => {
+        this.draw("beings");
+      }, 200);
     };
     this.draw();
     document.addEventListener("keydown", this.handleKeyboardEvnets);

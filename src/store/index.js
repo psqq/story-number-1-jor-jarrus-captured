@@ -64,6 +64,20 @@ function getInitialState() {
       }),
     ],
     messages: [],
+    stairs: [
+      {
+        id: 'stair-up',
+        deep: 1,
+        x: 0,
+        y: 0,
+      },
+      {
+        id: 'stair-down',
+        deep: 1,
+        x: 19,
+        y: 19,
+      },
+    ]
   };
 }
 
