@@ -91,7 +91,6 @@ export default new Vuex.Store({
   mutations: {
     finishTurn(state) {
       state.turn += 1;
-      console.log(state.turn);
     },
     addMessage(state, msg) {
       console.log(msg);
