@@ -4,6 +4,7 @@ const skills = [
     id: 'passive-mc-skill',
     name: 'Восстановление',
     desc: 'Восстанавливает 10% от максимального здоровья за убийство',
+    level: 1,
     passive: true,
     active: true,
     duration: Infinity,
@@ -16,7 +17,9 @@ const skills = [
   {
     id: 'q-mc-skill',
     name: 'Уворот',
-    desc: 'На 3 4 5 6 7 хода шанс уклонения будет 50%',
+    desc: 'На 3, 4, 5, 6, 7 хода шанс уклонения будет 50%',
+    level: 1,
+    durationByLevel: [0, 3, 4, 5, 6, 7],
     passive: false,
     active: false,
     duration: 0,

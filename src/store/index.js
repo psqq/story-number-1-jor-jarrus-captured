@@ -39,6 +39,7 @@ function makeRandomGoblin(x, y) {
 
 function getInitialState() {
   return {
+    turn: 0,
     player: makeBeing({
       x: 15, y: 15,
       hp: 550, maxHp: 550,
@@ -74,6 +75,10 @@ export default new Vuex.Store({
     ...getInitialState(),
   },
   mutations: {
+    finishTurn(state) {
+      state.turn += 1;
+      console.log(state.turn);
+    },
     addMessage(state, msg) {
       console.log(msg);
       state.messages.push({
@@ -144,7 +149,17 @@ export default new Vuex.Store({
       if (defender.id) {
         state.currentEnemy = defender;
       }
-      defender.hp -= attacker.ad + attacker.bonusAd;
+      let dmg = attacker.ad + attacker.bonusAd;
+      for (let skill of defender.skills) {
+        if (skill.active && skill.trigger == 'attack-defense') {
+          if (skill.effect.id == 'chance-to-dodge') {
+            if (Math.random() < skill.effect.value) {
+              dmg = 0;
+            }
+          }
+        }
+      }
+      defender.hp -= dmg;
       if (defender.hp <= 0) {
         this.commit('onKill', { dead: defender, killer: attacker });
         state.enemies = state.enemies.filter(e => e.hp > 0);

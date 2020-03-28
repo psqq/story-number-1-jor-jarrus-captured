@@ -35,7 +35,8 @@ export default {
       "attack",
       "tryAddRandomEnemy",
       "turnAi",
-      "openLoseScreen"
+      "openLoseScreen",
+      "finishTurn"
     ]),
     draw(what) {
       const p = this.playerPosition;
@@ -70,6 +71,10 @@ export default {
             this.update();
           }
         }
+      } else if (e.code == "KeyQ") {
+        const qSkill = this.player.skills[1];
+        qSkill.duration = qSkill.durationByLevel[qSkill.level];
+        qSkill.active = true;
       }
     },
     update() {
@@ -80,11 +85,18 @@ export default {
       if (!this.isPlayerAlive) {
         this.openLoseScreen();
       }
+      for (let skill of this.player.skills) {
+        skill.duration -= 1;
+        if (!skill.passive && skill.active && skill.duration <= 0) {
+          skill.active = false;
+        }
+      }
+      this.finishTurn();
       this.$forceUpdate();
     }
   },
   computed: {
-    ...Vuex.mapState(["enemies", "defaultSize"]),
+    ...Vuex.mapState(["enemies", "defaultSize", "player", "turn"]),
     ...Vuex.mapGetters([
       "playerPosition",
       "isMovablePosition",
