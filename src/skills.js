@@ -28,8 +28,9 @@ const skills = [
   },
 ];
 
-function findSkillById(id) {
-  return skills.find(x => x.id == id);
+function findSkillById(id, arrOfSkills) {
+  arrOfSkills = arrOfSkills || skills;
+  return arrOfSkills.find(x => x.id == id);
 }
 
 export {

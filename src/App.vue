@@ -40,7 +40,7 @@ export default {
 }
 
 .mainmenu-content, .game-content, .lose-content, .shop-content {
-  max-width: 500px;
+  max-width: 700px;
 }
 
 .btn {

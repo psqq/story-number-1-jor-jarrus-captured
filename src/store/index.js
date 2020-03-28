@@ -37,7 +37,6 @@ function makeRandomGoblin(x, y) {
   });
 }
 
-
 function getInitialState() {
   return {
     player: makeBeing({
@@ -49,6 +48,7 @@ function getInitialState() {
       inventory: [],
       skills: [
         skills.findSkillById('passive-mc-skill'),
+        skills.findSkillById('q-mc-skill'),
       ],
     }),
     currentEnemy: null,
@@ -61,7 +61,8 @@ function getInitialState() {
         ad: 45,
         bonusAd: 0,
       }),
-    ]
+    ],
+    messages: [],
   };
 }
 
@@ -73,6 +74,12 @@ export default new Vuex.Store({
     ...getInitialState(),
   },
   mutations: {
+    addMessage(state, msg) {
+      console.log(msg);
+      state.messages.push({
+        text: msg,
+      });
+    },
     startNewGame(state) {
       state.screen = 'game';
       Object.assign(state, getInitialState());

@@ -1,11 +1,10 @@
 <template>
   <div class="player-short-info">
-    <div class="player-stats">
-      <u>Ваши статы:</u>
-      <Bar v-bind:currentValue="player.hp" v-bind:maxValue="player.maxHp"></Bar>
+    <u>Ваши статы:</u>
+    <div class=".player-stats">
       <BeingBaseInfo :being="player"></BeingBaseInfo>
+      <span>Золото: {{ player.gold }}$ </span>
     </div>
-    <p>Золото: {{ player.gold }}$ </p>
   </div>
 </template>
 
@@ -29,6 +28,6 @@ export default {
 <style scoped>
 .player-stats {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
 }
 </style>
