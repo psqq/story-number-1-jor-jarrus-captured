@@ -5,7 +5,7 @@ import Victor from 'victor';
 import config from '../config.js';
 import id from '../id.js';
 import items from '../items.js';
-import skills from '../skills.js';
+import * as skills from '../skills.js';
 
 
 Vue.use(Vuex);
@@ -48,7 +48,7 @@ function getInitialState() {
       gold: 500,
       inventory: [],
       skills: [
-        skills[0],
+        skills.findSkillById('passive-mc-skill'),
       ],
     }),
     currentEnemy: null,
