@@ -102,8 +102,8 @@ export default new Vuex.Store({
     onKill(state, { killer }) {
       for (let skill of killer.skills) {
         if (skill.trigger == 'kill-enemy') {
-          if (skill.effect == 'health-10-percent-of-max-hp') {
-            killer.hp = Math.min(killer.maxHp, killer.hp + 0.1 * killer.maxHp);
+          if (skill.effect.id == 'health-on-percent-of-max-hp') {
+            killer.hp = Math.min(killer.maxHp, killer.hp + skill.effect.value * killer.maxHp);
           }
         }
       }
